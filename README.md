@@ -177,3 +177,23 @@ Backend -> Azure OpenAI (scoring final)
 DB (PostgreSQL) <-- Score final
      |
 Frontend -> affichage scores
+
+## Architecture du projet
+
+- 2 Parties : Frontend et backend
+- Chaque projet est conteneurisé avec sa propre image et son propre dockerfile 
+- Un docker compose permet de démarrer les services suivants
+    - Frontend
+    - backend
+    - base de données
+
+- On ajoutera des scripts permettant automatiquement de créer des images pour chaque projet (.sh)
+- On ajoutera un script permattant de lancer le docker compose
+
+
+## pipeline Jenkins 
+
+
+## base de données
+ - On aura une base de données relationnelle PostGreSQL conteneurisée 
+
