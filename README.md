@@ -197,3 +197,4 @@ Frontend -> affichage scores
 ## base de données
  - On aura une base de données relationnelle PostGreSQL conteneurisée 
 
+##whait
