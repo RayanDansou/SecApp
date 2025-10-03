@@ -184,8 +184,8 @@ Frontend -> affichage scores
 - Chaque projet est conteneurisé avec sa propre image et son propre dockerfile 
 - Un docker compose permet de démarrer les services suivants
     - Frontend
-    - backend
-    - base de données
+    - Backend
+    - Base de données
 
 - On ajoutera des scripts permettant automatiquement de créer des images pour chaque projet (.sh)
 - On ajoutera un script permattant de lancer le docker compose
