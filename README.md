@@ -87,7 +87,9 @@ Authentification via username/password avec JWT.
 - `POST /api/questionnaires/{id}/submit/` → soumission des réponses + envoi vers Azure OpenAI  
 
 #### Exemple de payload JSON de création d'un questionnaire
-```json { "title": "Projet CRM Interne", "questions": [ { "text": "Le système est-il accessible depuis Internet ?", "response": "Non" }, { "text": "Les données sont-elles chiffrées ?", "response": "Oui" } ] }```
+```json 
+{ "title": "Projet CRM Interne", "questions": [ { "text": "Le système est-il accessible depuis Internet ?", "response": "Non" }, { "text": "Les données sont-elles chiffrées ?", "response": "Oui" } ] }
+```
 
 ### Questions
 - `GET /api/questionnaires/{id}/questions/` → récupération des questions  
@@ -98,7 +100,9 @@ Authentification via username/password avec JWT.
 
 #### Exemple de payload JSON de validation
 
-```json { "status": "validé", "comment": "Les contrôles d’accès sont conformes." }```
+```json 
+{ "status": "validé", "comment": "Les contrôles d’accès sont conformes." }
+```
 
 ### Scores
 - `GET /api/questionnaires/{id}/score/` → récupération des scores finaux  
@@ -134,7 +138,9 @@ Authentification via username/password avec JWT.
 ### Logs applicatifs
 
 Format standard JSON pour audit: <br><br>
-```json { "timestamp": "2025-10-21T10:05:12Z", "user": "chef.projet1", "action": "submit_questionnaire", "target": "questionnaire_42", "status": "success" }```
+```json 
+{ "timestamp": "2025-10-21T10:05:12Z", "user": "chef.projet1", "action": "submit_questionnaire", "target": "questionnaire_42", "status": "success" }
+```
 
 ---
 
@@ -322,10 +328,14 @@ Scripts `.sh` pour build et lancement automatisés
 
 ##### Format d'appel attendu pour l'IA
 
-```python response = client.chat.completions.create( model="gpt-4o-mini", messages=[{"role": "system", "content": "Tu es un expert sécurité..."}, {"role": "user", "content": questionnaire_data}], response_format="json")```
+```python 
+response = client.chat.completions.create( model="gpt-4o-mini", messages=[{"role": "system", "content": "Tu es un expert sécurité..."}, {"role": "user", "content": questionnaire_data}], response_format="json")
+```
 ##### Format standard JSON pour l'IA
 
-```json { "confidentiality": 85, "integrity": 90, "availability": 80, "recommendations": "Renforcer le chiffrement des backups." }```
+```json 
+{ "confidentiality": 85, "integrity": 90, "availability": 80, "recommendations": "Renforcer le chiffrement des backups." }
+```
 
 #### Flow 3 : Consultation (Business Owner)
 1. Login  
