@@ -370,7 +370,7 @@ response = client.chat.completions.create( model="gpt-4o-mini", messages=[{"role
 │   └── requirements.txt<br>
 │
 ├── frontend/<br>
-    ├── Dckerfile
+    ├── Dockerfile
 │   ├── pages/                   # Pages Next.js (login, dashboard, etc.)<br>
 │   ├── components/              # Composants réutilisables (UI)<br>
 │   ├── services/                # Fonctions d’appel API centralisées<br>
