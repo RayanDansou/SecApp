@@ -361,17 +361,21 @@ response = client.chat.completions.create( model="gpt-4o-mini", messages=[{"role
 
 /secapp/ <br>
 ├── backend/ <br>
+    -- Dockerfile
 │   ├── manage.py                # Point d’entrée Django<br>
 │   ├── secapp/                  # Configs globales (settings, urls, wsgi)<br>
 │   ├── questionnaires/          # App principale (questionnaires, docs, scores)<br>
 │   ├── users/                   # App utilisateurs (auth, rôles, JWT)<br>
 │   └── requirements.txt<br>
 ├── frontend/<br>
+    -- Dckerfile
 │   ├── pages/                   # Pages Next.js (login, dashboard, etc.)<br>
 │   ├── components/              # Composants réutilisables (UI)<br>
 │   ├── services/                # Fonctions d’appel API centralisées<br>
 │   ├── styles/<br>
 │   └── package.json<br>
+----Database
+    ----Dockerfile
 ├── docker-compose.yml<br>
 ├── Jenkinsfile<br>
 ├── .env.example<br>
