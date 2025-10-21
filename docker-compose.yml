@@ -1,0 +1,94 @@
+version: '3.9'
+
+services:
+  # Base de données PostgreSQL
+  database:
+    image: postgres:16-alpine
+    container_name: secapp-database
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-secapp}
+      POSTGRES_USER: ${POSTGRES_USER:-secapp_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secapp_password}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - secapp-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-secapp_user} -d ${POSTGRES_DB:-secapp}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend Django
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: secapp-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-secapp_user}:${POSTGRES_PASSWORD:-secapp_password}@database:5432/${POSTGRES_DB:-secapp}
+    volumes:
+      - ./backend:/app
+      - backend_media:/app/media
+      - backend_static:/app/static
+    ports:
+      - "8000:8000"
+    networks:
+      - secapp-network
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/api/health/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend Next.js
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: secapp-frontend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3000:3000"
+    networks:
+      - secapp-network
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  secapp-network:
+    driver: bridge
+    name: secapp-network
+
+volumes:
+  postgres_data:
+    name: secapp_postgres_data
+  backend_media:
+    name: secapp_backend_media
+  backend_static:
+    name: secapp_backend_static

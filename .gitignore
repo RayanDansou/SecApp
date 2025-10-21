@@ -1,0 +1,263 @@
+# ============================================
+# SecApp - .gitignore
+# ============================================
+
+# ============================================
+# ENVIRONMENT & SECRETS
+# ============================================
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.p12
+secrets/
+credentials/
+
+# ============================================
+# PYTHON / DJANGO
+# ============================================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+static_root/
+
+# Django migrations (optionnel - décommenter si vous ne versionnez pas les migrations)
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+# Coverage
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# ============================================
+# NODE.JS / NEXT.JS
+# ============================================
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Next.js
+.next/
+out/
+build
+
+# Production
+/build
+/.next/
+/out/
+
+# Testing
+/coverage
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# ============================================
+# DOCKER
+# ============================================
+# Docker volumes
+postgres_data/
+backend_media/
+backend_static/
+
+# ============================================
+# IDE / EDITORS
+# ============================================
+# VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+
+# ============================================
+# OS
+# ============================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ============================================
+# LOGS
+# ============================================
+*.log
+logs/
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# ============================================
+# BACKUP & TEMP FILES
+# ============================================
+*.bak
+*.tmp
+*.temp
+*.swp
+*~
+.~*
+backup/
+backups/
+*.backup
+
+# ============================================
+# TESTING
+# ============================================
+.pytest_cache/
+.coverage
+htmlcov/
+test-results/
+*.test.js
+coverage/
+
+# ============================================
+# CI/CD
+# ============================================
+.jenkins/
+.github/workflows/*.log
+
+# ============================================
+# DOCUMENTATION
+# ============================================
+docs/_build/
+site/
+
+# ============================================
+# MEDIA & UPLOADS
+# ============================================
+media/
+uploads/
+*.pdf
+*.docx
+*.doc
+
+# Exception: garder les fichiers d'exemple
+!**/examples/**/*.pdf
+!**/examples/**/*.docx
+
+# ============================================
+# SECURITY SCANS
+# ============================================
+.trivy/
+security-scan-results/
+vulnerability-reports/
+
+# ============================================
+# CUSTOM PROJECT FILES
+# ============================================
+# Fichiers temporaires de développement
+TODO.txt
+NOTES.md
+scratch/
+
+# Données de test
+test_data/
+fixtures/local/
+
+# ============================================
+# KEEP THESE FILES
+# ============================================
+# Assurez-vous de committer ces fichiers
+!.gitkeep
+!.env.example
+!README.md
+!LICENSE
+!Dockerfile
+!docker-compose.yml
+!Jenkinsfile
+!*.sh
