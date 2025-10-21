@@ -1,4 +1,5 @@
 {
     "vscode-pokemon.theme": "forest",
-    "vscode-pokemon.position": "panel"
+    "vscode-pokemon.position": "explorer",
+    "vscode-pokemon.pokemonSize": "large"
 }
