@@ -86,12 +86,19 @@ Authentification via username/password avec JWT.
 - `GET /api/questionnaires/{id}/` → détail d’un questionnaire  
 - `POST /api/questionnaires/{id}/submit/` → soumission des réponses + envoi vers Azure OpenAI  
 
+#### Exemple de payload JSON de création d'un questionnaire
+```json { "title": "Projet CRM Interne", "questions": [ { "text": "Le système est-il accessible depuis Internet ?", "response": "Non" }, { "text": "Les données sont-elles chiffrées ?", "response": "Oui" } ] }```
+
 ### Questions
 - `GET /api/questionnaires/{id}/questions/` → récupération des questions  
 - `POST /api/questionnaires/{id}/questions/` → ajout d’une question  
 
 ### Validation
 - `POST /api/questionnaires/{id}/validate/` → validation ou rejet par analyste  
+
+#### Exemple de payload JSON de validation
+
+```json { "status": "validé", "comment": "Les contrôles d’accès sont conformes." }```
 
 ### Scores
 - `GET /api/questionnaires/{id}/score/` → récupération des scores finaux  
@@ -122,7 +129,12 @@ Authentification via username/password avec JWT.
 - JWT + gestion des rôles côté backend  
 - HTTPS obligatoire  
 - Validation stricte des fichiers uploadés (MIME type, antivirus, taille max)  
-- Logs complets des actions (audit trail)  
+- Logs complets des actions (audit trail)
+
+### Logs applicatifs
+
+Format standard JSON pour audit: <br><br>
+```json { "timestamp": "2025-10-21T10:05:12Z", "user": "chef.projet1", "action": "submit_questionnaire", "target": "questionnaire_42", "status": "success" }```
 
 ---
 
@@ -197,7 +209,8 @@ Scripts `.sh` pour build et lancement automatisés
 - questionnaire_id (FK unique → questionnaires.id)  
 - confidentiality (int)  
 - integrity (int)  
-- availability (int)  
+- availability (int)
+- recommendations (varchar)  
 - generated_at (timestamp)  
 
 #### `messages`
@@ -305,14 +318,21 @@ Scripts `.sh` pour build et lancement automatisés
 3. Consultation réponses + docs  
 4. Appel IA affiché en front  
 5. Valider/Rejeter → `POST /validate/`  
-6. MAJ état + notification envoyée  
+6. MAJ état + notification envoyée 
+
+##### Format d'appel attendu pour l'IA
+
+```python response = client.chat.completions.create( model="gpt-4o-mini", messages=[{"role": "system", "content": "Tu es un expert sécurité..."}, {"role": "user", "content": questionnaire_data}], response_format="json")```
+##### Format standard JSON pour l'IA
+
+```json { "confidentiality": 85, "integrity": 90, "availability": 80, "recommendations": "Renforcer le chiffrement des backups." }```
 
 #### Flow 3 : Consultation (Business Owner)
 1. Login  
 2. Dashboard → projets validés  
 3. Sélection projet → GET `/questionnaires/{id}`  
 4. Consultation scores → GET `/score/`  
-5. Envoi commentaire → POST `/messages/`  
+5. Envoi commentaire → POST `/messages/` 
 
 ---
 
@@ -324,3 +344,40 @@ Scripts `.sh` pour build et lancement automatisés
 - **Timeline** : suivi workflow  
 - **ChatBox** : communication utilisateurs  
 - **Charts (Scores)** : visualisation CIA (Confidentialité, Intégrité, Disponibilité)  
+
+---
+
+### Architecture du projet
+
+/secapp/
+├── backend/
+│   ├── manage.py                # Point d’entrée Django
+│   ├── secapp/                  # Configs globales (settings, urls, wsgi)
+│   ├── questionnaires/          # App principale (questionnaires, docs, scores)
+│   ├── users/                   # App utilisateurs (auth, rôles, JWT)
+│   └── requirements.txt
+├── frontend/
+│   ├── pages/                   # Pages Next.js (login, dashboard, etc.)
+│   ├── components/              # Composants réutilisables (UI)
+│   ├── services/                # Fonctions d’appel API centralisées
+│   ├── styles/
+│   └── package.json
+├── docker-compose.yml
+├── Jenkinsfile
+├── .env.example
+└── README.md
+
+---
+
+### Variables d'environnement
+
+```bash
+# .env
+DJANGO_SECRET_KEY=supersecretkey
+DATABASE_URL=postgresql://user:password@db:5432/secapp
+AZURE_OPENAI_KEY=sk-...
+RESEND_API_KEY=re_12345
+FRONTEND_URL=https://secapp.example.com
+```
+
+
