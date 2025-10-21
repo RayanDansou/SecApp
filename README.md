@@ -349,23 +349,23 @@ Scripts `.sh` pour build et lancement automatisés
 
 ### Architecture du projet
 
-/secapp/
-├── backend/
-│   ├── manage.py                # Point d’entrée Django
-│   ├── secapp/                  # Configs globales (settings, urls, wsgi)
-│   ├── questionnaires/          # App principale (questionnaires, docs, scores)
-│   ├── users/                   # App utilisateurs (auth, rôles, JWT)
-│   └── requirements.txt
-├── frontend/
-│   ├── pages/                   # Pages Next.js (login, dashboard, etc.)
-│   ├── components/              # Composants réutilisables (UI)
-│   ├── services/                # Fonctions d’appel API centralisées
-│   ├── styles/
-│   └── package.json
-├── docker-compose.yml
-├── Jenkinsfile
-├── .env.example
-└── README.md
+/secapp/ <br>
+├── backend/ <br>
+│   ├── manage.py                # Point d’entrée Django<br>
+│   ├── secapp/                  # Configs globales (settings, urls, wsgi)<br>
+│   ├── questionnaires/          # App principale (questionnaires, docs, scores)<br>
+│   ├── users/                   # App utilisateurs (auth, rôles, JWT)<br>
+│   └── requirements.txt<br>
+├── frontend/<br>
+│   ├── pages/                   # Pages Next.js (login, dashboard, etc.)<br>
+│   ├── components/              # Composants réutilisables (UI)<br>
+│   ├── services/                # Fonctions d’appel API centralisées<br>
+│   ├── styles/<br>
+│   └── package.json<br>
+├── docker-compose.yml<br>
+├── Jenkinsfile<br>
+├── .env.example<br>
+└── README.md<br>
 
 ---
 
