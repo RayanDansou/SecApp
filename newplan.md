@@ -25,6 +25,65 @@
 * Documentation complète et démo fonctionnelle
 
 ---
+## 🔹 Phase -3 — Backend basique (Hello World)
+
+**Durée estimée :** 1 jour
+
+### Objectif
+Vérifier que le backend Django fonctionne et répond à une requête simple.
+
+### Étapes
+* Initialiser un projet Django : `django-admin startproject backend`
+* Créer une app `core`
+* Ajouter endpoint `/hello/` → renvoie JSON `{ "message": "Hello World" }`
+* Configurer `settings.py` minimal : SQLite, timezone, debug=True
+* Tester via Docker
+
+### ✅ Tests
+*  Conteneur up et fonctionnel
+* Accéder à `http://localhost:8000/hello/` → renvoie `{ "message": "Hello World" }`
+* CI simple : build + test endpoint OK
+
+---
+
+## 🔹 Phase -2 — Frontend basique (React / Next.js)
+
+**Durée estimée :** 1 jour
+
+### Objectif
+Vérifier que le frontend fonctionne et peut afficher un composant minimal.
+
+### Étapes
+* Initialiser un projet Next.js / React : `npx create-next-app frontend`
+* Ajouter une page `/` avec “Hello Frontend”
+* Vérifier que le projet build + run local : `npm run dev`
+* Optionnel : configurer ESLint + Prettier
+
+### ✅ Tests
+* Accéder à `http://localhost:3000/` → texte “Hello Frontend” visible
+* Build OK : `npm run build`
+
+---
+
+## 🔹 Phase -1 — Base de données basique + endpoint test
+
+**Durée estimée :** 1 jour
+
+### Objectif
+Tester la connexion et la création d’une table générique pour validation initiale.
+
+### Étapes
+* Créer une base de données SQLite/PostgreSQL (selon stack finale)
+* Ajouter un modèle test : `TestModel(id, name, created_at)`
+* Appliquer migrations : `python manage.py makemigrations && migrate`
+* Créer endpoint `/api/test/` qui liste les instances `TestModel`
+* Tester CRUD minimal
+
+### ✅ Tests
+* POST + GET sur `/api/test/` fonctionne
+* Connexion DB OK, logs de migration corrects
+
+---
 
 ## ⚙️ Phase 0 — Bootstrap & Environnement exécutable
 
