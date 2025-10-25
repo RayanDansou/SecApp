@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import questionnaireService from '../services/questionnaireService';
-import Navbar from '../components/Navbar';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -259,8 +258,6 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <Navbar />
-
       <div className="dashboard-content">
         <div className="welcome-card">
           <h1>Bienvenue, {user?.first_name || user?.username} !</h1>

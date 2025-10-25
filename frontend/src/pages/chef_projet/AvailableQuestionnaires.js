@@ -28,6 +28,11 @@ const AvailableQuestionnaires = () => {
     navigate(`/fill-questionnaire/${id}`);
   };
 
+  const truncateText = (text, maxLength = 150) => {
+    if (!text || text.length <= maxLength) return text;
+    return text.substring(0, maxLength).trim() + '...';
+  };
+
   if (loading) {
     return (
       <div className="available-questionnaires">
@@ -61,7 +66,7 @@ const AvailableQuestionnaires = () => {
               </div>
 
               {questionnaire.description && (
-                <p className="card-description">{questionnaire.description}</p>
+                <p className="card-description">{truncateText(questionnaire.description)}</p>
               )}
 
               <div className="card-meta">

@@ -83,8 +83,12 @@ const FillQuestionnaire = () => {
         setResponse(newResponse);
       }
 
-      setSuccess('Réponses sauvegardées avec succès ! Vous pouvez maintenant uploader des documents.');
-      setTimeout(() => setSuccess(''), 3000);
+      setSuccess('Brouillon sauvegardé ! Redirection...');
+
+      // Redirection vers la liste des réponses
+      setTimeout(() => {
+        navigate('/my-responses', { state: { message: 'Brouillon sauvegardé avec succès' } });
+      }, 1500);
     } catch (err) {
       setError(err.error || 'Erreur lors de la sauvegarde');
     } finally {

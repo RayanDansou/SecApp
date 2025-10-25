@@ -51,6 +51,11 @@ const MyResponses = () => {
     });
   };
 
+  const truncateText = (text, maxLength = 150) => {
+    if (!text || text.length <= maxLength) return text;
+    return text.substring(0, maxLength).trim() + '...';
+  };
+
   if (loading) {
     return (
       <div className="my-responses">
@@ -99,7 +104,7 @@ const MyResponses = () => {
 
               <div className="card-body">
                 {response.questionnaire.description && (
-                  <p className="card-description">{response.questionnaire.description}</p>
+                  <p className="card-description">{truncateText(response.questionnaire.description)}</p>
                 )}
 
                 <div className="card-meta">
