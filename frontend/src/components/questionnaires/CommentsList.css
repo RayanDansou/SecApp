@@ -1,0 +1,123 @@
+.comments-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.comments-section h3 {
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.comments-list {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.no-comments {
+  text-align: center;
+  color: #999;
+  padding: 20px;
+  font-style: italic;
+}
+
+.comment-item {
+  background-color: white;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: #333;
+}
+
+.comment-role {
+  color: #666;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.comment-date {
+  color: #999;
+  font-size: 0.85rem;
+  margin-left: auto;
+}
+
+.comment-content {
+  color: #555;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.comment-form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.comment-form h4 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1rem;
+}
+
+.comment-form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+  margin-bottom: 12px;
+}
+
+.comment-form textarea:focus {
+  outline: none;
+  border-color: #4285f4;
+}
+
+.comment-form button {
+  background-color: #4285f4;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.comment-form button:hover:not(:disabled) {
+  background-color: #357ae8;
+}
+
+.comment-form button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}

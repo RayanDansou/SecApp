@@ -11,7 +11,7 @@ urlpatterns = [
 
     # API endpoints
     path('api/auth/', include('users.urls', namespace='users')),
-    path('api/questionnaires/', include('questionnaires.urls', namespace='questionnaires')),
+    path('api/', include('questionnaires.urls', namespace='questionnaires')),
 
     # Test endpoint
     path('', hello),

@@ -6,9 +6,19 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
-import Questionnaires from './pages/Questionnaires';
-import QuestionnaireDetail from './pages/QuestionnaireDetail';
-import QuestionnaireForm from './pages/QuestionnaireForm';
+
+// Pages CHEF_PROJET
+import AvailableQuestionnaires from './pages/chef_projet/AvailableQuestionnaires';
+import FillQuestionnaire from './pages/chef_projet/FillQuestionnaire';
+import MyResponses from './pages/chef_projet/MyResponses';
+import ResponseDetail from './pages/chef_projet/ResponseDetail';
+
+// Pages ANALYSTE
+import SubmittedResponses from './pages/analyste/SubmittedResponses';
+
+// Pages BUSINESS_OWNER
+import ValidatedResponses from './pages/business_owner/ValidatedResponses';
+
 import './App.css';
 
 function App() {
@@ -39,36 +49,80 @@ function App() {
               }
             />
 
-            {/* Routes Questionnaires */}
+            {/* Routes CHEF_PROJET */}
             <Route
-              path="/questionnaires"
+              path="/available-questionnaires"
               element={
-                <ProtectedRoute>
-                  <Questionnaires />
+                <ProtectedRoute allowedRoles={['CHEF_PROJET']}>
+                  <AvailableQuestionnaires />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/questionnaires/new"
+              path="/fill-questionnaire/:id"
               element={
-                <ProtectedRoute>
-                  <QuestionnaireForm />
+                <ProtectedRoute allowedRoles={['CHEF_PROJET']}>
+                  <FillQuestionnaire />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/questionnaires/:id"
+              path="/my-responses"
               element={
-                <ProtectedRoute>
-                  <QuestionnaireDetail />
+                <ProtectedRoute allowedRoles={['CHEF_PROJET']}>
+                  <MyResponses />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/questionnaires/:id/edit"
+              path="/response/:id"
               element={
-                <ProtectedRoute>
-                  <QuestionnaireForm />
+                <ProtectedRoute allowedRoles={['CHEF_PROJET', 'ANALYSTE', 'BUSINESS_OWNER']}>
+                  <ResponseDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/response/:id/edit"
+              element={
+                <ProtectedRoute allowedRoles={['CHEF_PROJET']}>
+                  <FillQuestionnaire />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Routes ANALYSTE */}
+            <Route
+              path="/analyste/submitted-responses"
+              element={
+                <ProtectedRoute allowedRoles={['ANALYSTE']}>
+                  <SubmittedResponses />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/analyste/response/:id"
+              element={
+                <ProtectedRoute allowedRoles={['ANALYSTE']}>
+                  <ResponseDetail />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Routes BUSINESS_OWNER */}
+            <Route
+              path="/business-owner/validated-responses"
+              element={
+                <ProtectedRoute allowedRoles={['BUSINESS_OWNER']}>
+                  <ValidatedResponses />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/business-owner/response/:id"
+              element={
+                <ProtectedRoute allowedRoles={['BUSINESS_OWNER']}>
+                  <ResponseDetail />
                 </ProtectedRoute>
               }
             />

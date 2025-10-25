@@ -22,6 +22,66 @@ const Dashboard = () => {
     return roleNames[role] || role;
   };
 
+  const renderRoleSpecificCards = () => {
+    switch (user?.role) {
+      case 'CHEF_PROJET':
+        return (
+          <>
+            <div className="card">
+              <h3>Questionnaires disponibles</h3>
+              <p>Consultez les questionnaires de sécurité disponibles</p>
+              <button className="btn btn-primary" onClick={() => navigate('/available-questionnaires')}>
+                Voir les questionnaires
+              </button>
+            </div>
+
+            <div className="card">
+              <h3>Mes réponses</h3>
+              <p>Gérez vos questionnaires remplis et leur statut</p>
+              <button className="btn btn-primary" onClick={() => navigate('/my-responses')}>
+                Mes questionnaires
+              </button>
+            </div>
+          </>
+        );
+
+      case 'ANALYSTE':
+        return (
+          <>
+            <div className="card">
+              <h3>Réponses soumises</h3>
+              <p>Consultez et validez les questionnaires soumis</p>
+              <button className="btn btn-primary" onClick={() => navigate('/analyste/submitted-responses')}>
+                Voir les réponses
+              </button>
+            </div>
+
+            <div className="card">
+              <h3>Créer un template</h3>
+              <p>Créez de nouveaux questionnaires de sécurité</p>
+              <button className="btn btn-secondary" disabled>
+                Créer un questionnaire
+              </button>
+            </div>
+          </>
+        );
+
+      case 'BUSINESS_OWNER':
+        return (
+          <div className="card">
+            <h3>Questionnaires validés</h3>
+            <p>Consultez les résultats des évaluations de sécurité</p>
+            <button className="btn btn-primary" onClick={() => navigate('/business-owner/validated-responses')}>
+              Voir les résultats
+            </button>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="dashboard-container">
       <nav className="dashboard-nav">
@@ -71,39 +131,12 @@ const Dashboard = () => {
             </button>
           </div>
 
-          <div className="card">
-            <h3>Questionnaires</h3>
-            <p>Gérez vos questionnaires de sécurité</p>
-            <button className="btn btn-secondary" onClick={() => navigate('/questionnaires')}>
-              Voir les questionnaires
-            </button>
-          </div>
-
-          {user?.role === 'ANALYSTE' && (
-            <div className="card">
-              <h3>Validations</h3>
-              <p>Questionnaires en attente de validation</p>
-              <button className="btn btn-secondary" disabled>
-                Voir les validations
-              </button>
-            </div>
-          )}
-
-          {user?.role === 'BUSINESS_OWNER' && (
-            <div className="card">
-              <h3>Rapports</h3>
-              <p>Consultez les rapports de sécurité</p>
-              <button className="btn btn-secondary" disabled>
-                Voir les rapports
-              </button>
-            </div>
-          )}
+          {renderRoleSpecificCards()}
         </div>
 
         <div className="info-message">
           <p>
-            Cette interface sera enrichie avec les fonctionnalités de gestion des questionnaires
-            dans les prochaines phases du projet.
+            Plateforme de gestion des questionnaires de sécurité - Version 2.0
           </p>
         </div>
       </div>
