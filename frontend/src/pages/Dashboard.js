@@ -30,6 +30,9 @@ const Dashboard = () => {
         </div>
         <div className="nav-user">
           <span className="user-name">{user?.username}</span>
+          <button onClick={() => navigate('/profile')} className="btn btn-profile">
+            Mon Profil
+          </button>
           <button onClick={handleLogout} className="btn btn-logout">
             Déconnexion
           </button>
@@ -60,6 +63,14 @@ const Dashboard = () => {
         </div>
 
         <div className="dashboard-cards">
+          <div className="card">
+            <h3>Mon Profil</h3>
+            <p>Gérez vos informations personnelles et votre mot de passe</p>
+            <button className="btn btn-secondary" onClick={() => navigate('/profile')}>
+              Accéder au profil
+            </button>
+          </div>
+
           <div className="card">
             <h3>Questionnaires</h3>
             <p>Gérez vos questionnaires de sécurité</p>
