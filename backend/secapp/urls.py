@@ -1,11 +1,17 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.http import HttpResponse
 
 def hello(request):
-    return HttpResponse("Oe ça marche la famille")
+    return HttpResponse("SecApp Backend is running!")
 
 urlpatterns = [
+    # Admin
     path('admin/', admin.site.urls),
-    path('hello/', hello),
+
+    # API endpoints
+    path('api/auth/', include('users.urls', namespace='users')),
+
+    # Test endpoint
+    path('', hello),
 ]
