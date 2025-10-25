@@ -15,6 +15,9 @@ import ResponseDetail from './pages/chef_projet/ResponseDetail';
 
 // Pages ANALYSTE
 import SubmittedResponses from './pages/analyste/SubmittedResponses';
+import CreateTemplate from './pages/analyste/CreateTemplate';
+import MyTemplates from './pages/analyste/MyTemplates';
+import AnalysteResponseDetail from './pages/analyste/AnalysteResponseDetail';
 
 // Pages BUSINESS_OWNER
 import ValidatedResponses from './pages/business_owner/ValidatedResponses';
@@ -101,10 +104,26 @@ function App() {
               }
             />
             <Route
+              path="/analyste/create-template"
+              element={
+                <ProtectedRoute allowedRoles={['ANALYSTE']}>
+                  <CreateTemplate />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/analyste/my-templates"
+              element={
+                <ProtectedRoute allowedRoles={['ANALYSTE']}>
+                  <MyTemplates />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/analyste/response/:id"
               element={
                 <ProtectedRoute allowedRoles={['ANALYSTE']}>
-                  <ResponseDetail />
+                  <AnalysteResponseDetail />
                 </ProtectedRoute>
               }
             />

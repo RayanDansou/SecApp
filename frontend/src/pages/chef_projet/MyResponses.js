@@ -62,6 +62,9 @@ const MyResponses = () => {
   return (
     <div className="my-responses">
       <div className="page-header">
+        <button onClick={() => navigate('/dashboard')} className="btn-back">
+          ← Retour à l'accueil
+        </button>
         <div className="header-content">
           <h1>Mes questionnaires</h1>
           <p className="subtitle">Consultez l'état de vos questionnaires de sécurité</p>

@@ -23,6 +23,21 @@
   font-size: 1rem;
 }
 
+.btn-back {
+  background-color: transparent;
+  border: none;
+  color: #4285f4;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 8px 0;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.btn-back:hover {
+  color: #357ae8;
+}
+
 .btn-new {
   background-color: #4285f4;
   color: white;

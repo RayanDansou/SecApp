@@ -83,7 +83,7 @@ const FillQuestionnaire = () => {
         setResponse(newResponse);
       }
 
-      setSuccess('Réponses sauvegardées avec succès');
+      setSuccess('Réponses sauvegardées avec succès ! Vous pouvez maintenant uploader des documents.');
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
       setError(err.error || 'Erreur lors de la sauvegarde');
@@ -183,6 +183,12 @@ const FillQuestionnaire = () => {
         <h1>{questionnaire.title}</h1>
         {questionnaire.description && (
           <p className="description">{questionnaire.description}</p>
+        )}
+        {questionnaire.created_by && (
+          <div className="creator-info">
+            Créé par: <strong>{questionnaire.created_by.first_name} {questionnaire.created_by.last_name}</strong>
+            {questionnaire.created_by.email && <span className="creator-email"> ({questionnaire.created_by.email})</span>}
+          </div>
         )}
         {response && (
           <div className="response-status">

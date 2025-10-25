@@ -52,7 +52,7 @@ class QuestionnaireService {
    */
   async updateQuestionnaire(id, data) {
     try {
-      const response = await api.put(`/api/questionnaires/${id}/`, data);
+      const response = await api.patch(`/api/questionnaires/${id}/`, data);
       return response.data;
     } catch (error) {
       throw error.response?.data || { error: 'Erreur lors de la mise à jour du questionnaire' };

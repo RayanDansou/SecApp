@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import Layout from './Layout';
 
 /**
  * Composant pour protéger les routes nécessitant une authentification
@@ -45,8 +46,8 @@ const ProtectedRoute = ({ children, allowedRoles = null }) => {
     );
   }
 
-  // Si tout est OK, afficher le contenu
-  return children;
+  // Si tout est OK, afficher le contenu avec le Layout
+  return <Layout>{children}</Layout>;
 };
 
 export default ProtectedRoute;

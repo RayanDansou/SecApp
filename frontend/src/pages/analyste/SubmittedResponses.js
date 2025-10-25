@@ -65,6 +65,9 @@ const SubmittedResponses = () => {
   return (
     <div className="submitted-responses">
       <div className="page-header">
+        <button onClick={() => navigate('/dashboard')} className="btn-back">
+          ← Retour au tableau de bord
+        </button>
         <div className="header-content">
           <h1>Réponses soumises</h1>
           <p className="subtitle">Consultez et validez les questionnaires de sécurité</p>
