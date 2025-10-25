@@ -74,7 +74,7 @@ const Dashboard = () => {
           <div className="card">
             <h3>Questionnaires</h3>
             <p>Gérez vos questionnaires de sécurité</p>
-            <button className="btn btn-secondary" disabled>
+            <button className="btn btn-secondary" onClick={() => navigate('/questionnaires')}>
               Voir les questionnaires
             </button>
           </div>

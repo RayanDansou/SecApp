@@ -154,7 +154,7 @@ Tester la connexion et la création d’une table générique pour validation in
 
 ### ✅ Tests
 
-* Création et lecture questionnaire (Chef de Projet)
+* Création et lecture questionnaire (Analyste sécurité)
 * Permission : utilisateur ne peut pas voir celui d’un autre
 * E2E : login → créer → voir dans la liste
 

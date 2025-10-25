@@ -6,6 +6,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import Questionnaires from './pages/Questionnaires';
+import QuestionnaireDetail from './pages/QuestionnaireDetail';
+import QuestionnaireForm from './pages/QuestionnaireForm';
 import './App.css';
 
 function App() {
@@ -32,6 +35,40 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Profile />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Routes Questionnaires */}
+            <Route
+              path="/questionnaires"
+              element={
+                <ProtectedRoute>
+                  <Questionnaires />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/questionnaires/new"
+              element={
+                <ProtectedRoute>
+                  <QuestionnaireForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/questionnaires/:id"
+              element={
+                <ProtectedRoute>
+                  <QuestionnaireDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/questionnaires/:id/edit"
+              element={
+                <ProtectedRoute>
+                  <QuestionnaireForm />
                 </ProtectedRoute>
               }
             />

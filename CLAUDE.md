@@ -7,12 +7,14 @@
 - Actions principales : saisie du questionnaire, validation, consultation des scores de sécurité  
 
 ### Chef de projet
-- Peut créer et remplir un questionnaire de sécurité  
+- Peut remplir un questionnaire de sécurité  
 - Peut uploader un document d’architecture technique (ex : Word, PDF)  
 - Peut consulter l’état d’avancement du questionnaire (brouillon, en attente, en validation, validé, rejeté)  
 - Peut échanger avec l’analyste via un système de communication intégré (notification, messagerie ou mail automatique)  
 
 ### Analyste sécurité
+- Peut créer un questionnaire de sécurité 
+- reçoit une notification lorsqu'un questionnaire qu'il a créé est rempli
 - Peut accéder aux questionnaires remplis par les chefs de projet  
 - Peut consulter les documents d’architecture technique associés  
 - Peut valider ou rejeter un questionnaire de sécurité (workflow de validation)  
