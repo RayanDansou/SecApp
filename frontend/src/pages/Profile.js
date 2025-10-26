@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import authService from '../services/authService';
 import './Profile.css';
 
 const Profile = () => {
-  const { user, updateProfile, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user, updateProfile } = useAuth();
 
   // État pour les informations du profil
   const [profileData, setProfileData] = useState({
@@ -188,11 +186,6 @@ const Profile = () => {
     }
   };
 
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
-
   const getRoleDisplayName = (role) => {
     const roleNames = {
       'CHEF_PROJET': 'Chef de Projet',
@@ -205,20 +198,6 @@ const Profile = () => {
 
   return (
     <div className="profile-container">
-      <nav className="profile-nav">
-        <div className="nav-brand">
-          <h2>SecApp</h2>
-        </div>
-        <div className="nav-actions">
-          <button onClick={() => navigate('/dashboard')} className="btn btn-secondary">
-            Retour au Dashboard
-          </button>
-          <button onClick={handleLogout} className="btn btn-logout">
-            Déconnexion
-          </button>
-        </div>
-      </nav>
-
       <div className="profile-content">
         <div className="profile-header">
           <h1>Mon Profil</h1>
