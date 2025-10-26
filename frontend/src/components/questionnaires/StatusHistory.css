@@ -1,27 +1,31 @@
 .status-history {
   margin-top: 30px;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: var(--bg-secondary);
   border-radius: 8px;
+  transition: background-color 0.3s ease;
 }
 
 .status-history h3 {
   margin-bottom: 20px;
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.2rem;
+  transition: color 0.3s ease;
 }
 
 .history-loading {
   text-align: center;
   padding: 20px;
-  color: #999;
+  color: var(--text-muted);
+  transition: color 0.3s ease;
 }
 
 .no-history {
   text-align: center;
-  color: #999;
+  color: var(--text-muted);
   padding: 20px;
   font-style: italic;
+  transition: color 0.3s ease;
 }
 
 .history-timeline {
@@ -36,16 +40,18 @@
   top: 0;
   bottom: 0;
   width: 2px;
-  background-color: #ddd;
+  background-color: var(--border-color);
+  transition: background-color 0.3s ease;
 }
 
 .history-item {
   position: relative;
   margin-bottom: 20px;
-  background-color: white;
+  background-color: var(--bg-card);
   padding: 15px;
   border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px var(--shadow);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .history-item.latest {
@@ -60,8 +66,9 @@
   height: 12px;
   border-radius: 50%;
   background-color: #4285f4;
-  border: 2px solid white;
-  box-shadow: 0 0 0 2px #ddd;
+  border: 2px solid var(--bg-card);
+  box-shadow: 0 0 0 2px var(--border-color);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .history-content {
@@ -77,7 +84,8 @@
 
 .history-status {
   font-size: 0.95rem;
-  color: #333;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .history-status strong {
@@ -87,22 +95,25 @@
 
 .history-date {
   font-size: 0.85rem;
-  color: #999;
+  color: var(--text-muted);
+  transition: color 0.3s ease;
 }
 
 .history-user {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 6px;
+  transition: color 0.3s ease;
 }
 
 .history-comment {
   margin-top: 10px;
   padding: 10px;
-  background-color: #f5f5f5;
+  background-color: var(--bg-secondary);
   border-left: 3px solid #4285f4;
   border-radius: 4px;
   font-size: 0.9rem;
-  color: #555;
+  color: var(--text-secondary);
   font-style: italic;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

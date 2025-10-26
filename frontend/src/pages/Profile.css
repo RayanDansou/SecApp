@@ -1,21 +1,24 @@
 .profile-container {
   min-height: 100vh;
-  background-color: #f5f7fa;
+  background-color: var(--bg-secondary);
+  transition: background-color 0.3s ease;
 }
 
 .profile-nav {
-  background: white;
+  background: var(--bg-primary);
   padding: 16px 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 4px var(--shadow);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .nav-brand h2 {
   margin: 0;
-  color: #667eea;
+  color: var(--primary);
   font-size: 24px;
+  transition: color 0.3s ease;
 }
 
 .nav-actions {
@@ -39,7 +42,7 @@
 }
 
 .btn-logout {
-  background-color: #dc3545;
+  background-color: var(--danger);
   color: white;
   padding: 8px 16px;
   border: none;
@@ -65,14 +68,16 @@
 
 .profile-header h1 {
   margin: 0 0 8px 0;
-  color: #333;
+  color: var(--text-primary);
   font-size: 32px;
+  transition: color 0.3s ease;
 }
 
 .profile-header p {
   margin: 0;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 16px;
+  transition: color 0.3s ease;
 }
 
 .profile-grid {
@@ -82,10 +87,11 @@
 }
 
 .profile-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px var(--shadow);
   overflow: hidden;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card-header {
@@ -109,7 +115,8 @@
   flex-direction: column;
   gap: 6px;
   padding: 12px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
 }
 
 .info-item:last-child {
@@ -118,16 +125,18 @@
 
 .info-label {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
   text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 0.5px;
+  transition: color 0.3s ease;
 }
 
 .info-value {
   font-size: 16px;
-  color: #333;
+  color: var(--text-primary);
   font-weight: 500;
+  transition: color 0.3s ease;
 }
 
 .role-badge {
@@ -149,15 +158,17 @@
 }
 
 .alert-success {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  background-color: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .alert-error {
-  background-color: #fee;
-  color: #c33;
-  border: 1px solid #fcc;
+  background-color: var(--error-bg);
+  color: var(--error);
+  border: 1px solid var(--error);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .form-group {
@@ -168,18 +179,21 @@
   display: block;
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 8px;
+  transition: color 0.3s ease;
 }
 
 .form-group input {
   width: 100%;
   padding: 12px 16px;
   font-size: 14px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s ease, color 0.3s ease;
   box-sizing: border-box;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
 }
 
 .form-group input:focus {
@@ -189,8 +203,9 @@
 }
 
 .form-group input:disabled {
-  background-color: #f5f5f5;
+  background-color: var(--bg-secondary);
   cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .input-error {

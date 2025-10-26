@@ -1,15 +1,17 @@
 .questionnaires-container {
   min-height: 100vh;
-  background-color: #f5f7fa;
+  background-color: var(--bg-secondary);
+  transition: background-color 0.3s ease;
 }
 
 .questionnaires-nav {
-  background: white;
+  background: var(--bg-card);
   padding: 16px 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 4px var(--shadow);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .nav-brand h2 {
@@ -39,7 +41,7 @@
 }
 
 .btn-logout {
-  background-color: #dc3545;
+  background-color: var(--danger);
   color: white;
   padding: 8px 16px;
   border: none;
@@ -50,7 +52,7 @@
 }
 
 .btn-logout:hover {
-  background-color: #c82333;
+  background-color: var(--error);
 }
 
 .questionnaires-content {
@@ -68,14 +70,16 @@
 
 .questionnaires-header h1 {
   margin: 0 0 8px 0;
-  color: #333;
+  color: var(--text-primary);
   font-size: 32px;
+  transition: color 0.3s ease;
 }
 
 .questionnaires-header p {
   margin: 0;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 16px;
+  transition: color 0.3s ease;
 }
 
 .btn-primary {
@@ -106,9 +110,10 @@
 }
 
 .alert-error {
-  background-color: #fee;
-  color: #c33;
-  border: 1px solid #fcc;
+  background-color: var(--error-bg);
+  color: var(--error);
+  border: 1px solid var(--error);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .loading-container {
@@ -123,11 +128,12 @@
 .spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid #f3f3f3;
+  border: 4px solid var(--bg-secondary);
   border-top: 4px solid #667eea;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 16px;
+  transition: border-color 0.3s ease;
 }
 
 @keyframes spin {
@@ -138,9 +144,10 @@
 .empty-state {
   text-align: center;
   padding: 80px 20px;
-  background: white;
+  background: var(--bg-card);
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .empty-icon {
@@ -150,14 +157,16 @@
 
 .empty-state h3 {
   margin: 0 0 12px 0;
-  color: #333;
+  color: var(--text-primary);
   font-size: 24px;
+  transition: color 0.3s ease;
 }
 
 .empty-state p {
   margin: 0 0 24px 0;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 16px;
+  transition: color 0.3s ease;
 }
 
 .questionnaires-grid {
@@ -167,33 +176,35 @@
 }
 
 .questionnaire-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px var(--shadow);
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s ease;
   overflow: hidden;
 }
 
 .questionnaire-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px var(--shadow);
 }
 
 .questionnaire-card .card-header {
   padding: 20px 24px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 12px;
+  transition: border-color 0.3s ease;
 }
 
 .questionnaire-card .card-header h3 {
   margin: 0;
-  color: #333;
+  color: var(--text-primary);
   font-size: 18px;
   flex: 1;
+  transition: color 0.3s ease;
 }
 
 .status-badge {
@@ -205,28 +216,33 @@
 }
 
 .status-brouillon {
-  background-color: #f8f9fa;
-  color: #6c757d;
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .status-soumis {
-  background-color: #cfe2ff;
-  color: #084298;
+  background-color: var(--info-bg);
+  color: var(--info);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .status-en-analyse {
-  background-color: #fff3cd;
-  color: #997404;
+  background-color: var(--warning-bg);
+  color: var(--warning);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .status-valide {
-  background-color: #d1e7dd;
-  color: #0f5132;
+  background-color: var(--success-bg);
+  color: var(--success);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .status-rejete {
-  background-color: #f8d7da;
-  color: #842029;
+  background-color: var(--error-bg);
+  color: var(--error);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .questionnaire-card .card-body {
@@ -242,20 +258,23 @@
 
 .info-label {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
   text-transform: uppercase;
   font-weight: 600;
+  transition: color 0.3s ease;
 }
 
 .info-value {
   font-size: 14px;
-  color: #333;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .questionnaire-card .card-footer {
   padding: 16px 24px;
-  background-color: #f8f9fa;
+  background-color: var(--bg-secondary);
   text-align: right;
+  transition: background-color 0.3s ease;
 }
 
 .view-link {

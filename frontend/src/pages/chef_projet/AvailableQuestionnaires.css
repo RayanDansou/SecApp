@@ -10,41 +10,47 @@
 
 .page-header h1 {
   font-size: 2rem;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 8px;
+  transition: color 0.3s ease;
 }
 
 .subtitle {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 1rem;
+  transition: color 0.3s ease;
 }
 
 .loading {
   text-align: center;
   padding: 60px 20px;
-  color: #999;
+  color: var(--text-muted);
   font-size: 1.1rem;
+  transition: color 0.3s ease;
 }
 
 .error-message {
-  background-color: #ffebee;
-  color: #c62828;
+  background-color: var(--error-bg);
+  color: var(--error);
   padding: 15px;
   border-radius: 4px;
   margin-bottom: 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .empty-state {
   text-align: center;
   padding: 60px 20px;
-  background-color: #f9f9f9;
+  background-color: var(--bg-secondary);
   border-radius: 8px;
+  transition: background-color 0.3s ease;
 }
 
 .empty-state p {
-  color: #999;
+  color: var(--text-muted);
   font-size: 1.1rem;
   font-style: italic;
+  transition: color 0.3s ease;
 }
 
 .questionnaires-grid {
@@ -54,17 +60,17 @@
 }
 
 .questionnaire-card {
-  background-color: white;
+  background-color: var(--bg-card);
   border-radius: 8px;
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s, transform 0.3s;
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: box-shadow 0.3s, transform 0.3s, background-color 0.3s ease;
   display: flex;
   flex-direction: column;
 }
 
 .questionnaire-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 16px var(--shadow);
   transform: translateY(-2px);
 }
 
@@ -78,26 +84,29 @@
 
 .card-header h3 {
   margin: 0;
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.25rem;
   flex: 1;
+  transition: color 0.3s ease;
 }
 
 .question-count {
-  background-color: #e3f2fd;
-  color: #1976d2;
+  background-color: var(--info-bg);
+  color: var(--info);
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 0.85rem;
   font-weight: 500;
   white-space: nowrap;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .card-description {
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 16px;
   flex: 1;
+  transition: color 0.3s ease;
 }
 
 .card-meta {
@@ -106,8 +115,9 @@
   gap: 8px;
   margin-bottom: 20px;
   padding: 12px;
-  background-color: #f9f9f9;
+  background-color: var(--bg-secondary);
   border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
 .meta-item {
@@ -117,12 +127,14 @@
 }
 
 .meta-label {
-  color: #999;
+  color: var(--text-muted);
   font-weight: 500;
+  transition: color 0.3s ease;
 }
 
 .meta-value {
-  color: #555;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
 }
 
 .start-button {

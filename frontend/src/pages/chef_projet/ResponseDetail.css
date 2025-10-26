@@ -32,41 +32,46 @@
 
 .header-content h1 {
   font-size: 2rem;
-  color: #333;
+  color: var(--text-primary);
   margin: 0;
+  transition: color 0.3s ease;
 }
 
 .loading {
   text-align: center;
   padding: 60px 20px;
-  color: #999;
+  color: var(--text-muted);
   font-size: 1.1rem;
+  transition: color 0.3s ease;
 }
 
 .error-message {
-  background-color: #ffebee;
-  color: #c62828;
+  background-color: var(--error-bg);
+  color: var(--error);
   padding: 15px;
   border-radius: 4px;
   margin-bottom: 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .response-info,
 .questionnaire-info,
 .answers-section {
-  background-color: white;
+  background-color: var(--bg-card);
   padding: 24px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--shadow);
   margin-bottom: 24px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .response-info h2,
 .questionnaire-info h2,
 .answers-section h2 {
   font-size: 1.3rem;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 20px;
+  transition: color 0.3s ease;
 }
 
 .info-grid {
@@ -82,43 +87,50 @@
 }
 
 .info-label {
-  color: #999;
+  color: var(--text-muted);
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  transition: color 0.3s ease;
 }
 
 .info-value {
-  color: #333;
+  color: var(--text-primary);
   font-size: 1rem;
   font-weight: 500;
+  transition: color 0.3s ease;
 }
 
 .questionnaire-description {
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 16px;
+  transition: color 0.3s ease;
 }
 
 .questionnaire-meta {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 0.95rem;
+  transition: color 0.3s ease;
 }
 
 .questionnaire-meta strong {
-  color: #333;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .separator {
   margin: 0 8px;
-  color: #ccc;
+  color: var(--border-color);
+  transition: color 0.3s ease;
 }
 
 .answer-item {
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: var(--bg-secondary);
   border-radius: 6px;
   margin-bottom: 16px;
+  transition: background-color 0.3s ease;
 }
 
 .answer-item:last-child {
@@ -142,33 +154,36 @@
 }
 
 .required-mark {
-  color: #d32f2f;
+  color: var(--danger);
   font-size: 1.2rem;
   font-weight: bold;
 }
 
 .question-text {
   font-size: 1.05rem;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 12px;
   font-weight: 500;
   line-height: 1.5;
+  transition: color 0.3s ease;
 }
 
 .answer-text {
-  color: #555;
+  color: var(--text-secondary);
   line-height: 1.6;
   padding: 12px;
-  background-color: white;
+  background-color: var(--bg-card);
   border-radius: 4px;
   white-space: pre-wrap;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .no-answers {
   text-align: center;
-  color: #999;
+  color: var(--text-muted);
   padding: 40px 20px;
   font-style: italic;
+  transition: color 0.3s ease;
 }
 
 .actions {

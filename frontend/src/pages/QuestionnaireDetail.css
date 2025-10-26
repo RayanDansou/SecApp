@@ -1,15 +1,17 @@
 .detail-container {
   min-height: 100vh;
-  background-color: #f5f7fa;
+  background-color: var(--bg-secondary);
+  transition: background-color 0.3s ease;
 }
 
 .detail-nav {
-  background: white;
+  background: var(--bg-card);
   padding: 16px 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 4px var(--shadow);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .detail-content {
@@ -49,8 +51,9 @@
 
 .detail-header h1 {
   margin: 0 0 12px 0;
-  color: #333;
+  color: var(--text-primary);
   font-size: 32px;
+  transition: color 0.3s ease;
 }
 
 .header-actions {
@@ -75,7 +78,7 @@
 }
 
 .btn-delete {
-  background-color: #dc3545;
+  background-color: var(--danger);
   color: white;
   padding: 10px 20px;
   border: none;
@@ -87,7 +90,7 @@
 }
 
 .btn-delete:hover {
-  background-color: #c82333;
+  background-color: var(--error);
 }
 
 .detail-grid {
@@ -97,10 +100,11 @@
 }
 
 .detail-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px var(--shadow);
   overflow: hidden;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .detail-card .card-header {
@@ -124,7 +128,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
 }
 
 .info-item:last-child {
@@ -133,16 +138,18 @@
 
 .info-label {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
   text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 0.5px;
+  transition: color 0.3s ease;
 }
 
 .info-value {
   font-size: 16px;
-  color: #333;
+  color: var(--text-primary);
   font-weight: 500;
+  transition: color 0.3s ease;
 }
 
 .loading-container,
@@ -158,11 +165,12 @@
 .spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid #f3f3f3;
+  border: 4px solid var(--bg-secondary);
   border-top: 4px solid #667eea;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 16px;
+  transition: border-color 0.3s ease;
 }
 
 @keyframes spin {
@@ -185,25 +193,28 @@
 }
 
 .modal-content {
-  background: white;
+  background: var(--bg-card);
   border-radius: 10px;
   padding: 32px;
   max-width: 500px;
   width: 90%;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 40px var(--shadow);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .modal-content h3 {
   margin: 0 0 16px 0;
-  color: #333;
+  color: var(--text-primary);
   font-size: 24px;
+  transition: color 0.3s ease;
 }
 
 .modal-content p {
   margin: 0 0 24px 0;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 16px;
   line-height: 1.5;
+  transition: color 0.3s ease;
 }
 
 .modal-actions {

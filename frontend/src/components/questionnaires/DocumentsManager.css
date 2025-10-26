@@ -1,8 +1,9 @@
 .documents-manager {
   margin-top: 30px;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: var(--bg-secondary);
   border-radius: 8px;
+  transition: background-color 0.3s ease;
 }
 
 .documents-header {
@@ -14,8 +15,9 @@
 
 .documents-header h3 {
   margin: 0;
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.2rem;
+  transition: color 0.3s ease;
 }
 
 .upload-section {
@@ -45,19 +47,21 @@
 }
 
 .error-message {
-  background-color: #ffebee;
-  color: #c62828;
+  background-color: var(--error-bg);
+  color: var(--error);
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 15px;
   font-size: 0.9rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .no-documents {
   text-align: center;
-  color: #999;
+  color: var(--text-muted);
   padding: 30px;
   font-style: italic;
+  transition: color 0.3s ease;
 }
 
 .documents-list {
@@ -67,18 +71,18 @@
 }
 
 .document-item {
-  background-color: white;
+  background-color: var(--bg-card);
   padding: 15px;
   border-radius: 6px;
   display: flex;
   align-items: center;
   gap: 15px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.2s;
+  box-shadow: 0 1px 3px var(--shadow);
+  transition: box-shadow 0.2s, background-color 0.3s ease;
 }
 
 .document-item:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px var(--shadow);
 }
 
 .document-icon {
@@ -93,16 +97,18 @@
 
 .document-name {
   font-weight: 500;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 4px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: color 0.3s ease;
 }
 
 .document-meta {
   font-size: 0.85rem;
-  color: #999;
+  color: var(--text-muted);
+  transition: color 0.3s ease;
 }
 
 .document-actions {
@@ -126,9 +132,9 @@
 }
 
 .action-button:hover {
-  background-color: #f0f0f0;
+  background-color: var(--bg-secondary);
 }
 
 .action-button.delete:hover {
-  background-color: #ffebee;
+  background-color: var(--error-bg);
 }

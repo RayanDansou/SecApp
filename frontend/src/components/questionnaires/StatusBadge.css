@@ -9,36 +9,48 @@
 }
 
 .status-draft {
-  background-color: #e0e0e0;
-  color: #616161;
+  background-color: var(--draft-bg, #e0e0e0);
+  color: var(--draft, #616161);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .status-submitted {
-  background-color: #e3f2fd;
-  color: #1976d2;
+  background-color: var(--info-bg, #e3f2fd);
+  color: var(--info, #1976d2);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .status-pending {
-  background-color: #fff3e0;
-  color: #f57c00;
+  background-color: var(--warning-bg, #fff3e0);
+  color: var(--warning, #f57c00);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .status-validation {
   background-color: #f3e5f5;
   color: #7b1fa2;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode .status-validation {
+  background-color: rgba(123, 31, 162, 0.2);
+  color: #ce93d8;
 }
 
 .status-approved {
-  background-color: #e8f5e9;
-  color: #388e3c;
+  background-color: var(--success-bg, #e8f5e9);
+  color: var(--success, #388e3c);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .status-rejected {
-  background-color: #ffebee;
-  color: #d32f2f;
+  background-color: var(--error-bg, #ffebee);
+  color: var(--error, #d32f2f);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .status-default {
-  background-color: #f5f5f5;
-  color: #757575;
+  background-color: var(--bg-secondary, #f5f5f5);
+  color: var(--text-muted, #757575);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

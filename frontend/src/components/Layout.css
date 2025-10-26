@@ -1,10 +1,13 @@
 .layout {
   min-height: 100vh;
-  background-color: #f5f7fa;
+  background-color: var(--bg-secondary);
   display: flex;
   flex-direction: column;
+  transition: background-color 0.3s ease;
 }
 
 .layout-content {
   flex: 1;
+  background-color: var(--bg-secondary);
+  transition: background-color 0.3s ease;
 }

@@ -1,14 +1,16 @@
 .comments-section {
   margin-top: 30px;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: var(--bg-secondary);
   border-radius: 8px;
+  transition: background-color 0.3s ease;
 }
 
 .comments-section h3 {
   margin-bottom: 20px;
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.2rem;
+  transition: color 0.3s ease;
 }
 
 .comments-list {
@@ -19,17 +21,19 @@
 
 .no-comments {
   text-align: center;
-  color: #999;
+  color: var(--text-muted);
   padding: 20px;
   font-style: italic;
+  transition: color 0.3s ease;
 }
 
 .comment-item {
-  background-color: white;
+  background-color: var(--bg-card);
   padding: 15px;
   border-radius: 6px;
   margin-bottom: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px var(--shadow);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .comment-header {
@@ -42,49 +46,58 @@
 
 .comment-author {
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .comment-role {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 0.85rem;
   text-transform: uppercase;
+  transition: color 0.3s ease;
 }
 
 .comment-date {
-  color: #999;
+  color: var(--text-muted);
   font-size: 0.85rem;
   margin-left: auto;
+  transition: color 0.3s ease;
 }
 
 .comment-content {
-  color: #555;
+  color: var(--text-secondary);
   line-height: 1.5;
   white-space: pre-wrap;
+  transition: color 0.3s ease;
 }
 
 .comment-form {
-  background-color: white;
+  background-color: var(--bg-card);
   padding: 20px;
   border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px var(--shadow);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .comment-form h4 {
   margin-bottom: 15px;
-  color: #333;
+  color: var(--text-primary);
   font-size: 1rem;
+  transition: color 0.3s ease;
 }
 
 .comment-form textarea {
   width: 100%;
   padding: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   font-family: inherit;
   font-size: 0.95rem;
   resize: vertical;
   margin-bottom: 12px;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  transition: border-color 0.3s, background-color 0.3s ease, color 0.3s ease;
 }
 
 .comment-form textarea:focus {
@@ -114,10 +127,11 @@
 }
 
 .error-message {
-  background-color: #ffebee;
-  color: #c62828;
+  background-color: var(--error-bg);
+  color: var(--error);
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 12px;
   font-size: 0.9rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
