@@ -1,13 +1,14 @@
 .navbar {
-  background: white;
+  background: var(--bg-primary);
   padding: 16px 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 4px var(--shadow);
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: sticky;
   top: 0;
   z-index: 1000;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .nav-brand {
@@ -21,8 +22,9 @@
 
 .nav-brand h2 {
   margin: 0;
-  color: #667eea;
+  color: var(--primary);
   font-size: 24px;
+  transition: color 0.3s ease;
 }
 
 .nav-user {
@@ -33,7 +35,8 @@
 
 .user-name {
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 /* --- Boutons génériques --- */
@@ -76,8 +79,8 @@
 
 /* --- Bouton Profil --- */
 .btn-profile {
-  color: #667eea;
-  border: 2px solid #667eea;
+  color: var(--primary);
+  border: 2px solid var(--primary);
 }
 
 .btn-profile:hover {
@@ -85,15 +88,43 @@
   transform: scale(1.1);
 }
 
+body.dark-mode .btn-profile:hover {
+  background-color: rgba(129, 140, 248, 0.2);
+}
+
 /* --- Bouton Déconnexion --- */
 .btn-logout {
-  color: #dc3545;
-  border: 2px solid #dc3545;
+  color: var(--danger);
+  border: 2px solid var(--danger);
 }
 
 .btn-logout:hover {
   background-color: rgba(220, 53, 69, 0.1);
   transform: scale(1.1);
+}
+
+body.dark-mode .btn-logout:hover {
+  background-color: rgba(239, 68, 68, 0.2);
+}
+
+/* --- Bouton Theme Toggle --- */
+.btn-theme {
+  color: #f59e0b;
+  border: 2px solid #f59e0b;
+}
+
+.btn-theme:hover {
+  background-color: rgba(245, 158, 11, 0.1);
+  transform: scale(1.1);
+}
+
+body.dark-mode .btn-theme {
+  color: #fbbf24;
+  border-color: #fbbf24;
+}
+
+body.dark-mode .btn-theme:hover {
+  background-color: rgba(251, 191, 36, 0.2);
 }
 
 /* --- Responsive --- */

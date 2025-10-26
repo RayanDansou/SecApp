@@ -1,11 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { User, LogOut } from 'lucide-react'; // ✅ Icônes Lucide
+import { useTheme } from '../contexts/ThemeContext';
+import { User, LogOut, Moon, Sun } from 'lucide-react';
 import './Navbar.css';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const { isDarkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -21,6 +23,15 @@ const Navbar = () => {
 
       <div className="nav-user">
         <span className="user-name">{user?.username}</span>
+
+        {/* --- Bouton Dark Mode --- */}
+        <button
+          onClick={toggleTheme}
+          className="btn btn-theme btn-icon-only"
+          title={isDarkMode ? "Mode clair" : "Mode sombre"}
+        >
+          {isDarkMode ? <Sun size={20} strokeWidth={2.2} /> : <Moon size={20} strokeWidth={2.2} />}
+        </button>
 
         {/* --- Bouton Profil --- */}
         <button

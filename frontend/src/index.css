@@ -1,3 +1,53 @@
+/* Variables CSS pour Light Mode */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f7fa;
+  --bg-card: #ffffff;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --border-color: #e0e0e0;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --shadow-hover: rgba(0, 0, 0, 0.15);
+  --primary: #667eea;
+  --primary-hover: #5568d3;
+  --danger: #dc3545;
+  --danger-hover: #c82333;
+  --success: #388e3c;
+  --success-bg: #e8f5e9;
+  --error: #c62828;
+  --error-bg: #ffebee;
+  --warning: #f57c00;
+  --warning-bg: #fff3e0;
+  --info: #1976d2;
+  --info-bg: #e3f2fd;
+}
+
+/* Variables CSS pour Dark Mode */
+body.dark-mode {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #0f0f0f;
+  --bg-card: #2d2d2d;
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --text-muted: #808080;
+  --border-color: #404040;
+  --shadow: rgba(0, 0, 0, 0.3);
+  --shadow-hover: rgba(0, 0, 0, 0.5);
+  --primary: #818cf8;
+  --primary-hover: #6366f1;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --success: #4ade80;
+  --success-bg: #14532d;
+  --error: #f87171;
+  --error-bg: #7f1d1d;
+  --warning: #fb923c;
+  --warning-bg: #7c2d12;
+  --info: #60a5fa;
+  --info-bg: #1e3a8a;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,6 +55,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 code {

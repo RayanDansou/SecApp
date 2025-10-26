@@ -1,0 +1,234 @@
+/* ========================================
+   DARK MODE GLOBAL STYLES
+   ======================================== */
+
+/* --- Cards & Containers --- */
+.card,
+.profile-card,
+.template-card,
+.questionnaire-card,
+.response-card,
+.welcome-card,
+.recent-section {
+  background-color: var(--bg-card);
+  border-color: var(--border-color);
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover,
+.template-card:hover,
+.questionnaire-card:hover,
+.response-card:hover,
+.recent-item:hover {
+  box-shadow: 0 4px 16px var(--shadow-hover);
+}
+
+/* --- Text Colors --- */
+h1, h2, h3, h4, h5, h6,
+.card-title,
+.page-header h1,
+.info-value,
+.meta-value {
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+p,
+.subtitle,
+.card-description,
+.description,
+.info-label,
+.meta-label,
+.question-text {
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+.text-muted,
+.item-meta,
+.creator-email {
+  color: var(--text-muted);
+  transition: color 0.3s ease;
+}
+
+/* --- Inputs & Forms --- */
+input,
+textarea,
+select {
+  background-color: var(--bg-card);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary);
+  background-color: var(--bg-primary);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* --- Buttons Primaires --- */
+.btn-primary,
+.start-button {
+  background-color: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.btn-primary:hover,
+.start-button:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+/* --- Buttons Secondaires --- */
+.btn-secondary {
+  background-color: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+.btn-secondary:hover {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* --- Messages d'erreur et succès --- */
+.error-message,
+.alert-error {
+  background-color: var(--error-bg);
+  color: var(--error);
+  border-color: var(--error);
+}
+
+.success-message,
+.alert-success {
+  background-color: var(--success-bg);
+  color: var(--success);
+  border-color: var(--success);
+}
+
+.info-message {
+  background-color: var(--info-bg);
+  color: var(--info);
+  border-color: var(--info);
+}
+
+/* --- Tables & Lists --- */
+table {
+  background-color: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+th {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+td {
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+tr:hover {
+  background-color: var(--bg-secondary);
+}
+
+/* --- Dividers & Borders --- */
+hr,
+.divider,
+.border-top,
+.border-bottom {
+  border-color: var(--border-color);
+}
+
+/* --- Empty States --- */
+.empty-state {
+  background-color: var(--bg-card);
+  color: var(--text-secondary);
+}
+
+.empty-state h2 {
+  color: var(--text-primary);
+}
+
+/* --- Loading States --- */
+.loading {
+  color: var(--text-muted);
+}
+
+/* --- Badges & Status --- */
+.badge {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.role-badge {
+  background: var(--primary);
+  color: white;
+}
+
+/* --- Modal & Overlay --- */
+.modal,
+.overlay {
+  background-color: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* --- Scrollbars (Webkit) --- */
+body.dark-mode ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+body.dark-mode ::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 6px;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* --- Links --- */
+a {
+  color: var(--primary);
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--primary-hover);
+}
+
+/* --- Container principal --- */
+.dashboard-container,
+.profile-container,
+.layout {
+  background-color: var(--bg-secondary);
+  transition: background-color 0.3s ease;
+}
+
+.dashboard-content,
+.profile-content,
+.layout-content {
+  background-color: var(--bg-secondary);
+}

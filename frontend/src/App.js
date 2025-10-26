@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -27,8 +28,9 @@ import './App.css';
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <div className="app">
+      <ThemeProvider>
+        <AuthProvider>
+          <div className="app">
           <Routes>
             {/* Routes publiques */}
             <Route path="/login" element={<Login />} />
@@ -167,7 +169,8 @@ function App() {
             />
           </Routes>
         </div>
-      </AuthProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </Router>
   );
 }
