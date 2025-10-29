@@ -31,6 +31,7 @@
   "navbar": {
     "dashboard": "Tableau de bord",
     "profile": "Profil",
+    "settings": "Paramètres",
     "logout": "Déconnexion",
     "lightMode": "Mode clair",
     "darkMode": "Mode sombre",

@@ -1,9 +1,9 @@
-import React from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
-import { User, LogOut, Moon, Sun } from 'lucide-react';
+import { User, LogOut, Moon, Sun, Settings, Shield, ChevronRight } from 'lucide-react';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -12,9 +12,14 @@ const Navbar = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
 
-  const toggleLanguage = () => {
-    const newLang = i18n.language === 'fr' ? 'en' : 'fr';
-    i18n.changeLanguage(newLang);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const userMenuRef = useRef(null);
+
+  const toggleLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+    setShowLanguageMenu(false);
   };
 
   const handleLogout = async () => {
@@ -22,50 +27,165 @@ const Navbar = () => {
     navigate('/login');
   };
 
+  // Fermer le menu si on clique en dehors
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setShowUserMenu(false);
+        setShowLanguageMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Détecter le scroll pour l'effet floating
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const getInitials = (username) => {
+    if (!username) return 'U';
+    return username.substring(0, 2).toUpperCase();
+  };
+
   return (
-    <nav className="navbar">
-      <div className="nav-brand" onClick={() => navigate('/dashboard')}>
-        <h2>{t('common.appName')}</h2>
+    <nav className={`navbar ${isScrolled ? 'navbar-scrolled' : ''}`}>
+      <div className="navbar-container">
+        <div className="nav-brand" onClick={() => navigate('/dashboard')}>
+          <h2>{t('common.appName')}</h2>
+        </div>
+
+        <div className="nav-links">
+        <a onClick={() => navigate('/dashboard')} className="nav-link">
+          {t('navbar.dashboard')}
+        </a>
+
+        {user?.role === 'CHEF_PROJET' && (
+          <>
+            <a onClick={() => navigate('/available-questionnaires')} className="nav-link">
+              {t('questionnaire.questionnaires')}
+            </a>
+            <a onClick={() => navigate('/my-responses')} className="nav-link">
+              {t('questionnaire.myResponses')}
+            </a>
+          </>
+        )}
+
+        {user?.role === 'ANALYSTE' && (
+          <>
+            <a onClick={() => navigate('/analyste/submitted-responses')} className="nav-link">
+              {t('analyste.submittedResponses')}
+            </a>
+            <a onClick={() => navigate('/analyste/my-templates')} className="nav-link">
+              {t('template.myTemplates')}
+            </a>
+          </>
+        )}
+
+        {user?.role === 'BUSINESS_OWNER' && (
+          <a onClick={() => navigate('/business-owner/validated-responses')} className="nav-link">
+            {t('businessOwner.validatedResponses')}
+          </a>
+        )}
+
+        {user?.role === 'ADMIN' && (
+          <a onClick={() => navigate('/admin/users')} className="nav-link">
+            {t('admin.userManagement')}
+          </a>
+        )}
       </div>
 
-      <div className="nav-user">
-        <span className="user-name">{user?.username}</span>
+      <div className="nav-user" ref={userMenuRef}>
+        <div className="user-avatar" onClick={() => setShowUserMenu(!showUserMenu)}>
+          <div className="avatar-circle">
+            {getInitials(user?.username)}
+          </div>
+        </div>
 
-        {/* --- Bouton Langue --- */}
-        <button
-          onClick={toggleLanguage}
-          className="btn btn-language btn-icon-only"
-          title={t('navbar.language')}
-        >
-          <span className="language-flag">{i18n.language === 'fr' ? '🇫🇷' : '🇬🇧'}</span>
-        </button>
+        {showUserMenu && (
+          <div className="user-dropdown-menu">
+            <div className="user-info">
+              <div className="user-info-name">{user?.username}</div>
+              <div className="user-info-email">{user?.email}</div>
+            </div>
 
-        {/* --- Bouton Dark Mode --- */}
-        <button
-          onClick={toggleTheme}
-          className="btn btn-theme btn-icon-only"
-          title={isDarkMode ? t('navbar.lightMode') : t('navbar.darkMode')}
-        >
-          {isDarkMode ? <Sun size={20} strokeWidth={2.2} /> : <Moon size={20} strokeWidth={2.2} />}
-        </button>
+            <div className="dropdown-divider"></div>
 
-        {/* --- Bouton Profil --- */}
-        <button
-          onClick={() => navigate('/profile')}
-          className="btn btn-profile btn-icon-only"
-          title={t('navbar.profile')}
-        >
-          <User size={20} strokeWidth={2.2} />
-        </button>
+            <button className="dropdown-item" onClick={() => { navigate('/profile'); setShowUserMenu(false); }}>
+              <User size={18} />
+              <span>{t('navbar.profile')}</span>
+            </button>
 
-        {/* --- Bouton Déconnexion --- */}
-        <button
-          onClick={handleLogout}
-          className="btn btn-logout btn-icon-only"
-          title={t('navbar.logout')}
-        >
-          <LogOut size={20} strokeWidth={2.2} />
-        </button>
+            <button className="dropdown-item" onClick={() => { navigate('/profile'); setShowUserMenu(false); }}>
+              <Settings size={18} />
+              <span>{t('navbar.settings')}</span>
+            </button>
+
+            {user?.role === 'ADMIN' && (
+              <button className="dropdown-item" onClick={() => { navigate('/admin/users'); setShowUserMenu(false); }}>
+                <Shield size={18} />
+                <span>{t('admin.manageUsers')}</span>
+              </button>
+            )}
+
+            <div className="dropdown-divider"></div>
+
+            <button className="dropdown-item" onClick={toggleTheme}>
+              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+              <span>{isDarkMode ? t('navbar.lightMode') : t('navbar.darkMode')}</span>
+            </button>
+
+            <div className="dropdown-item dropdown-submenu" onClick={() => setShowLanguageMenu(!showLanguageMenu)}>
+              <div className="dropdown-item-content">
+                <span className="language-flag-small">{i18n.language === 'fr' ? '🇫🇷' : '🇬🇧'}</span>
+                <span>{t('navbar.language')}</span>
+              </div>
+              <ChevronRight size={18} className={`chevron ${showLanguageMenu ? 'rotated' : ''}`} />
+
+              {showLanguageMenu && (
+                <div className="language-submenu">
+                  <button
+                    className={`language-option ${i18n.language === 'fr' ? 'active' : ''}`}
+                    onClick={(e) => { e.stopPropagation(); toggleLanguage('fr'); }}
+                  >
+                    <span className="language-flag-small">🇫🇷</span>
+                    <span>Français</span>
+                  </button>
+                  <button
+                    className={`language-option ${i18n.language === 'en' ? 'active' : ''}`}
+                    onClick={(e) => { e.stopPropagation(); toggleLanguage('en'); }}
+                  >
+                    <span className="language-flag-small">🇬🇧</span>
+                    <span>English</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="dropdown-divider"></div>
+
+            <button className="dropdown-item dropdown-item-danger" onClick={handleLogout}>
+              <LogOut size={18} />
+              <span>{t('navbar.logout')}</span>
+            </button>
+          </div>
+        )}
+      </div>
       </div>
     </nav>
   );
