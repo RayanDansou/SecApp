@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import questionnaireService from '../../services/questionnaireService';
 import StatusBadge from '../../components/questionnaires/StatusBadge';
 import './ValidatedResponses.css';
@@ -10,6 +11,7 @@ const ValidatedResponses = () => {
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all'); // all, validated, rejected
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadResponses();
@@ -20,7 +22,7 @@ const ValidatedResponses = () => {
       const data = await questionnaireService.getResponses();
       setResponses(data);
     } catch (err) {
-      setError(err.error || 'Erreur lors du chargement des réponses');
+      setError(err.error || t('errors.generic'));
     } finally {
       setLoading(false);
     }
@@ -54,7 +56,7 @@ const ValidatedResponses = () => {
   if (loading) {
     return (
       <div className="validated-responses">
-        <div className="loading">Chargement des réponses...</div>
+        <div className="loading">{t('common.loading')}</div>
       </div>
     );
   }
@@ -63,8 +65,8 @@ const ValidatedResponses = () => {
     <div className="validated-responses">
       <div className="page-header">
         <div className="header-content">
-          <h1>Questionnaires validés</h1>
-          <p className="subtitle">Consultez les résultats des évaluations de sécurité</p>
+          <h1>{t('businessOwner.validatedResponses')}</h1>
+          <p className="subtitle">{t('businessOwner.validatedResponsesSubtitle')}</p>
         </div>
       </div>
 
@@ -73,19 +75,19 @@ const ValidatedResponses = () => {
           className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
           onClick={() => setFilter('all')}
         >
-          Tous ({responses.length})
+          {t('businessOwner.filterAll')} ({responses.length})
         </button>
         <button
           className={`filter-btn ${filter === 'validated' ? 'active' : ''}`}
           onClick={() => setFilter('validated')}
         >
-          Validés ({responses.filter(r => r.status === 'VALIDE').length})
+          {t('businessOwner.filterValidated')} ({responses.filter(r => r.status === 'VALIDE').length})
         </button>
         <button
           className={`filter-btn ${filter === 'rejected' ? 'active' : ''}`}
           onClick={() => setFilter('rejected')}
         >
-          Rejetés ({responses.filter(r => r.status === 'REJETE').length})
+          {t('analyste.filterRejected')} ({responses.filter(r => r.status === 'REJETE').length})
         </button>
       </div>
 
@@ -94,8 +96,8 @@ const ValidatedResponses = () => {
       {filteredResponses.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">📋</div>
-          <h2>Aucune réponse</h2>
-          <p>Aucune réponse ne correspond à ce filtre</p>
+          <h2>{t('businessOwner.noValidatedResponses')}</h2>
+          <p>{t('businessOwner.noValidatedResponsesMessage')}</p>
         </div>
       ) : (
         <div className="responses-list">
@@ -110,7 +112,7 @@ const ValidatedResponses = () => {
 
               <div className="card-body">
                 <div className="project-info">
-                  <span className="project-label">Chef de projet:</span>
+                  <span className="project-label">{t('analyste.projectManager', { defaultValue: 'Chef de projet' })}:</span>
                   <span className="project-name">
                     {response.responder.first_name} {response.responder.last_name}
                   </span>
@@ -118,13 +120,13 @@ const ValidatedResponses = () => {
 
                 <div className="card-meta">
                   <div className="meta-row">
-                    <span className="meta-label">Soumis le:</span>
+                    <span className="meta-label">{t('questionnaire.submittedOn')}:</span>
                     <span className="meta-value">
                       {response.submitted_at ? formatDate(response.submitted_at) : '-'}
                     </span>
                   </div>
                   <div className="meta-row">
-                    <span className="meta-label">Analysé par:</span>
+                    <span className="meta-label">{t('businessOwner.analyzedBy', { defaultValue: 'Analysé par' })}:</span>
                     <span className="meta-value">
                       {response.questionnaire.created_by?.first_name} {response.questionnaire.created_by?.last_name}
                     </span>
@@ -134,7 +136,7 @@ const ValidatedResponses = () => {
 
               <div className="card-actions">
                 <button onClick={() => handleViewResponse(response.id)} className="btn-view">
-                  Voir les détails
+                  {t('questionnaire.viewDetails')}
                 </button>
               </div>
             </div>

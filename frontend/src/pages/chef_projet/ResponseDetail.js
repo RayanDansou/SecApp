@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import questionnaireService from '../../services/questionnaireService';
 import StatusBadge from '../../components/questionnaires/StatusBadge';
 import StatusHistory from '../../components/questionnaires/StatusHistory';
@@ -10,6 +11,7 @@ import './ResponseDetail.css';
 const ResponseDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [response, setResponse] = useState(null);
   const [documents, setDocuments] = useState([]);
@@ -26,7 +28,7 @@ const ResponseDetail = () => {
       setResponse(data);
       setDocuments(data.documents || []);
     } catch (err) {
-      setError(err.error || 'Erreur lors du chargement de la réponse');
+      setError(err.error || t('errors.generic'));
     } finally {
       setLoading(false);
     }
@@ -45,7 +47,7 @@ const ResponseDetail = () => {
   if (loading) {
     return (
       <div className="response-detail">
-        <div className="loading">Chargement...</div>
+        <div className="loading">{t('common.loading')}</div>
       </div>
     );
   }
@@ -53,9 +55,9 @@ const ResponseDetail = () => {
   if (!response) {
     return (
       <div className="response-detail">
-        <div className="error-message">Réponse non trouvée</div>
+        <div className="error-message">{t('errors.notFound')}</div>
         <button onClick={() => navigate('/my-responses')} className="btn-back">
-          Retour à mes réponses
+          {t('common.back')}
         </button>
       </div>
     );
@@ -65,7 +67,7 @@ const ResponseDetail = () => {
     <div className="response-detail">
       <div className="page-header">
         <button onClick={() => navigate('/my-responses')} className="btn-back">
-          ← Retour
+          ← {t('common.back')}
         </button>
         <div className="header-content">
           <h1>{response.questionnaire.title}</h1>
@@ -76,53 +78,53 @@ const ResponseDetail = () => {
       {error && <div className="error-message">{error}</div>}
 
       <div className="response-info">
-        <h2>Informations</h2>
+        <h2>{t('common.information', { defaultValue: 'Informations' })}</h2>
         <div className="info-grid">
           <div className="info-item">
-            <span className="info-label">Créé par:</span>
+            <span className="info-label">{t('questionnaire.createdBy')}:</span>
             <span className="info-value">
               {response.responder.first_name} {response.responder.last_name}
             </span>
           </div>
           <div className="info-item">
-            <span className="info-label">Date de création:</span>
+            <span className="info-label">{t('common.date')}:</span>
             <span className="info-value">{formatDate(response.created_at)}</span>
           </div>
           {response.submitted_at && (
             <div className="info-item">
-              <span className="info-label">Date de soumission:</span>
+              <span className="info-label">{t('questionnaire.submittedOn')}:</span>
               <span className="info-value">{formatDate(response.submitted_at)}</span>
             </div>
           )}
           <div className="info-item">
-            <span className="info-label">Dernière modification:</span>
+            <span className="info-label">{t('questionnaire.lastModified')}:</span>
             <span className="info-value">{formatDate(response.updated_at)}</span>
           </div>
         </div>
       </div>
 
       <div className="questionnaire-info">
-        <h2>À propos du questionnaire</h2>
+        <h2>{t('questionnaire.aboutQuestionnaire', { defaultValue: 'À propos du questionnaire' })}</h2>
         {response.questionnaire.description && (
           <p className="questionnaire-description">{response.questionnaire.description}</p>
         )}
         <div className="questionnaire-meta">
-          <span>Créé par: </span>
+          <span>{t('questionnaire.createdBy')}: </span>
           <strong>
             {response.questionnaire.created_by?.first_name} {response.questionnaire.created_by?.last_name}
           </strong>
           <span className="separator">•</span>
-          <span>{response.questionnaire.questions?.length || 0} questions</span>
+          <span>{t('questionnaire.totalQuestions', { count: response.questionnaire.questions?.length || 0 })}</span>
         </div>
       </div>
 
       <div className="answers-section">
-        <h2>Réponses</h2>
+        <h2>{t('questionnaire.answers')}</h2>
         {response.answers && response.answers.length > 0 ? (
           response.answers.map((answer, index) => (
             <div key={answer.id} className="answer-item">
               <div className="answer-header">
-                <span className="answer-number">Question {index + 1}</span>
+                <span className="answer-number">{t('questionnaire.questionNumber', { number: index + 1 })}</span>
                 {answer.question?.is_required && <span className="required-mark">*</span>}
               </div>
               <div className="question-text">{answer.question?.text}</div>
@@ -130,7 +132,7 @@ const ResponseDetail = () => {
             </div>
           ))
         ) : (
-          <p className="no-answers">Aucune réponse enregistrée</p>
+          <p className="no-answers">{t('questionnaire.noResponses')}</p>
         )}
       </div>
 
@@ -140,7 +142,7 @@ const ResponseDetail = () => {
         onDelete={() => {}}
         canUpload={false}
         canDelete={false}
-        title="Documents d'architecture technique"
+        title={t('documents.technicalDocuments', { defaultValue: 'Documents d\'architecture technique' })}
       />
 
       {response.questionnaire.documents && response.questionnaire.documents.length > 0 && (
@@ -150,7 +152,7 @@ const ResponseDetail = () => {
           onDelete={() => {}}
           canUpload={false}
           canDelete={false}
-          title="Documents de référence du questionnaire"
+          title={t('documents.referenceDocuments')}
         />
       )}
 
@@ -161,7 +163,7 @@ const ResponseDetail = () => {
       {response.status === 'BROUILLON' && (
         <div className="actions">
           <button onClick={() => navigate(`/response/${response.id}/edit`)} className="btn-edit">
-            Continuer à remplir
+            {t('questionnaire.continueQuestionnaire')}
           </button>
         </div>
       )}

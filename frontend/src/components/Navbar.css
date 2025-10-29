@@ -107,6 +107,33 @@ body.dark-mode .btn-logout:hover {
   background-color: rgba(239, 68, 68, 0.2);
 }
 
+/* --- Bouton Langue --- */
+.btn-language {
+  color: #10b981;
+  border: 2px solid #10b981;
+}
+
+.btn-language:hover {
+  background-color: rgba(16, 185, 129, 0.1);
+  transform: scale(1.1);
+}
+
+body.dark-mode .btn-language {
+  color: #34d399;
+  border-color: #34d399;
+}
+
+body.dark-mode .btn-language:hover {
+  background-color: rgba(52, 211, 153, 0.2);
+}
+
+.language-flag {
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* --- Bouton Theme Toggle --- */
 .btn-theme {
   color: #f59e0b;

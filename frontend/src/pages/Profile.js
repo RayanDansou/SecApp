@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import authService from '../services/authService';
 import './Profile.css';
 
 const Profile = () => {
+  const { t } = useTranslation();
   const { user, updateProfile } = useAuth();
 
   // État pour les informations du profil
@@ -74,9 +76,9 @@ const Profile = () => {
     const errors = {};
 
     if (!profileData.email.trim()) {
-      errors.email = "L'email est requis";
+      errors.email = t('errors.formIncomplete');
     } else if (!/\S+@\S+\.\S+/.test(profileData.email)) {
-      errors.email = "L'email n'est pas valide";
+      errors.email = t('errors.validationError');
     }
 
     setProfileErrors(errors);
@@ -88,19 +90,19 @@ const Profile = () => {
     const errors = {};
 
     if (!passwordData.old_password) {
-      errors.old_password = "L'ancien mot de passe est requis";
+      errors.old_password = t('errors.formIncomplete');
     }
 
     if (!passwordData.new_password) {
-      errors.new_password = "Le nouveau mot de passe est requis";
+      errors.new_password = t('errors.formIncomplete');
     } else if (passwordData.new_password.length < 8) {
-      errors.new_password = "Le mot de passe doit contenir au moins 8 caractères";
+      errors.new_password = t('errors.validationError');
     }
 
     if (!passwordData.new_password2) {
-      errors.new_password2 = "La confirmation est requise";
+      errors.new_password2 = t('errors.formIncomplete');
     } else if (passwordData.new_password !== passwordData.new_password2) {
-      errors.new_password2 = "Les mots de passe ne correspondent pas";
+      errors.new_password2 = t('errors.validationError');
     }
 
     setPasswordErrors(errors);
@@ -123,7 +125,7 @@ const Profile = () => {
       const result = await updateProfile(profileData);
 
       if (result.success) {
-        setProfileSuccess('Profil mis à jour avec succès !');
+        setProfileSuccess(t('profile.profileUpdated'));
       } else {
         if (result.error) {
           const errors = {};
@@ -136,11 +138,11 @@ const Profile = () => {
           });
           setProfileErrors(errors);
         } else {
-          setProfileErrors({ general: 'Erreur lors de la mise à jour du profil' });
+          setProfileErrors({ general: t('errors.generic') });
         }
       }
     } catch (err) {
-      setProfileErrors({ general: 'Une erreur est survenue' });
+      setProfileErrors({ general: t('errors.generic') });
     } finally {
       setLoadingProfile(false);
     }
@@ -165,7 +167,7 @@ const Profile = () => {
         passwordData.new_password2
       );
 
-      setPasswordSuccess('Mot de passe modifié avec succès !');
+      setPasswordSuccess(t('profile.passwordChanged'));
       setPasswordData({
         old_password: '',
         new_password: '',
@@ -179,7 +181,7 @@ const Profile = () => {
       } else if (error.new_password) {
         setPasswordErrors({ new_password: Array.isArray(error.new_password) ? error.new_password[0] : error.new_password });
       } else {
-        setPasswordErrors({ general: 'Erreur lors du changement de mot de passe' });
+        setPasswordErrors({ general: t('errors.generic') });
       }
     } finally {
       setLoadingPassword(false);
@@ -187,40 +189,34 @@ const Profile = () => {
   };
 
   const getRoleDisplayName = (role) => {
-    const roleNames = {
-      'CHEF_PROJET': 'Chef de Projet',
-      'ANALYSTE': 'Analyste Sécurité',
-      'BUSINESS_OWNER': 'Business Owner',
-      'ADMIN': 'Administrateur'
-    };
-    return roleNames[role] || role;
+    return t(`roles.${role}`, role);
   };
 
   return (
     <div className="profile-container">
       <div className="profile-content">
         <div className="profile-header">
-          <h1>Mon Profil</h1>
-          <p>Gérez vos informations personnelles et votre sécurité</p>
+          <h1>{t('profile.title')}</h1>
+          <p>{t('profile.subtitle')}</p>
         </div>
 
         <div className="profile-grid">
           {/* Section Informations du compte */}
           <div className="profile-card">
             <div className="card-header">
-              <h2>Informations du compte</h2>
+              <h2>{t('profile.accountInfo')}</h2>
             </div>
             <div className="card-body">
               <div className="info-item">
-                <span className="info-label">Nom d'utilisateur</span>
+                <span className="info-label">{t('auth.username')}</span>
                 <span className="info-value">{user?.username}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">Rôle</span>
+                <span className="info-label">{t('auth.role')}</span>
                 <span className="role-badge">{getRoleDisplayName(user?.role)}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">Date d'inscription</span>
+                <span className="info-label">{t('profile.joinedOn')}</span>
                 <span className="info-value">
                   {user?.date_joined ? new Date(user.date_joined).toLocaleDateString('fr-FR') : 'N/A'}
                 </span>
@@ -231,7 +227,7 @@ const Profile = () => {
           {/* Section Modifier les informations personnelles */}
           <div className="profile-card">
             <div className="card-header">
-              <h2>Informations personnelles</h2>
+              <h2>{t('profile.personalInfo')}</h2>
             </div>
             <div className="card-body">
               {profileSuccess && (
@@ -248,7 +244,7 @@ const Profile = () => {
 
               <form onSubmit={handleProfileSubmit}>
                 <div className="form-group">
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email">{t('auth.email')}</label>
                   <input
                     type="email"
                     id="email"
@@ -264,7 +260,7 @@ const Profile = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="first_name">Prénom</label>
+                  <label htmlFor="first_name">{t('auth.firstName')}</label>
                   <input
                     type="text"
                     id="first_name"
@@ -272,12 +268,12 @@ const Profile = () => {
                     value={profileData.first_name}
                     onChange={handleProfileChange}
                     disabled={loadingProfile}
-                    placeholder="Votre prénom"
+                    placeholder={t('auth.firstName')}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="last_name">Nom</label>
+                  <label htmlFor="last_name">{t('auth.lastName')}</label>
                   <input
                     type="text"
                     id="last_name"
@@ -285,7 +281,7 @@ const Profile = () => {
                     value={profileData.last_name}
                     onChange={handleProfileChange}
                     disabled={loadingProfile}
-                    placeholder="Votre nom"
+                    placeholder={t('auth.lastName')}
                   />
                 </div>
 
@@ -294,7 +290,7 @@ const Profile = () => {
                   className="btn btn-primary"
                   disabled={loadingProfile}
                 >
-                  {loadingProfile ? 'Mise à jour...' : 'Mettre à jour le profil'}
+                  {loadingProfile ? t('common.loading') : t('profile.updateProfile')}
                 </button>
               </form>
             </div>
@@ -303,7 +299,7 @@ const Profile = () => {
           {/* Section Changer le mot de passe */}
           <div className="profile-card">
             <div className="card-header">
-              <h2>Changer le mot de passe</h2>
+              <h2>{t('profile.changePassword')}</h2>
             </div>
             <div className="card-body">
               {passwordSuccess && (
@@ -320,7 +316,7 @@ const Profile = () => {
 
               <form onSubmit={handlePasswordSubmit}>
                 <div className="form-group">
-                  <label htmlFor="old_password">Ancien mot de passe</label>
+                  <label htmlFor="old_password">{t('profile.currentPassword')}</label>
                   <input
                     type="password"
                     id="old_password"
@@ -336,7 +332,7 @@ const Profile = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="new_password">Nouveau mot de passe</label>
+                  <label htmlFor="new_password">{t('profile.newPassword')}</label>
                   <input
                     type="password"
                     id="new_password"
@@ -344,7 +340,7 @@ const Profile = () => {
                     value={passwordData.new_password}
                     onChange={handlePasswordChange}
                     disabled={loadingPassword}
-                    placeholder="Minimum 8 caractères"
+                    placeholder={t('auth.password')}
                     className={passwordErrors.new_password ? 'input-error' : ''}
                   />
                   {passwordErrors.new_password && (
@@ -353,7 +349,7 @@ const Profile = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="new_password2">Confirmer le nouveau mot de passe</label>
+                  <label htmlFor="new_password2">{t('auth.confirmPassword')}</label>
                   <input
                     type="password"
                     id="new_password2"
@@ -361,7 +357,7 @@ const Profile = () => {
                     value={passwordData.new_password2}
                     onChange={handlePasswordChange}
                     disabled={loadingPassword}
-                    placeholder="Confirmer le mot de passe"
+                    placeholder={t('auth.confirmPassword')}
                     className={passwordErrors.new_password2 ? 'input-error' : ''}
                   />
                   {passwordErrors.new_password2 && (
@@ -374,7 +370,7 @@ const Profile = () => {
                   className="btn btn-primary"
                   disabled={loadingPassword}
                 >
-                  {loadingPassword ? 'Modification...' : 'Changer le mot de passe'}
+                  {loadingPassword ? t('common.loading') : t('profile.changePassword')}
                 </button>
               </form>
             </div>

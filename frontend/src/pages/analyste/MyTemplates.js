@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import questionnaireService from '../../services/questionnaireService';
 import StatusBadge from '../../components/questionnaires/StatusBadge';
 import './MyTemplates.css';
@@ -10,6 +11,7 @@ const MyTemplates = () => {
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all'); // all, active, inactive
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadTemplates();
@@ -20,7 +22,7 @@ const MyTemplates = () => {
       const data = await questionnaireService.getQuestionnaires();
       setTemplates(data);
     } catch (err) {
-      setError(err.error || 'Erreur lors du chargement des templates');
+      setError(err.error || t('errors.generic'));
     } finally {
       setLoading(false);
     }
@@ -33,13 +35,13 @@ const MyTemplates = () => {
         t.id === id ? { ...t, is_active: !currentStatus } : t
       ));
     } catch (err) {
-      setError(err.error || 'Erreur lors de la modification du template');
+      setError(err.error || t('errors.generic'));
       setTimeout(() => setError(''), 3000);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce template ?')) {
+    if (!window.confirm(t('template.confirmDelete'))) {
       return;
     }
 
@@ -47,7 +49,7 @@ const MyTemplates = () => {
       await questionnaireService.deleteQuestionnaire(id);
       setTemplates(templates.filter(t => t.id !== id));
     } catch (err) {
-      setError(err.error || 'Erreur lors de la suppression du template');
+      setError(err.error || t('errors.generic'));
       setTimeout(() => setError(''), 3000);
     }
   };
@@ -72,7 +74,7 @@ const MyTemplates = () => {
   if (loading) {
     return (
       <div className="my-templates">
-        <div className="loading">Chargement des templates...</div>
+        <div className="loading">{t('common.loading')}</div>
       </div>
     );
   }
@@ -81,14 +83,14 @@ const MyTemplates = () => {
     <div className="my-templates">
       <div className="page-header">
         <button onClick={() => navigate('/dashboard')} className="btn-back">
-          ← Retour au tableau de bord
+          ← {t('common.back')}
         </button>
         <div className="header-content">
-          <h1>Mes templates</h1>
-          <p className="subtitle">Gérez vos questionnaires de sécurité</p>
+          <h1>{t('template.myTemplates')}</h1>
+          <p className="subtitle">{t('template.manageTemplates', { defaultValue: 'Gérez vos questionnaires de sécurité' })}</p>
         </div>
         <button onClick={() => navigate('/analyste/create-template')} className="btn-create">
-          + Créer un template
+          + {t('template.createTemplate')}
         </button>
       </div>
 
@@ -97,19 +99,19 @@ const MyTemplates = () => {
           className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
           onClick={() => setFilter('all')}
         >
-          Tous ({templates.length})
+          {t('common.all')} ({templates.length})
         </button>
         <button
           className={`filter-btn ${filter === 'active' ? 'active' : ''}`}
           onClick={() => setFilter('active')}
         >
-          Actifs ({templates.filter(t => t.is_active).length})
+          {t('template.active')} ({templates.filter(t => t.is_active).length})
         </button>
         <button
           className={`filter-btn ${filter === 'inactive' ? 'active' : ''}`}
           onClick={() => setFilter('inactive')}
         >
-          Inactifs ({templates.filter(t => !t.is_active).length})
+          {t('template.inactive')} ({templates.filter(t => !t.is_active).length})
         </button>
       </div>
 
@@ -118,14 +120,14 @@ const MyTemplates = () => {
       {filteredTemplates.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">📋</div>
-          <h2>Aucun template</h2>
+          <h2>{t('template.noTemplates')}</h2>
           <p>
             {filter === 'all'
-              ? "Vous n'avez pas encore créé de template"
-              : `Aucun template ${filter === 'active' ? 'actif' : 'inactif'}`}
+              ? t('template.noTemplatesMessage', { defaultValue: "Vous n'avez pas encore créé de template" })
+              : `${t('template.noTemplates')} ${filter === 'active' ? t('template.active').toLowerCase() : t('template.inactive').toLowerCase()}`}
           </p>
           <button onClick={() => navigate('/analyste/create-template')} className="btn-primary">
-            Créer mon premier template
+            {t('template.createFirstTemplate', { defaultValue: 'Créer mon premier template' })}
           </button>
         </div>
       ) : (
@@ -137,9 +139,9 @@ const MyTemplates = () => {
                   <h3>{template.title}</h3>
                   <div className="status-indicator">
                     {template.is_active ? (
-                      <span className="badge badge-active">Actif</span>
+                      <span className="badge badge-active">{t('template.active')}</span>
                     ) : (
-                      <span className="badge badge-inactive">Inactif</span>
+                      <span className="badge badge-inactive">{t('template.inactive')}</span>
                     )}
                   </div>
                 </div>
@@ -152,20 +154,20 @@ const MyTemplates = () => {
 
                 <div className="card-meta">
                   <div className="meta-row">
-                    <span className="meta-label">Questions:</span>
+                    <span className="meta-label">{t('questionnaire.questions')}:</span>
                     <span className="meta-value">{template.question_count || 0}</span>
                   </div>
                   <div className="meta-row">
-                    <span className="meta-label">Documents:</span>
+                    <span className="meta-label">{t('documents.documents')}:</span>
                     <span className="meta-value">{template.document_count || template.documents?.length || 0}</span>
                   </div>
                   <div className="meta-row">
-                    <span className="meta-label">Créé le:</span>
+                    <span className="meta-label">{t('common.date')}:</span>
                     <span className="meta-value">{formatDate(template.created_at)}</span>
                   </div>
                   {template.updated_at && (
                     <div className="meta-row">
-                      <span className="meta-label">Modifié le:</span>
+                      <span className="meta-label">{t('questionnaire.lastModified')}:</span>
                       <span className="meta-value">{formatDate(template.updated_at)}</span>
                     </div>
                   )}
@@ -177,13 +179,13 @@ const MyTemplates = () => {
                   onClick={() => handleToggleActive(template.id, template.is_active)}
                   className={`btn-toggle ${template.is_active ? 'btn-deactivate' : 'btn-activate'}`}
                 >
-                  {template.is_active ? 'Désactiver' : 'Activer'}
+                  {template.is_active ? t('template.deactivate') : t('template.activate')}
                 </button>
                 <button
                   onClick={() => handleDelete(template.id)}
                   className="btn-delete"
                 >
-                  Supprimer
+                  {t('common.delete')}
                 </button>
               </div>
             </div>

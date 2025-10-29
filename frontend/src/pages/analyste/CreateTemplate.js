@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import questionnaireService from '../../services/questionnaireService';
 import DocumentsManager from '../../components/questionnaires/DocumentsManager';
 import './CreateTemplate.css';
 
 const CreateTemplate = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -47,7 +49,7 @@ const CreateTemplate = () => {
 
   const removeQuestion = (index) => {
     if (questions.length === 1) {
-      setError('Le questionnaire doit contenir au moins une question');
+      setError(t('template.atLeastOneQuestion'));
       setTimeout(() => setError(''), 3000);
       return;
     }
@@ -78,18 +80,18 @@ const CreateTemplate = () => {
 
   const validateForm = () => {
     if (!formData.title.trim()) {
-      setError('Le titre est obligatoire');
+      setError(t('template.titleRequired'));
       return false;
     }
 
     if (formData.title.trim().length < 3) {
-      setError('Le titre doit contenir au moins 3 caractères');
+      setError(t('template.titleMinLength'));
       return false;
     }
 
     const emptyQuestions = questions.filter(q => !q.text.trim());
     if (emptyQuestions.length > 0) {
-      setError('Toutes les questions doivent avoir un texte');
+      setError(t('template.allQuestionsRequired'));
       return false;
     }
 
@@ -118,14 +120,14 @@ const CreateTemplate = () => {
 
       const createdTemplate = await questionnaireService.createQuestionnaire(templateData);
       setCreatedTemplateId(createdTemplate.id);
-      setSuccess('Template créé avec succès ! Redirection...');
+      setSuccess(t('template.templateCreated') + ' ! Redirection...');
 
       // Redirection vers la page des templates
       setTimeout(() => {
         navigate('/analyste/my-templates');
       }, 1500);
     } catch (err) {
-      setError(err.error || 'Erreur lors de la création du template');
+      setError(err.error || t('errors.generic'));
     } finally {
       setLoading(false);
     }
@@ -133,13 +135,13 @@ const CreateTemplate = () => {
 
   const handleDocumentUpload = async (file) => {
     if (!createdTemplateId) {
-      throw new Error('Veuillez d\'abord créer le template');
+      throw new Error(t('template.createFirst', { defaultValue: 'Veuillez d\'abord créer le template' }));
     }
 
     try {
       const doc = await questionnaireService.uploadQuestionnaireDocument(createdTemplateId, file);
       setDocuments(prev => [...prev, doc]);
-      setSuccess('Document ajouté avec succès');
+      setSuccess(t('documents.documentUploaded'));
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
       throw err;
@@ -150,7 +152,7 @@ const CreateTemplate = () => {
     try {
       await questionnaireService.deleteQuestionnaireDocument(createdTemplateId, docId);
       setDocuments(prev => prev.filter(d => d.id !== docId));
-      setSuccess('Document supprimé');
+      setSuccess(t('documents.documentDeleted'));
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
       throw err;
@@ -165,10 +167,10 @@ const CreateTemplate = () => {
     <div className="create-template">
       <div className="page-header">
         <button onClick={() => navigate('/dashboard')} className="btn-back">
-          ← Retour
+          ← {t('common.back')}
         </button>
-        <h1>Créer un questionnaire template</h1>
-        <p className="subtitle">Définissez les questions de sécurité pour les chefs de projet</p>
+        <h1>{t('template.createTemplate')}</h1>
+        <p className="subtitle">{t('template.createTemplateSubtitle', { defaultValue: 'Définissez les questions de sécurité pour les chefs de projet' })}</p>
       </div>
 
       {error && <div className="error-message">{error}</div>}
@@ -177,11 +179,11 @@ const CreateTemplate = () => {
       {!createdTemplateId ? (
         <form onSubmit={handleSubmit} className="template-form">
           <div className="form-section">
-            <h2>Informations du template</h2>
+            <h2>{t('template.templateInfo')}</h2>
 
             <div className="form-group">
               <label htmlFor="title">
-                Titre du questionnaire <span className="required">*</span>
+                {t('template.templateTitle')} <span className="required">*</span>
               </label>
               <input
                 type="text"
@@ -189,20 +191,20 @@ const CreateTemplate = () => {
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
-                placeholder="Ex: Évaluation de sécurité applicative"
+                placeholder={t('template.titlePlaceholder', { defaultValue: 'Ex: Évaluation de sécurité applicative' })}
                 required
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="description">Description</label>
+              <label htmlFor="description">{t('template.templateDescription')}</label>
               <textarea
                 id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
                 rows="3"
-                placeholder="Description du questionnaire et de son objectif..."
+                placeholder={t('template.descriptionPlaceholder', { defaultValue: 'Description du questionnaire et de son objectif...' })}
               />
             </div>
 
@@ -214,16 +216,16 @@ const CreateTemplate = () => {
                   checked={formData.is_active}
                   onChange={handleInputChange}
                 />
-                <span>Template actif (visible par les chefs de projet)</span>
+                <span>{t('template.isActive')}</span>
               </label>
             </div>
           </div>
 
           <div className="form-section">
             <div className="section-header">
-              <h2>Questions ({questions.length})</h2>
+              <h2>{t('questionnaire.questions')} ({questions.length})</h2>
               <button type="button" onClick={addQuestion} className="btn-add">
-                + Ajouter une question
+                + {t('template.addQuestion')}
               </button>
             </div>
 
@@ -231,14 +233,14 @@ const CreateTemplate = () => {
               {questions.map((question, index) => (
                 <div key={index} className="question-item">
                   <div className="question-header">
-                    <span className="question-number">Question {index + 1}</span>
+                    <span className="question-number">{t('questionnaire.questionNumber', { number: index + 1 })}</span>
                     <div className="question-actions">
                       <button
                         type="button"
                         onClick={() => moveQuestion(index, 'up')}
                         disabled={index === 0}
                         className="btn-icon"
-                        title="Déplacer vers le haut"
+                        title={t('template.moveUp')}
                       >
                         ↑
                       </button>
@@ -247,7 +249,7 @@ const CreateTemplate = () => {
                         onClick={() => moveQuestion(index, 'down')}
                         disabled={index === questions.length - 1}
                         className="btn-icon"
-                        title="Déplacer vers le bas"
+                        title={t('template.moveDown')}
                       >
                         ↓
                       </button>
@@ -255,7 +257,7 @@ const CreateTemplate = () => {
                         type="button"
                         onClick={() => removeQuestion(index)}
                         className="btn-icon btn-delete"
-                        title="Supprimer"
+                        title={t('template.removeQuestion')}
                       >
                         🗑️
                       </button>
@@ -263,11 +265,11 @@ const CreateTemplate = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Texte de la question</label>
+                    <label>{t('template.questionText')}</label>
                     <textarea
                       value={question.text}
                       onChange={(e) => handleQuestionChange(index, 'text', e.target.value)}
-                      placeholder="Ex: Le système est-il accessible depuis Internet ?"
+                      placeholder={t('template.questionPlaceholder', { defaultValue: 'Ex: Le système est-il accessible depuis Internet ?' })}
                       rows="3"
                       required
                     />
@@ -280,7 +282,7 @@ const CreateTemplate = () => {
                         checked={question.is_required}
                         onChange={(e) => handleQuestionChange(index, 'is_required', e.target.checked)}
                       />
-                      <span>Question obligatoire</span>
+                      <span>{t('template.isRequired')}</span>
                     </label>
                   </div>
                 </div>
@@ -290,10 +292,10 @@ const CreateTemplate = () => {
 
           <div className="form-actions">
             <button type="button" onClick={() => navigate('/dashboard')} className="btn-secondary">
-              Annuler
+              {t('common.cancel')}
             </button>
             <button type="submit" disabled={loading} className="btn-primary">
-              {loading ? 'Création...' : 'Créer le template'}
+              {loading ? t('template.creating') : t('template.createTemplateBtn')}
             </button>
           </div>
         </form>
@@ -301,8 +303,8 @@ const CreateTemplate = () => {
         <div className="template-created">
           <div className="success-card">
             <div className="success-icon">✓</div>
-            <h2>Template créé avec succès !</h2>
-            <p>Vous pouvez maintenant ajouter des documents de référence (optionnel)</p>
+            <h2>{t('template.templateCreated')} !</h2>
+            <p>{t('template.templateCreatedMessage')}</p>
           </div>
 
           <DocumentsManager
@@ -311,12 +313,12 @@ const CreateTemplate = () => {
             onDelete={handleDocumentDelete}
             canUpload={true}
             canDelete={true}
-            title="Documents de référence"
+            title={t('documents.referenceDocuments')}
           />
 
           <div className="form-actions">
             <button onClick={handleFinish} className="btn-primary">
-              Terminer
+              {t('template.finish')}
             </button>
           </div>
         </div>

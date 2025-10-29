@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import questionnaireService from '../services/questionnaireService';
 import './Dashboard.css';
 
 const Dashboard = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [recentTemplates, setRecentTemplates] = useState([]);
@@ -34,13 +36,7 @@ const Dashboard = () => {
   };
 
   const getRoleDisplayName = (role) => {
-    const roleNames = {
-      'CHEF_PROJET': 'Chef de Projet',
-      'ANALYSTE': 'Analyste Sécurité',
-      'BUSINESS_OWNER': 'Business Owner',
-      'ADMIN': 'Administrateur'
-    };
-    return roleNames[role] || role;
+    return t(`roles.${role}`, role);
   };
 
   const formatDate = (dateString) => {
@@ -52,15 +48,15 @@ const Dashboard = () => {
   };
 
   const getStatusLabel = (status) => {
-    const labels = {
-      'BROUILLON': 'Brouillon',
-      'SOUMIS': 'Soumis',
-      'EN_ATTENTE': 'En attente',
-      'EN_VALIDATION': 'En validation',
-      'VALIDE': 'Validé',
-      'REJETE': 'Rejeté'
+    const statusMap = {
+      'BROUILLON': 'draft',
+      'SOUMIS': 'submitted',
+      'EN_ATTENTE': 'pending',
+      'EN_VALIDATION': 'in_analysis',
+      'VALIDE': 'validated',
+      'REJETE': 'rejected'
     };
-    return labels[status] || status;
+    return t(`status.${statusMap[status] || status.toLowerCase()}`, status);
   };
 
   const renderRoleSpecificCards = () => {
@@ -69,18 +65,18 @@ const Dashboard = () => {
         return (
           <>
             <div className="card">
-              <h3>Questionnaires disponibles</h3>
-              <p>Consultez les questionnaires de sécurité disponibles</p>
+              <h3>{t('dashboard.chefProjet.availableQuestionnaires')}</h3>
+              <p>{t('questionnaire.availableQuestionnaires')}</p>
               <button className="btn btn-primary" onClick={() => navigate('/available-questionnaires')}>
-                Voir les questionnaires
+                {t('questionnaire.viewDetails')}
               </button>
             </div>
 
             <div className="card">
-              <h3>Mes réponses</h3>
-              <p>Gérez vos questionnaires remplis et leur statut</p>
+              <h3>{t('dashboard.chefProjet.myResponses')}</h3>
+              <p>{t('questionnaire.myResponses')}</p>
               <button className="btn btn-primary" onClick={() => navigate('/my-responses')}>
-                Mes questionnaires
+                {t('questionnaire.myResponses')}
               </button>
             </div>
           </>
@@ -90,26 +86,26 @@ const Dashboard = () => {
         return (
           <>
             <div className="card">
-              <h3>Réponses soumises</h3>
-              <p>Consultez et validez les questionnaires soumis</p>
+              <h3>{t('dashboard.analyste.submittedResponses')}</h3>
+              <p>{t('analyste.submittedResponsesSubtitle')}</p>
               <button className="btn btn-primary" onClick={() => navigate('/analyste/submitted-responses')}>
-                Voir les réponses
+                {t('analyste.viewResponse')}
               </button>
             </div>
 
             <div className="card">
-              <h3>Créer un template</h3>
-              <p>Créez de nouveaux questionnaires de sécurité</p>
+              <h3>{t('dashboard.analyste.createTemplate')}</h3>
+              <p>{t('template.createTemplate')}</p>
               <button className="btn btn-primary" onClick={() => navigate('/analyste/create-template')}>
-                Créer un questionnaire
+                {t('questionnaire.createQuestionnaire')}
               </button>
             </div>
 
             <div className="card">
-              <h3>Mes templates</h3>
-              <p>Gérez vos templates créés</p>
+              <h3>{t('dashboard.analyste.myTemplates')}</h3>
+              <p>{t('template.myTemplates')}</p>
               <button className="btn btn-primary" onClick={() => navigate('/analyste/my-templates')}>
-                Voir mes templates
+                {t('dashboard.analyste.myTemplates')}
               </button>
             </div>
           </>
@@ -118,10 +114,10 @@ const Dashboard = () => {
       case 'BUSINESS_OWNER':
         return (
           <div className="card">
-            <h3>Questionnaires validés</h3>
-            <p>Consultez les résultats des évaluations de sécurité</p>
+            <h3>{t('dashboard.businessOwner.validatedResponses')}</h3>
+            <p>{t('businessOwner.validatedResponsesSubtitle')}</p>
             <button className="btn btn-primary" onClick={() => navigate('/business-owner/validated-responses')}>
-              Voir les résultats
+              {t('dashboard.businessOwner.viewAll')}
             </button>
           </div>
         );
@@ -135,7 +131,7 @@ const Dashboard = () => {
     if (loading) {
       return (
         <div className="recent-section">
-          <p className="loading-text">Chargement...</p>
+          <p className="loading-text">{t('common.loading')}</p>
         </div>
       );
     }
@@ -146,9 +142,9 @@ const Dashboard = () => {
           {recentTemplates.length > 0 && (
             <div className="recent-section">
               <div className="recent-header">
-                <h2>Derniers templates créés</h2>
+                <h2>{t('dashboard.analyste.latestTemplates')}</h2>
                 <button className="btn-link" onClick={() => navigate('/analyste/my-templates')}>
-                  Voir tous →
+                  {t('dashboard.businessOwner.viewAll')} →
                 </button>
               </div>
               <div className="recent-items">
@@ -157,16 +153,16 @@ const Dashboard = () => {
                     <div className="item-header">
                       <h4>{template.title}</h4>
                       <span className={`badge ${template.is_active ? 'badge-active' : 'badge-inactive'}`}>
-                        {template.is_active ? 'Actif' : 'Inactif'}
+                        {template.is_active ? t('template.active') : t('template.inactive')}
                       </span>
                     </div>
                     {template.description && (
                       <p className="item-description">{template.description}</p>
                     )}
                     <div className="item-meta">
-                      <span>{template.question_count || 0} questions</span>
+                      <span>{t('questionnaire.totalQuestions', { count: template.question_count || 0 })}</span>
                       <span>•</span>
-                      <span>Créé le {formatDate(template.created_at)}</span>
+                      <span>{formatDate(template.created_at)}</span>
                     </div>
                   </div>
                 ))}
@@ -177,32 +173,32 @@ const Dashboard = () => {
           {recentResponses.length > 0 && (
             <div className="recent-section">
               <div className="recent-header">
-                <h2>Dernières réponses soumises</h2>
+                <h2>{t('dashboard.analyste.recentResponses')}</h2>
                 <button className="btn-link" onClick={() => navigate('/analyste/submitted-responses')}>
-                  Voir toutes →
+                  {t('dashboard.businessOwner.viewAll')} →
                 </button>
               </div>
               <div className="recent-items">
                 {recentResponses.map((response) => (
                   <div key={response.id} className="recent-item" onClick={() => navigate(`/analyste/response/${response.id}`)}>
                     <div className="item-header">
-                      <h4>{response.questionnaire?.title || 'Sans titre'}</h4>
+                      <h4>{response.questionnaire?.title || t('common.title')}</h4>
                       <span className={`badge badge-status-${response.status.toLowerCase()}`}>
                         {getStatusLabel(response.status)}
                       </span>
                     </div>
                     {response.responder && (
                       <p className="item-description">
-                        Par {response.responder.first_name} {response.responder.last_name}
+                        {response.responder.first_name} {response.responder.last_name}
                       </p>
                     )}
                     <div className="item-meta">
-                      <span>{response.answer_count || response.answers?.length || 0} réponses</span>
+                      <span>{t('questionnaire.totalQuestions', { count: response.answer_count || response.answers?.length || 0 })}</span>
                       <span>•</span>
                       <span>
                         {response.submitted_at
-                          ? `Soumis le ${formatDate(response.submitted_at)}`
-                          : `Créé le ${formatDate(response.created_at)}`
+                          ? `${t('questionnaire.submittedOn')} ${formatDate(response.submitted_at)}`
+                          : formatDate(response.created_at)
                         }
                       </span>
                     </div>
@@ -219,16 +215,16 @@ const Dashboard = () => {
       return (
         <div className="recent-section">
           <div className="recent-header">
-            <h2>Derniers questionnaires soumis</h2>
+            <h2>{t('dashboard.recentActivity')}</h2>
             <button className="btn-link" onClick={() => navigate('/my-responses')}>
-              Voir tous →
+              {t('dashboard.businessOwner.viewAll')} →
             </button>
           </div>
           <div className="recent-items">
             {recentResponses.map((response) => (
               <div key={response.id} className="recent-item" onClick={() => navigate(`/response/${response.id}`)}>
                 <div className="item-header">
-                  <h4>{response.questionnaire?.title || 'Sans titre'}</h4>
+                  <h4>{response.questionnaire?.title || t('common.title')}</h4>
                   <span className={`badge badge-status-${response.status.toLowerCase()}`}>
                     {getStatusLabel(response.status)}
                   </span>
@@ -237,12 +233,12 @@ const Dashboard = () => {
                   <p className="item-description">{response.questionnaire.description}</p>
                 )}
                 <div className="item-meta">
-                  <span>{response.answer_count || response.answers?.length || 0} réponses</span>
+                  <span>{t('questionnaire.totalQuestions', { count: response.answer_count || response.answers?.length || 0 })}</span>
                   <span>•</span>
                   <span>
                     {response.submitted_at
-                      ? `Soumis le ${formatDate(response.submitted_at)}`
-                      : `Créé le ${formatDate(response.created_at)}`
+                      ? `${t('questionnaire.submittedOn')} ${formatDate(response.submitted_at)}`
+                      : formatDate(response.created_at)
                     }
                   </span>
                 </div>
@@ -260,33 +256,33 @@ const Dashboard = () => {
     <div className="dashboard-container">
       <div className="dashboard-content">
         <div className="welcome-card">
-          <h1>Bienvenue, {user?.first_name || user?.username} !</h1>
+          <h1>{t('dashboard.welcome', { name: user?.first_name || user?.username })}</h1>
           <div className="user-info">
             <div className="info-item">
-              <span className="info-label">Nom d'utilisateur:</span>
+              <span className="info-label">{t('auth.username')}:</span>
               <span className="info-value">{user?.username}</span>
             </div>
             <div className="info-item">
-              <span className="info-label">Email:</span>
+              <span className="info-label">{t('auth.email')}:</span>
               <span className="info-value">{user?.email}</span>
             </div>
             <div className="info-item">
-              <span className="info-label">Rôle:</span>
+              <span className="info-label">{t('auth.role')}:</span>
               <span className="info-value role-badge">{getRoleDisplayName(user?.role)}</span>
             </div>
             <div className="info-item">
-              <span className="info-label">Statut:</span>
-              <span className="info-value status-active">Actif</span>
+              <span className="info-label">{t('common.status')}:</span>
+              <span className="info-value status-active">{t('template.active')}</span>
             </div>
           </div>
         </div>
 
         <div className="dashboard-cards">
           <div className="card">
-            <h3>Mon Profil</h3>
-            <p>Gérez vos informations personnelles et votre mot de passe</p>
+            <h3>{t('profile.title')}</h3>
+            <p>{t('profile.subtitle')}</p>
             <button className="btn btn-secondary" onClick={() => navigate('/profile')}>
-              Accéder au profil
+              {t('navbar.profile')}
             </button>
           </div>
 

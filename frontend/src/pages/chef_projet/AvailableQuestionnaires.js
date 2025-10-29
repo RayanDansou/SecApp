@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import questionnaireService from '../../services/questionnaireService';
 import './AvailableQuestionnaires.css';
 
 const AvailableQuestionnaires = () => {
+  const { t } = useTranslation();
   const [questionnaires, setQuestionnaires] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -18,7 +20,7 @@ const AvailableQuestionnaires = () => {
       const data = await questionnaireService.getQuestionnaires();
       setQuestionnaires(data);
     } catch (err) {
-      setError(err.error || 'Erreur lors du chargement des questionnaires');
+      setError(err.error || t('errors.generic'));
     } finally {
       setLoading(false);
     }
@@ -36,7 +38,7 @@ const AvailableQuestionnaires = () => {
   if (loading) {
     return (
       <div className="available-questionnaires">
-        <div className="loading">Chargement des questionnaires...</div>
+        <div className="loading">{t('common.loading')}</div>
       </div>
     );
   }
@@ -44,15 +46,15 @@ const AvailableQuestionnaires = () => {
   return (
     <div className="available-questionnaires">
       <div className="page-header">
-        <h1>Questionnaires disponibles</h1>
-        <p className="subtitle">Sélectionnez un questionnaire pour commencer</p>
+        <h1>{t('questionnaire.availableQuestionnaires')}</h1>
+        <p className="subtitle">{t('dashboard.chefProjet.startQuestionnaire')}</p>
       </div>
 
       {error && <div className="error-message">{error}</div>}
 
       {questionnaires.length === 0 ? (
         <div className="empty-state">
-          <p>Aucun questionnaire disponible pour le moment</p>
+          <p>{t('questionnaire.noQuestionnaires')}</p>
         </div>
       ) : (
         <div className="questionnaires-grid">
@@ -61,7 +63,9 @@ const AvailableQuestionnaires = () => {
               <div className="card-header">
                 <h3>{questionnaire.title}</h3>
                 {questionnaire.question_count && (
-                  <span className="question-count">{questionnaire.question_count} questions</span>
+                  <span className="question-count">
+                    {t('questionnaire.totalQuestions', { count: questionnaire.question_count })}
+                  </span>
                 )}
               </div>
 
@@ -71,13 +75,13 @@ const AvailableQuestionnaires = () => {
 
               <div className="card-meta">
                 <div className="meta-item">
-                  <span className="meta-label">Créé par:</span>
+                  <span className="meta-label">{t('questionnaire.createdBy')}:</span>
                   <span className="meta-value">
                     {questionnaire.created_by?.first_name} {questionnaire.created_by?.last_name}
                   </span>
                 </div>
                 <div className="meta-item">
-                  <span className="meta-label">Date:</span>
+                  <span className="meta-label">{t('common.date')}:</span>
                   <span className="meta-value">
                     {new Date(questionnaire.created_at).toLocaleDateString('fr-FR')}
                   </span>
@@ -88,7 +92,7 @@ const AvailableQuestionnaires = () => {
                 onClick={() => handleStartQuestionnaire(questionnaire.id)}
                 className="start-button"
               >
-                Commencer ce questionnaire
+                {t('questionnaire.startQuestionnaire')}
               </button>
             </div>
           ))}

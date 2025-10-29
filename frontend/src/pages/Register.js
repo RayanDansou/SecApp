@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import './Register.css';
 
 const Register = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -38,30 +40,30 @@ const Register = () => {
 
     // Validation username
     if (!formData.username.trim()) {
-      newErrors.username = "Le nom d'utilisateur est requis";
+      newErrors.username = t('errors.formIncomplete');
     } else if (formData.username.length < 3) {
-      newErrors.username = "Le nom d'utilisateur doit contenir au moins 3 caractères";
+      newErrors.username = t('errors.validationError');
     }
 
     // Validation email
     if (!formData.email.trim()) {
-      newErrors.email = "L'email est requis";
+      newErrors.email = t('errors.formIncomplete');
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "L'email n'est pas valide";
+      newErrors.email = t('errors.validationError');
     }
 
     // Validation password
     if (!formData.password) {
-      newErrors.password = "Le mot de passe est requis";
+      newErrors.password = t('errors.formIncomplete');
     } else if (formData.password.length < 8) {
-      newErrors.password = "Le mot de passe doit contenir au moins 8 caractères";
+      newErrors.password = t('errors.validationError');
     }
 
     // Validation password2
     if (!formData.password2) {
-      newErrors.password2 = "La confirmation du mot de passe est requise";
+      newErrors.password2 = t('errors.formIncomplete');
     } else if (formData.password !== formData.password2) {
-      newErrors.password2 = "Les mots de passe ne correspondent pas";
+      newErrors.password2 = t('errors.validationError');
     }
 
     setErrors(newErrors);
@@ -101,11 +103,11 @@ const Register = () => {
 
           setErrors(serverErrors);
         } else {
-          setErrors({ general: 'Une erreur est survenue lors de l\'inscription' });
+          setErrors({ general: t('errors.generic') });
         }
       }
     } catch (err) {
-      setErrors({ general: 'Une erreur est survenue. Veuillez réessayer.' });
+      setErrors({ general: t('errors.generic') });
     } finally {
       setLoading(false);
     }
@@ -115,8 +117,8 @@ const Register = () => {
     <div className="register-container">
       <div className="register-card">
         <div className="register-header">
-          <h1>SecApp</h1>
-          <p>Créez votre compte</p>
+          <h1>{t('common.appName')}</h1>
+          <p>{t('auth.registerSubtitle')}</p>
         </div>
 
         {errors.general && (
@@ -129,7 +131,7 @@ const Register = () => {
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="username">
-                Nom d'utilisateur <span className="required">*</span>
+                {t('auth.username')} <span className="required">*</span>
               </label>
               <input
                 type="text"
@@ -138,7 +140,7 @@ const Register = () => {
                 value={formData.username}
                 onChange={handleChange}
                 disabled={loading}
-                placeholder="Nom d'utilisateur"
+                placeholder={t('auth.username')}
                 className={errors.username ? 'input-error' : ''}
               />
               {errors.username && (
@@ -148,7 +150,7 @@ const Register = () => {
 
             <div className="form-group">
               <label htmlFor="email">
-                Email <span className="required">*</span>
+                {t('auth.email')} <span className="required">*</span>
               </label>
               <input
                 type="email"
@@ -157,7 +159,7 @@ const Register = () => {
                 value={formData.email}
                 onChange={handleChange}
                 disabled={loading}
-                placeholder="email@example.com"
+                placeholder={t('auth.email')}
                 className={errors.email ? 'input-error' : ''}
               />
               {errors.email && (
@@ -168,7 +170,7 @@ const Register = () => {
 
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="first_name">Prénom</label>
+              <label htmlFor="first_name">{t('auth.firstName')}</label>
               <input
                 type="text"
                 id="first_name"
@@ -176,12 +178,12 @@ const Register = () => {
                 value={formData.first_name}
                 onChange={handleChange}
                 disabled={loading}
-                placeholder="Prénom"
+                placeholder={t('auth.firstName')}
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="last_name">Nom</label>
+              <label htmlFor="last_name">{t('auth.lastName')}</label>
               <input
                 type="text"
                 id="last_name"
@@ -189,14 +191,14 @@ const Register = () => {
                 value={formData.last_name}
                 onChange={handleChange}
                 disabled={loading}
-                placeholder="Nom"
+                placeholder={t('auth.lastName')}
               />
             </div>
           </div>
 
           <div className="form-group">
             <label htmlFor="role">
-              Rôle <span className="required">*</span>
+              {t('auth.role')} <span className="required">*</span>
             </label>
             <select
               id="role"
@@ -205,17 +207,17 @@ const Register = () => {
               onChange={handleChange}
               disabled={loading}
             >
-              <option value="CHEF_PROJET">Chef de Projet</option>
-              <option value="ANALYSTE">Analyste Sécurité</option>
-              <option value="BUSINESS_OWNER">Business Owner</option>
-              <option value="ADMIN">Administrateur</option>
+              <option value="CHEF_PROJET">{t('roles.CHEF_PROJET')}</option>
+              <option value="ANALYSTE">{t('roles.ANALYSTE')}</option>
+              <option value="BUSINESS_OWNER">{t('roles.BUSINESS_OWNER')}</option>
+              <option value="ADMIN">{t('roles.ADMIN')}</option>
             </select>
           </div>
 
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="password">
-                Mot de passe <span className="required">*</span>
+                {t('auth.password')} <span className="required">*</span>
               </label>
               <input
                 type="password"
@@ -224,7 +226,7 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 disabled={loading}
-                placeholder="Minimum 8 caractères"
+                placeholder={t('auth.password')}
                 className={errors.password ? 'input-error' : ''}
               />
               {errors.password && (
@@ -234,7 +236,7 @@ const Register = () => {
 
             <div className="form-group">
               <label htmlFor="password2">
-                Confirmer le mot de passe <span className="required">*</span>
+                {t('auth.confirmPassword')} <span className="required">*</span>
               </label>
               <input
                 type="password"
@@ -243,7 +245,7 @@ const Register = () => {
                 value={formData.password2}
                 onChange={handleChange}
                 disabled={loading}
-                placeholder="Confirmer le mot de passe"
+                placeholder={t('auth.confirmPassword')}
                 className={errors.password2 ? 'input-error' : ''}
               />
               {errors.password2 && (
@@ -257,14 +259,14 @@ const Register = () => {
             className="btn btn-primary"
             disabled={loading}
           >
-            {loading ? 'Inscription...' : 'S\'inscrire'}
+            {loading ? t('auth.registering') : t('auth.register')}
           </button>
         </form>
 
         <div className="register-footer">
           <p>
-            Vous avez déjà un compte ?{' '}
-            <Link to="/login">Se connecter</Link>
+            {t('auth.alreadyHaveAccount')}{' '}
+            <Link to="/login">{t('auth.signIn')}</Link>
           </p>
         </div>
       </div>

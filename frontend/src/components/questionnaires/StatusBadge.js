@@ -1,17 +1,25 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './StatusBadge.css';
 
 const StatusBadge = ({ status }) => {
+  const { t } = useTranslation();
+
   const getStatusConfig = (status) => {
-    const configs = {
-      'BROUILLON': { label: 'Brouillon', className: 'status-draft' },
-      'SOUMIS': { label: 'Soumis', className: 'status-submitted' },
-      'EN_ATTENTE': { label: 'En attente', className: 'status-pending' },
-      'EN_VALIDATION': { label: 'En validation', className: 'status-validation' },
-      'VALIDE': { label: 'Validé', className: 'status-approved' },
-      'REJETE': { label: 'Rejeté', className: 'status-rejected' }
+    const statusMap = {
+      'BROUILLON': { key: 'draft', className: 'status-draft' },
+      'SOUMIS': { key: 'submitted', className: 'status-submitted' },
+      'EN_ATTENTE': { key: 'pending', className: 'status-pending' },
+      'EN_VALIDATION': { key: 'in_analysis', className: 'status-validation' },
+      'VALIDE': { key: 'validated', className: 'status-approved' },
+      'REJETE': { key: 'rejected', className: 'status-rejected' }
     };
-    return configs[status] || { label: status, className: 'status-default' };
+
+    const config = statusMap[status];
+    if (config) {
+      return { label: t(`status.${config.key}`), className: config.className };
+    }
+    return { label: status, className: 'status-default' };
   };
 
   const config = getStatusConfig(status);

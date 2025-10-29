@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import './styles/darkmode.css';
+import './i18n'; // Import i18n configuration
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 

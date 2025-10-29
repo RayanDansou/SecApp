@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import './Login.css';
 
 const Login = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -35,10 +37,10 @@ const Login = () => {
         // Rediriger vers le dashboard après connexion réussie
         navigate('/dashboard');
       } else {
-        setError(result.error?.error || 'Erreur de connexion');
+        setError(result.error?.error || t('errors.generic'));
       }
     } catch (err) {
-      setError('Une erreur est survenue. Veuillez réessayer.');
+      setError(t('errors.generic'));
     } finally {
       setLoading(false);
     }
@@ -48,8 +50,8 @@ const Login = () => {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <h1>SecApp</h1>
-          <p>Connectez-vous à votre compte</p>
+          <h1>{t('common.appName')}</h1>
+          <p>{t('auth.loginSubtitle')}</p>
         </div>
 
         {error && (
@@ -60,7 +62,7 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
-            <label htmlFor="username">Nom d'utilisateur</label>
+            <label htmlFor="username">{t('auth.username')}</label>
             <input
               type="text"
               id="username"
@@ -70,12 +72,12 @@ const Login = () => {
               required
               autoFocus
               disabled={loading}
-              placeholder="Entrez votre nom d'utilisateur"
+              placeholder={t('auth.username')}
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Mot de passe</label>
+            <label htmlFor="password">{t('auth.password')}</label>
             <input
               type="password"
               id="password"
@@ -84,7 +86,7 @@ const Login = () => {
               onChange={handleChange}
               required
               disabled={loading}
-              placeholder="Entrez votre mot de passe"
+              placeholder={t('auth.password')}
             />
           </div>
 
@@ -93,14 +95,14 @@ const Login = () => {
             className="btn btn-primary"
             disabled={loading}
           >
-            {loading ? 'Connexion...' : 'Se connecter'}
+            {loading ? t('auth.loggingIn') : t('auth.login')}
           </button>
         </form>
 
         <div className="login-footer">
           <p>
-            Pas encore de compte ?{' '}
-            <Link to="/register">S'inscrire</Link>
+            {t('auth.noAccount')}{' '}
+            <Link to="/register">{t('auth.signUp')}</Link>
           </p>
         </div>
       </div>

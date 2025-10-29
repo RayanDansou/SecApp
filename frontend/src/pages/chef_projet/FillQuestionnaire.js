@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import questionnaireService from '../../services/questionnaireService';
 import DocumentsManager from '../../components/questionnaires/DocumentsManager';
 import './FillQuestionnaire.css';
@@ -7,6 +8,7 @@ import './FillQuestionnaire.css';
 const FillQuestionnaire = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [questionnaire, setQuestionnaire] = useState(null);
   const [response, setResponse] = useState(null);
@@ -47,7 +49,7 @@ const FillQuestionnaire = () => {
         // Pas de réponse existante, c'est normal
       }
     } catch (err) {
-      setError(err.error || 'Erreur lors du chargement du questionnaire');
+      setError(err.error || t('errors.generic'));
     } finally {
       setLoading(false);
     }
@@ -83,14 +85,14 @@ const FillQuestionnaire = () => {
         setResponse(newResponse);
       }
 
-      setSuccess('Brouillon sauvegardé ! Redirection...');
+      setSuccess(t('questionnaire.draftSaved') + ' ! Redirection...');
 
       // Redirection vers la liste des réponses
       setTimeout(() => {
-        navigate('/my-responses', { state: { message: 'Brouillon sauvegardé avec succès' } });
+        navigate('/my-responses', { state: { message: t('questionnaire.draftSaved') } });
       }, 1500);
     } catch (err) {
-      setError(err.error || 'Erreur lors de la sauvegarde');
+      setError(err.error || t('errors.generic'));
     } finally {
       setSaving(false);
     }
@@ -110,11 +112,11 @@ const FillQuestionnaire = () => {
     );
 
     if (missingRequired.length > 0) {
-      setError(`Veuillez répondre à toutes les questions obligatoires (${missingRequired.length} manquantes)`);
+      setError(`${t('errors.formIncomplete')} (${missingRequired.length} manquantes)`);
       return;
     }
 
-    if (!window.confirm('Êtes-vous sûr de vouloir soumettre ce questionnaire ? Vous ne pourrez plus le modifier après soumission.')) {
+    if (!window.confirm(t('questionnaire.confirmSubmit', { defaultValue: 'Êtes-vous sûr de vouloir soumettre ce questionnaire ? Vous ne pourrez plus le modifier après soumission.' }))) {
       return;
     }
 
@@ -124,13 +126,13 @@ const FillQuestionnaire = () => {
     try {
       const responseId = response?.id;
       if (!responseId) {
-        throw new Error('Erreur: réponse non créée');
+        throw new Error(t('errors.generic'));
       }
 
       await questionnaireService.submitResponse(responseId);
-      navigate('/my-responses', { state: { message: 'Questionnaire soumis avec succès' } });
+      navigate('/my-responses', { state: { message: t('questionnaire.responseSubmitted') } });
     } catch (err) {
-      setError(err.error || 'Erreur lors de la soumission');
+      setError(err.error || t('errors.generic'));
     } finally {
       setSubmitting(false);
     }
@@ -138,14 +140,14 @@ const FillQuestionnaire = () => {
 
   const handleDocumentUpload = async (file) => {
     if (!response) {
-      setError('Veuillez d\'abord sauvegarder vos réponses');
+      setError(t('questionnaire.saveFirst', { defaultValue: 'Veuillez d\'abord sauvegarder vos réponses' }));
       return;
     }
 
     try {
       const doc = await questionnaireService.uploadResponseDocument(response.id, file);
       setDocuments(prev => [...prev, doc]);
-      setSuccess('Document uploadé avec succès');
+      setSuccess(t('documents.documentUploaded'));
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
       throw err;
@@ -156,7 +158,7 @@ const FillQuestionnaire = () => {
     try {
       await questionnaireService.deleteResponseDocument(response.id, docId);
       setDocuments(prev => prev.filter(d => d.id !== docId));
-      setSuccess('Document supprimé');
+      setSuccess(t('documents.documentDeleted'));
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
       throw err;
@@ -166,7 +168,7 @@ const FillQuestionnaire = () => {
   if (loading) {
     return (
       <div className="fill-questionnaire">
-        <div className="loading">Chargement du questionnaire...</div>
+        <div className="loading">{t('common.loading')}</div>
       </div>
     );
   }
@@ -174,7 +176,7 @@ const FillQuestionnaire = () => {
   if (!questionnaire) {
     return (
       <div className="fill-questionnaire">
-        <div className="error-message">Questionnaire non trouvé</div>
+        <div className="error-message">{t('errors.notFound')}</div>
       </div>
     );
   }
@@ -190,13 +192,13 @@ const FillQuestionnaire = () => {
         )}
         {questionnaire.created_by && (
           <div className="creator-info">
-            Créé par: <strong>{questionnaire.created_by.first_name} {questionnaire.created_by.last_name}</strong>
+            {t('questionnaire.createdBy')}: <strong>{questionnaire.created_by.first_name} {questionnaire.created_by.last_name}</strong>
             {questionnaire.created_by.email && <span className="creator-email"> ({questionnaire.created_by.email})</span>}
           </div>
         )}
         {response && (
           <div className="response-status">
-            Statut: <strong>{response.status_display || response.status}</strong>
+            {t('common.status')}: <strong>{response.status_display || response.status}</strong>
           </div>
         )}
       </div>
@@ -205,18 +207,18 @@ const FillQuestionnaire = () => {
       {success && <div className="success-message">{success}</div>}
 
       <div className="questions-section">
-        <h2>Questions</h2>
+        <h2>{t('questionnaire.questions')}</h2>
         {questionnaire.questions.map((question, index) => (
           <div key={question.id} className="question-item">
             <div className="question-header">
-              <span className="question-number">Question {index + 1}</span>
+              <span className="question-number">{t('questionnaire.questionNumber', { number: index + 1 })}</span>
               {question.is_required && <span className="required-mark">*</span>}
             </div>
             <div className="question-text">{question.text}</div>
             <textarea
               value={answers[question.id] || ''}
               onChange={(e) => handleAnswerChange(question.id, e.target.value)}
-              placeholder={isReadOnly ? '' : 'Votre réponse...'}
+              placeholder={isReadOnly ? '' : t('questionnaire.yourAnswer', { defaultValue: 'Votre réponse...' })}
               rows="4"
               disabled={isReadOnly}
               className={question.is_required && !answers[question.id] ? 'missing-required' : ''}
@@ -231,19 +233,19 @@ const FillQuestionnaire = () => {
         onDelete={handleDocumentDelete}
         canUpload={!isReadOnly}
         canDelete={!isReadOnly}
-        title="Documents d'architecture technique"
+        title={t('documents.technicalDocuments', { defaultValue: 'Documents d\'architecture technique' })}
       />
 
       {!isReadOnly && (
         <div className="actions">
           <button onClick={() => navigate('/my-responses')} className="btn-secondary">
-            Annuler
+            {t('common.cancel')}
           </button>
           <button onClick={handleSave} disabled={saving} className="btn-primary">
-            {saving ? 'Sauvegarde...' : 'Sauvegarder le brouillon'}
+            {saving ? t('common.saving', { defaultValue: 'Sauvegarde...' }) : t('questionnaire.saveDraft')}
           </button>
           <button onClick={handleSubmit} disabled={submitting} className="btn-submit">
-            {submitting ? 'Soumission...' : 'Soumettre le questionnaire'}
+            {submitting ? t('common.submitting', { defaultValue: 'Soumission...' }) : t('questionnaire.submitResponse')}
           </button>
         </div>
       )}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import questionnaireService from '../../services/questionnaireService';
 import StatusBadge from '../../components/questionnaires/StatusBadge';
 import './SubmittedResponses.css';
@@ -10,6 +11,7 @@ const SubmittedResponses = () => {
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all'); // all, pending, validated, rejected
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadResponses();
@@ -20,7 +22,7 @@ const SubmittedResponses = () => {
       const data = await questionnaireService.getResponses();
       setResponses(data);
     } catch (err) {
-      setError(err.error || 'Erreur lors du chargement des réponses');
+      setError(err.error || t('errors.generic'));
     } finally {
       setLoading(false);
     }
@@ -57,7 +59,7 @@ const SubmittedResponses = () => {
   if (loading) {
     return (
       <div className="submitted-responses">
-        <div className="loading">Chargement des réponses...</div>
+        <div className="loading">{t('common.loading')}</div>
       </div>
     );
   }
@@ -66,11 +68,11 @@ const SubmittedResponses = () => {
     <div className="submitted-responses">
       <div className="page-header">
         <button onClick={() => navigate('/dashboard')} className="btn-back">
-          ← Retour au tableau de bord
+          ← {t('common.back')}
         </button>
         <div className="header-content">
-          <h1>Réponses soumises</h1>
-          <p className="subtitle">Consultez et validez les questionnaires de sécurité</p>
+          <h1>{t('analyste.submittedResponses')}</h1>
+          <p className="subtitle">{t('analyste.submittedResponsesSubtitle')}</p>
         </div>
       </div>
 
@@ -79,25 +81,25 @@ const SubmittedResponses = () => {
           className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
           onClick={() => setFilter('all')}
         >
-          Toutes ({responses.length})
+          {t('analyste.filterAll')} ({responses.length})
         </button>
         <button
           className={`filter-btn ${filter === 'pending' ? 'active' : ''}`}
           onClick={() => setFilter('pending')}
         >
-          En attente ({responses.filter(r => ['SOUMIS', 'EN_ATTENTE', 'EN_VALIDATION'].includes(r.status)).length})
+          {t('analyste.filterPending')} ({responses.filter(r => ['SOUMIS', 'EN_ATTENTE', 'EN_VALIDATION'].includes(r.status)).length})
         </button>
         <button
           className={`filter-btn ${filter === 'validated' ? 'active' : ''}`}
           onClick={() => setFilter('validated')}
         >
-          Validées ({responses.filter(r => r.status === 'VALIDE').length})
+          {t('analyste.filterApproved')} ({responses.filter(r => r.status === 'VALIDE').length})
         </button>
         <button
           className={`filter-btn ${filter === 'rejected' ? 'active' : ''}`}
           onClick={() => setFilter('rejected')}
         >
-          Rejetées ({responses.filter(r => r.status === 'REJETE').length})
+          {t('analyste.filterRejected')} ({responses.filter(r => r.status === 'REJETE').length})
         </button>
       </div>
 
@@ -106,8 +108,8 @@ const SubmittedResponses = () => {
       {filteredResponses.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">📋</div>
-          <h2>Aucune réponse</h2>
-          <p>Aucune réponse ne correspond à ce filtre</p>
+          <h2>{t('analyste.noResponses')}</h2>
+          <p>{t('analyste.noResponsesMessage')}</p>
         </div>
       ) : (
         <div className="responses-list">
@@ -122,7 +124,7 @@ const SubmittedResponses = () => {
 
               <div className="card-body">
                 <div className="responder-info">
-                  <span className="responder-label">Répondant:</span>
+                  <span className="responder-label">{t('questionnaire.respondent')}:</span>
                   <span className="responder-name">
                     {response.responder.first_name} {response.responder.last_name}
                   </span>
@@ -131,14 +133,14 @@ const SubmittedResponses = () => {
 
                 <div className="card-meta">
                   <div className="meta-row">
-                    <span className="meta-label">Soumis le:</span>
+                    <span className="meta-label">{t('questionnaire.submittedOn')}:</span>
                     <span className="meta-value">
-                      {response.submitted_at ? formatDate(response.submitted_at) : 'Non soumis'}
+                      {response.submitted_at ? formatDate(response.submitted_at) : t('status.draft')}
                     </span>
                   </div>
                   {response.updated_at && (
                     <div className="meta-row">
-                      <span className="meta-label">Dernière modification:</span>
+                      <span className="meta-label">{t('questionnaire.lastModified')}:</span>
                       <span className="meta-value">{formatDate(response.updated_at)}</span>
                     </div>
                   )}
@@ -147,7 +149,7 @@ const SubmittedResponses = () => {
 
               <div className="card-actions">
                 <button onClick={() => handleViewResponse(response.id)} className="btn-view">
-                  Voir et valider
+                  {t('analyste.viewResponse')}
                 </button>
               </div>
             </div>
