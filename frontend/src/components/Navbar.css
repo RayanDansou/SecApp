@@ -137,6 +137,7 @@ body.dark-mode .nav-link:hover {
   letter-spacing: 0.5px;
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
   transition: all 0.3s ease;
+  user-select: none;
 }
 
 .avatar-circle:hover {
@@ -272,31 +273,38 @@ body.dark-mode .dropdown-item-danger:hover {
 
 /* Language Submenu */
 .language-submenu {
-  margin-left: 32px;
-  margin-top: 8px;
-  margin-bottom: 8px;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  margin-left: 8px;
+  background: var(--bg-card);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px var(--shadow);
+  min-width: 180px;
+  overflow: hidden;
+  animation: slideInRight 0.2s ease;
+  border: 1px solid var(--border-color);
   padding: 8px 0;
-  border-left: 2px solid var(--primary);
-  animation: slideIn 0.2s ease;
 }
 
-@keyframes slideIn {
+@keyframes slideInRight {
   from {
     opacity: 0;
-    max-height: 0;
+    transform: translateX(-10px);
   }
   to {
     opacity: 1;
-    max-height: 200px;
+    transform: translateX(0);
   }
 }
 
 .language-option {
   width: 100%;
-  padding: 10px 16px;
+  padding: 12px 16px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  gap: 12px;
   background: none;
   border: none;
   color: var(--text-primary);
@@ -304,31 +312,37 @@ body.dark-mode .dropdown-item-danger:hover {
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
-  border-radius: 6px;
-  margin: 0 8px;
-  width: calc(100% - 16px);
 }
 
 .language-option:hover {
   background-color: rgba(102, 126, 234, 0.1);
 }
 
+body.dark-mode .language-option:hover {
+  background-color: rgba(129, 140, 248, 0.15);
+}
+
+.language-option-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .language-option.active {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
-  color: var(--primary);
+  background-color: rgba(102, 126, 234, 0.1);
   font-weight: 600;
 }
 
-.language-option.active::before {
-  content: '';
-  position: absolute;
-  left: -10px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 70%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 2px;
+.language-checkmark {
+  color: var(--primary);
+  font-weight: bold;
+  font-size: 16px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.language-option.active .language-checkmark {
+  opacity: 1;
 }
 
 .language-flag-small {

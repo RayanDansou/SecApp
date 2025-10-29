@@ -112,6 +112,7 @@ const Navbar = () => {
 
       <div className="nav-user" ref={userMenuRef}>
         <div className="user-avatar" onClick={() => setShowUserMenu(!showUserMenu)}>
+
           <div className="avatar-circle">
             {getInitials(user?.username)}
           </div>
@@ -150,12 +151,16 @@ const Navbar = () => {
               <span>{isDarkMode ? t('navbar.lightMode') : t('navbar.darkMode')}</span>
             </button>
 
-            <div className="dropdown-item dropdown-submenu" onClick={() => setShowLanguageMenu(!showLanguageMenu)}>
+            <div
+              className="dropdown-item dropdown-submenu"
+              onMouseEnter={() => setShowLanguageMenu(true)}
+              onMouseLeave={() => setShowLanguageMenu(false)}
+            >
               <div className="dropdown-item-content">
                 <span className="language-flag-small">{i18n.language === 'fr' ? '🇫🇷' : '🇬🇧'}</span>
                 <span>{t('navbar.language')}</span>
               </div>
-              <ChevronRight size={18} className={`chevron ${showLanguageMenu ? 'rotated' : ''}`} />
+              <ChevronRight size={18} />
 
               {showLanguageMenu && (
                 <div className="language-submenu">
@@ -163,15 +168,21 @@ const Navbar = () => {
                     className={`language-option ${i18n.language === 'fr' ? 'active' : ''}`}
                     onClick={(e) => { e.stopPropagation(); toggleLanguage('fr'); }}
                   >
-                    <span className="language-flag-small">🇫🇷</span>
-                    <span>Français</span>
+                    <div className="language-option-content">
+                      <span className="language-flag-small">🇫🇷</span>
+                      <span>Français</span>
+                    </div>
+                    <span className="language-checkmark">✓</span>
                   </button>
                   <button
                     className={`language-option ${i18n.language === 'en' ? 'active' : ''}`}
                     onClick={(e) => { e.stopPropagation(); toggleLanguage('en'); }}
                   >
-                    <span className="language-flag-small">🇬🇧</span>
-                    <span>English</span>
+                    <div className="language-option-content">
+                      <span className="language-flag-small">🇬🇧</span>
+                      <span>English</span>
+                    </div>
+                    <span className="language-checkmark">✓</span>
                   </button>
                 </div>
               )}
