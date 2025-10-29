@@ -153,7 +153,7 @@ body.dark-mode .nav-link:hover {
   border-radius: 12px;
   box-shadow: 0 8px 24px var(--shadow);
   min-width: 280px;
-  overflow: hidden;
+  overflow: visible;
   animation: slideDown 0.2s ease;
   z-index: 1001;
   border: 1px solid var(--border-color);
@@ -253,6 +253,10 @@ body.dark-mode .dropdown-item-danger:hover {
 .dropdown-submenu {
   cursor: pointer;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .dropdown-item-content {
@@ -262,13 +266,9 @@ body.dark-mode .dropdown-item-danger:hover {
   flex: 1;
 }
 
-.dropdown-submenu .chevron {
-  transition: transform 0.3s ease;
+.dropdown-submenu svg {
   color: var(--text-secondary);
-}
-
-.dropdown-submenu .chevron.rotated {
-  transform: rotate(90deg);
+  flex-shrink: 0;
 }
 
 /* Language Submenu */

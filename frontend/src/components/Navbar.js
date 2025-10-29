@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
-import { User, LogOut, Moon, Sun, Settings, Shield, ChevronRight } from 'lucide-react';
+import { LogOut, Moon, Sun, Settings, Shield, ChevronRight } from 'lucide-react';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -128,11 +128,6 @@ const Navbar = () => {
             <div className="dropdown-divider"></div>
 
             <button className="dropdown-item" onClick={() => { navigate('/profile'); setShowUserMenu(false); }}>
-              <User size={18} />
-              <span>{t('navbar.profile')}</span>
-            </button>
-
-            <button className="dropdown-item" onClick={() => { navigate('/profile'); setShowUserMenu(false); }}>
               <Settings size={18} />
               <span>{t('navbar.settings')}</span>
             </button>
@@ -153,8 +148,11 @@ const Navbar = () => {
 
             <div
               className="dropdown-item dropdown-submenu"
-              onMouseEnter={() => setShowLanguageMenu(true)}
-              onMouseLeave={() => setShowLanguageMenu(false)}
+              onClick={(e) => {
+                e.stopPropagation();
+                console.log('Language menu clicked, current state:', showLanguageMenu);
+                setShowLanguageMenu(!showLanguageMenu);
+              }}
             >
               <div className="dropdown-item-content">
                 <span className="language-flag-small">{i18n.language === 'fr' ? '🇫🇷' : '🇬🇧'}</span>
@@ -163,10 +161,17 @@ const Navbar = () => {
               <ChevronRight size={18} />
 
               {showLanguageMenu && (
-                <div className="language-submenu">
+                <div
+                  className="language-submenu"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <button
                     className={`language-option ${i18n.language === 'fr' ? 'active' : ''}`}
-                    onClick={(e) => { e.stopPropagation(); toggleLanguage('fr'); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleLanguage('fr');
+                      setShowLanguageMenu(false);
+                    }}
                   >
                     <div className="language-option-content">
                       <span className="language-flag-small">🇫🇷</span>
@@ -176,7 +181,11 @@ const Navbar = () => {
                   </button>
                   <button
                     className={`language-option ${i18n.language === 'en' ? 'active' : ''}`}
-                    onClick={(e) => { e.stopPropagation(); toggleLanguage('en'); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleLanguage('en');
+                      setShowLanguageMenu(false);
+                    }}
                   >
                     <div className="language-option-content">
                       <span className="language-flag-small">🇬🇧</span>
