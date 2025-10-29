@@ -25,7 +25,8 @@
     "description": "Description",
     "title": "Title",
     "required": "Required",
-    "optional": "Optional"
+    "optional": "Optional",
+    "you": "You"
   },
   "navbar": {
     "dashboard": "Dashboard",
@@ -99,7 +100,15 @@
     "updateProfile": "Update profile",
     "profileUpdated": "Profile updated successfully",
     "passwordChanged": "Password changed successfully",
-    "joinedOn": "Joined on"
+    "joinedOn": "Joined on",
+    "dangerZone": "Danger Zone",
+    "deleteAccount": "Delete my account",
+    "deleteAccountWarning": "This action is irreversible. All your data will be permanently deleted.",
+    "confirmDeleteAccount": "Are you really sure you want to delete your account?",
+    "confirmDeleteAccountMessage": "Type your username to confirm: {{username}}",
+    "accountDeleted": "Account deleted successfully",
+    "deletingAccount": "Deleting...",
+    "usernameDoesNotMatch": "Username does not match"
   },
   "questionnaire": {
     "title": "Questionnaire",
@@ -228,6 +237,18 @@
     "sending": "Sending...",
     "send": "Send",
     "writeComment": "Write your comment..."
+  },
+  "admin": {
+    "manageUsers": "Manage users",
+    "userManagement": "User Management",
+    "userList": "User list",
+    "totalUsers": "Total: {{count}} user(s)",
+    "deleteUser": "Delete user",
+    "confirmDeleteUser": "Are you sure you want to delete {{username}}?",
+    "confirmDeleteUserMessage": "This action is irreversible. All questionnaires and responses from this user will be deleted.",
+    "userDeleted": "User deleted successfully",
+    "cannotDeleteSelf": "You cannot delete your own account from this interface",
+    "noUsers": "No users found"
   },
   "errors": {
     "generic": "An error occurred",

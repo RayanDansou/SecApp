@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import authService from '../services/authService';
 import './Profile.css';
 
 const Profile = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { user, updateProfile } = useAuth();
 
   // État pour les informations du profil
@@ -28,6 +30,12 @@ const Profile = () => {
   const [passwordSuccess, setPasswordSuccess] = useState('');
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [loadingPassword, setLoadingPassword] = useState(false);
+
+  // État pour la suppression de compte
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmUsername, setDeleteConfirmUsername] = useState('');
+  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
 
   // Charger les données du profil
   useEffect(() => {
@@ -190,6 +198,41 @@ const Profile = () => {
 
   const getRoleDisplayName = (role) => {
     return t(`roles.${role}`, role);
+  };
+
+  // Ouvrir le modal de confirmation de suppression
+  const handleOpenDeleteModal = () => {
+    setShowDeleteModal(true);
+    setDeleteConfirmUsername('');
+    setDeleteError('');
+  };
+
+  // Fermer le modal de confirmation de suppression
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+    setDeleteConfirmUsername('');
+    setDeleteError('');
+  };
+
+  // Supprimer le compte
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmUsername !== user?.username) {
+      setDeleteError(t('profile.usernameDoesNotMatch'));
+      return;
+    }
+
+    setLoadingDelete(true);
+    setDeleteError('');
+
+    try {
+      await authService.deleteAccount();
+      // Rediriger vers la page de login après suppression
+      navigate('/login');
+    } catch (error) {
+      setDeleteError(error.error || t('errors.generic'));
+    } finally {
+      setLoadingDelete(false);
+    }
   };
 
   return (
@@ -375,8 +418,81 @@ const Profile = () => {
               </form>
             </div>
           </div>
+
+          {/* Section Zone dangereuse */}
+          <div className="profile-card danger-zone">
+            <div className="card-header">
+              <h2>{t('profile.dangerZone')}</h2>
+            </div>
+            <div className="card-body">
+              <p className="danger-warning">
+                {t('profile.deleteAccountWarning')}
+              </p>
+              <button
+                className="btn btn-danger"
+                onClick={handleOpenDeleteModal}
+              >
+                {t('profile.deleteAccount')}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Modal de confirmation de suppression */}
+      {showDeleteModal && (
+        <div className="modal-overlay" onClick={handleCloseDeleteModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{t('profile.confirmDeleteAccount')}</h2>
+              <button className="modal-close" onClick={handleCloseDeleteModal}>
+                ×
+              </button>
+            </div>
+            <div className="modal-body">
+              <p className="modal-warning">
+                {t('profile.deleteAccountWarning')}
+              </p>
+              <p className="modal-instruction">
+                {t('profile.confirmDeleteAccountMessage', { username: user?.username })}
+              </p>
+
+              {deleteError && (
+                <div className="alert alert-error">
+                  {deleteError}
+                </div>
+              )}
+
+              <div className="form-group">
+                <input
+                  type="text"
+                  value={deleteConfirmUsername}
+                  onChange={(e) => setDeleteConfirmUsername(e.target.value)}
+                  placeholder={user?.username}
+                  disabled={loadingDelete}
+                  className="delete-confirm-input"
+                />
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button
+                className="btn btn-secondary"
+                onClick={handleCloseDeleteModal}
+                disabled={loadingDelete}
+              >
+                {t('common.cancel')}
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={handleDeleteAccount}
+                disabled={loadingDelete || deleteConfirmUsername !== user?.username}
+              >
+                {loadingDelete ? t('profile.deletingAccount') : t('common.delete')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

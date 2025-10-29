@@ -23,6 +23,9 @@ import AnalysteResponseDetail from './pages/analyste/AnalysteResponseDetail';
 // Pages BUSINESS_OWNER
 import ValidatedResponses from './pages/business_owner/ValidatedResponses';
 
+// Pages ADMIN
+import UserManagement from './pages/admin/UserManagement';
+
 import './App.css';
 
 function App() {
@@ -144,6 +147,16 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['BUSINESS_OWNER']}>
                   <ResponseDetail />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Routes ADMIN */}
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <UserManagement />
                 </ProtectedRoute>
               }
             />

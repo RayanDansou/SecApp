@@ -157,3 +157,80 @@ class RefreshTokenView(TokenRefreshView):
     Endpoint pour rafraîchir le token - POST /api/auth/refresh/
     """
     permission_classes = [AllowAny]
+
+
+class DeleteAccountView(APIView):
+    """
+    Endpoint pour supprimer un compte utilisateur - DELETE /api/auth/delete-account/<user_id>/
+    - Un utilisateur peut supprimer son propre compte (sans user_id)
+    - Un admin peut supprimer n'importe quel compte (avec user_id)
+    """
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, user_id=None):
+        try:
+            # Si user_id est fourni, c'est un admin qui supprime un autre compte
+            if user_id:
+                # Vérifier que l'utilisateur est admin
+                if request.user.role != User.Role.ADMIN:
+                    return Response(
+                        {'error': 'Seuls les administrateurs peuvent supprimer d\'autres comptes'},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
+
+                # Vérifier que l'utilisateur cible existe
+                try:
+                    user_to_delete = User.objects.get(id=user_id)
+                except User.DoesNotExist:
+                    return Response(
+                        {'error': 'Utilisateur non trouvé'},
+                        status=status.HTTP_404_NOT_FOUND
+                    )
+
+                # Empêcher un admin de se supprimer lui-même via cette route
+                if user_to_delete.id == request.user.id:
+                    return Response(
+                        {'error': 'Utilisez l\'endpoint sans user_id pour supprimer votre propre compte'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+
+                deleted_username = user_to_delete.username
+                user_to_delete.delete()
+
+                return Response(
+                    {'message': f'Compte de {deleted_username} supprimé avec succès'},
+                    status=status.HTTP_200_OK
+                )
+
+            # Sinon, l'utilisateur supprime son propre compte
+            else:
+                deleted_username = request.user.username
+                request.user.delete()
+
+                return Response(
+                    {'message': f'Votre compte {deleted_username} a été supprimé avec succès'},
+                    status=status.HTTP_200_OK
+                )
+
+        except Exception as e:
+            return Response(
+                {'error': f'Erreur lors de la suppression du compte: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class UserListView(generics.ListAPIView):
+    """
+    Endpoint pour lister tous les utilisateurs - GET /api/auth/users/
+    Accessible uniquement aux administrateurs
+    """
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Seuls les admins peuvent voir la liste de tous les utilisateurs
+        if self.request.user.role == User.Role.ADMIN:
+            return User.objects.all().order_by('-date_joined')
+        else:
+            # Les non-admins ne voient que leur propre profil
+            return User.objects.filter(id=self.request.user.id)

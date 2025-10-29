@@ -122,6 +122,17 @@ const Dashboard = () => {
           </div>
         );
 
+      case 'ADMIN':
+        return (
+          <div className="card">
+            <h3>{t('admin.userManagement')}</h3>
+            <p>{t('admin.manageUsers')}</p>
+            <button className="btn btn-primary" onClick={() => navigate('/admin/users')}>
+              {t('admin.userList')}
+            </button>
+          </div>
+        );
+
       default:
         return null;
     }

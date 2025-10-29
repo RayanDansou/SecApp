@@ -118,6 +118,45 @@ class AuthService {
   }
 
   /**
+   * Suppression du compte utilisateur
+   * @param {number} userId - ID de l'utilisateur à supprimer (optionnel, pour admin uniquement)
+   * @returns {Promise} Message de confirmation
+   */
+  async deleteAccount(userId = null) {
+    try {
+      const url = userId
+        ? `/api/auth/delete-account/${userId}/`
+        : '/api/auth/delete-account/';
+
+      const response = await api.delete(url);
+
+      // Si c'est l'utilisateur qui supprime son propre compte, nettoyer le localStorage
+      if (!userId) {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('user');
+      }
+
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { error: 'Erreur lors de la suppression du compte' };
+    }
+  }
+
+  /**
+   * Récupération de la liste des utilisateurs (admin uniquement)
+   * @returns {Promise} Liste des utilisateurs
+   */
+  async getUsers() {
+    try {
+      const response = await api.get('/api/auth/users/');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { error: 'Erreur lors de la récupération des utilisateurs' };
+    }
+  }
+
+  /**
    * Récupération de l'utilisateur actuel depuis le localStorage
    * @returns {Object|null} Données utilisateur ou null
    */

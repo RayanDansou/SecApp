@@ -25,7 +25,8 @@
     "description": "Description",
     "title": "Titre",
     "required": "Obligatoire",
-    "optional": "Optionnel"
+    "optional": "Optionnel",
+    "you": "Vous"
   },
   "navbar": {
     "dashboard": "Tableau de bord",
@@ -99,7 +100,15 @@
     "updateProfile": "Mettre à jour le profil",
     "profileUpdated": "Profil mis à jour avec succès",
     "passwordChanged": "Mot de passe modifié avec succès",
-    "joinedOn": "Inscrit le"
+    "joinedOn": "Inscrit le",
+    "dangerZone": "Zone dangereuse",
+    "deleteAccount": "Supprimer mon compte",
+    "deleteAccountWarning": "Cette action est irréversible. Toutes vos données seront définitivement supprimées.",
+    "confirmDeleteAccount": "Êtes-vous vraiment sûr de vouloir supprimer votre compte ?",
+    "confirmDeleteAccountMessage": "Tapez votre nom d'utilisateur pour confirmer : {{username}}",
+    "accountDeleted": "Compte supprimé avec succès",
+    "deletingAccount": "Suppression...",
+    "usernameDoesNotMatch": "Le nom d'utilisateur ne correspond pas"
   },
   "questionnaire": {
     "title": "Questionnaire",
@@ -228,6 +237,18 @@
     "sending": "Envoi...",
     "send": "Envoyer",
     "writeComment": "Écrivez votre commentaire..."
+  },
+  "admin": {
+    "manageUsers": "Gérer les utilisateurs",
+    "userManagement": "Gestion des utilisateurs",
+    "userList": "Liste des utilisateurs",
+    "totalUsers": "Total : {{count}} utilisateur(s)",
+    "deleteUser": "Supprimer l'utilisateur",
+    "confirmDeleteUser": "Êtes-vous sûr de vouloir supprimer {{username}} ?",
+    "confirmDeleteUserMessage": "Cette action est irréversible. Tous les questionnaires et réponses de cet utilisateur seront supprimés.",
+    "userDeleted": "Utilisateur supprimé avec succès",
+    "cannotDeleteSelf": "Vous ne pouvez pas supprimer votre propre compte depuis cette interface",
+    "noUsers": "Aucun utilisateur trouvé"
   },
   "errors": {
     "generic": "Une erreur est survenue",
