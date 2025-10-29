@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -6,7 +6,7 @@ import authService from '../services/authService';
 import './Profile.css';
 
 const Profile = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { user, updateProfile } = useAuth();
 
@@ -32,7 +32,6 @@ const Profile = () => {
   const [passwordErrors, setPasswordErrors] = useState({});
   const [profileSuccess, setProfileSuccess] = useState('');
   const [passwordSuccess, setPasswordSuccess] = useState('');
-  const [loadingProfile, setLoadingProfile] = useState(false);
   const [loadingPassword, setLoadingPassword] = useState(false);
 
   // États pour la sauvegarde individuelle des champs
@@ -59,21 +58,6 @@ const Profile = () => {
     }
   }, [user]);
 
-  // Gestion du formulaire de profil
-  const handleProfileChange = (e) => {
-    setProfileData({
-      ...profileData,
-      [e.target.name]: e.target.value,
-    });
-    if (profileErrors[e.target.name]) {
-      setProfileErrors({
-        ...profileErrors,
-        [e.target.name]: null,
-      });
-    }
-    setProfileSuccess('');
-  };
-
   // Gestion du formulaire de mot de passe
   const handlePasswordChange = (e) => {
     setPasswordData({
@@ -87,20 +71,6 @@ const Profile = () => {
       });
     }
     setPasswordSuccess('');
-  };
-
-  // Validation du profil
-  const validateProfile = () => {
-    const errors = {};
-
-    if (!profileData.email.trim()) {
-      errors.email = t('errors.formIncomplete');
-    } else if (!/\S+@\S+\.\S+/.test(profileData.email)) {
-      errors.email = t('errors.validationError');
-    }
-
-    setProfileErrors(errors);
-    return Object.keys(errors).length === 0;
   };
 
   // Validation du mot de passe
@@ -161,45 +131,6 @@ const Profile = () => {
     }
   };
 
-  // Soumettre la modification du profil
-  const handleProfileSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!validateProfile()) {
-      return;
-    }
-
-    setLoadingProfile(true);
-    setProfileErrors({});
-    setProfileSuccess('');
-
-    try {
-      const result = await updateProfile(profileData);
-
-      if (result.success) {
-        setProfileSuccess(t('profile.profileUpdated'));
-      } else {
-        if (result.error) {
-          const errors = {};
-          Object.keys(result.error).forEach((key) => {
-            if (Array.isArray(result.error[key])) {
-              errors[key] = result.error[key][0];
-            } else {
-              errors[key] = result.error[key];
-            }
-          });
-          setProfileErrors(errors);
-        } else {
-          setProfileErrors({ general: t('errors.generic') });
-        }
-      }
-    } catch (err) {
-      setProfileErrors({ general: t('errors.generic') });
-    } finally {
-      setLoadingProfile(false);
-    }
-  };
-
   // Soumettre le changement de mot de passe
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
@@ -213,7 +144,7 @@ const Profile = () => {
     setPasswordSuccess('');
 
     try {
-      const result = await authService.changePassword(
+      await authService.changePassword(
         passwordData.old_password,
         passwordData.new_password,
         passwordData.new_password2
@@ -284,8 +215,8 @@ const Profile = () => {
       <div className="settings-content">
         {/* Header */}
         <div className="settings-header">
-          <h1>Settings</h1>
-          <p>Customize your account and preferences.</p>
+          <h1>{t('profile.settings')}</h1>
+          <p>{t('profile.customizeAccount')}</p>
         </div>
 
         {/* Layout avec sidebar */}
@@ -296,13 +227,13 @@ const Profile = () => {
               className={`sidebar-tab ${activeTab === 'account' ? 'active' : ''}`}
               onClick={() => setActiveTab('account')}
             >
-              Account
+              {t('profile.account')}
             </button>
             <button
               className={`sidebar-tab ${activeTab === 'security' ? 'active' : ''}`}
               onClick={() => setActiveTab('security')}
             >
-              Security
+              {t('profile.security')}
             </button>
           </div>
 
@@ -311,8 +242,8 @@ const Profile = () => {
             {activeTab === 'account' && (
               <div className="settings-section">
                 <div className="section-header">
-                  <h2>Profile</h2>
-                  <p>Edit your profile and information.</p>
+                  <h2>{t('profile.profileSection')}</h2>
+                  <p>{t('profile.editProfile')}</p>
                 </div>
 
                 {profileSuccess && (
@@ -330,54 +261,54 @@ const Profile = () => {
                 {/* Username */}
                 <div className="field-row">
                   <div className="field-info">
-                    <label>Username</label>
+                    <label>{t('auth.username')}</label>
                     <input
                       type="text"
                       value={profileData.username}
                       onChange={(e) => setProfileData({ ...profileData, username: e.target.value })}
                       disabled={savingUsername}
                     />
-                    <span className="field-hint">Your username will be visible to everyone.</span>
+                    <span className="field-hint">{t('profile.usernameHint')}</span>
                   </div>
                   <button
                     className="btn-save"
                     onClick={() => handleSaveField('username', profileData.username, setSavingUsername)}
                     disabled={savingUsername}
                   >
-                    {savingUsername ? 'Saving...' : 'Save'}
+                    {savingUsername ? t('profile.saving') : t('common.save')}
                   </button>
                 </div>
 
                 {/* Email */}
                 <div className="field-row">
                   <div className="field-info">
-                    <label>Email</label>
+                    <label>{t('auth.email')}</label>
                     <input
                       type="email"
                       value={profileData.email}
                       onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
                       disabled={savingEmail}
                     />
-                    <span className="field-hint">Your email is used for login and password recovery.</span>
+                    <span className="field-hint">{t('profile.emailHint')}</span>
                   </div>
                   <button
                     className="btn-save"
                     onClick={() => handleSaveField('email', profileData.email, setSavingEmail)}
                     disabled={savingEmail}
                   >
-                    {savingEmail ? 'Saving...' : 'Save'}
+                    {savingEmail ? t('profile.saving') : t('common.save')}
                   </button>
                 </div>
 
                 {/* First name */}
                 <div className="field-row">
                   <div className="field-info">
-                    <label>First name</label>
+                    <label>{t('auth.firstName')}</label>
                     <input
                       type="text"
                       value={profileData.first_name}
                       onChange={(e) => setProfileData({ ...profileData, first_name: e.target.value })}
-                      placeholder="First name"
+                      placeholder={t('auth.firstName')}
                       disabled={savingFirstName}
                     />
                   </div>
@@ -386,19 +317,19 @@ const Profile = () => {
                     onClick={() => handleSaveField('first_name', profileData.first_name, setSavingFirstName)}
                     disabled={savingFirstName}
                   >
-                    {savingFirstName ? 'Saving...' : 'Save'}
+                    {savingFirstName ? t('profile.saving') : t('common.save')}
                   </button>
                 </div>
 
                 {/* Last name */}
                 <div className="field-row">
                   <div className="field-info">
-                    <label>Last name</label>
+                    <label>{t('auth.lastName')}</label>
                     <input
                       type="text"
                       value={profileData.last_name}
                       onChange={(e) => setProfileData({ ...profileData, last_name: e.target.value })}
-                      placeholder="Last name"
+                      placeholder={t('auth.lastName')}
                       disabled={savingLastName}
                     />
                   </div>
@@ -407,23 +338,23 @@ const Profile = () => {
                     onClick={() => handleSaveField('last_name', profileData.last_name, setSavingLastName)}
                     disabled={savingLastName}
                   >
-                    {savingLastName ? 'Saving...' : 'Save'}
+                    {savingLastName ? t('profile.saving') : t('common.save')}
                   </button>
                 </div>
 
                 {/* Account info (read-only) */}
                 <div className="field-row read-only">
                   <div className="field-info">
-                    <label>Role</label>
+                    <label>{t('auth.role')}</label>
                     <span className="role-badge">{getRoleDisplayName(user?.role)}</span>
                   </div>
                 </div>
 
                 <div className="field-row read-only">
                   <div className="field-info">
-                    <label>Joined on</label>
+                    <label>{t('profile.joinedOn')}</label>
                     <span className="info-text">
-                      {user?.date_joined ? new Date(user.date_joined).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}
+                      {user?.date_joined ? new Date(user.date_joined).toLocaleDateString(i18n.language === 'fr' ? 'fr-FR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}
                     </span>
                   </div>
                 </div>
@@ -433,8 +364,8 @@ const Profile = () => {
             {activeTab === 'security' && (
               <div className="settings-section">
                 <div className="section-header">
-                  <h2>Password & Security</h2>
-                  <p>Manage your password and account security.</p>
+                  <h2>{t('profile.passwordSecurity')}</h2>
+                  <p>{t('profile.passwordSecuritySubtitle')}</p>
                 </div>
 
                 {passwordSuccess && (
@@ -451,10 +382,10 @@ const Profile = () => {
 
                 {/* Change Password */}
                 <form onSubmit={handlePasswordSubmit} className="password-form">
-                  <h3>Change Password</h3>
+                  <h3>{t('profile.changePassword')}</h3>
 
                   <div className="form-group">
-                    <label htmlFor="old_password">Current password</label>
+                    <label htmlFor="old_password">{t('profile.currentPassword')}</label>
                     <input
                       type="password"
                       id="old_password"
@@ -470,7 +401,7 @@ const Profile = () => {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="new_password">New password</label>
+                    <label htmlFor="new_password">{t('profile.newPassword')}</label>
                     <input
                       type="password"
                       id="new_password"
@@ -478,7 +409,7 @@ const Profile = () => {
                       value={passwordData.new_password}
                       onChange={handlePasswordChange}
                       disabled={loadingPassword}
-                      placeholder="Password"
+                      placeholder={t('auth.password')}
                       className={passwordErrors.new_password ? 'input-error' : ''}
                     />
                     {passwordErrors.new_password && (
@@ -487,7 +418,7 @@ const Profile = () => {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="new_password2">Confirm password</label>
+                    <label htmlFor="new_password2">{t('auth.confirmPassword')}</label>
                     <input
                       type="password"
                       id="new_password2"
@@ -495,7 +426,7 @@ const Profile = () => {
                       value={passwordData.new_password2}
                       onChange={handlePasswordChange}
                       disabled={loadingPassword}
-                      placeholder="Confirm password"
+                      placeholder={t('auth.confirmPassword')}
                       className={passwordErrors.new_password2 ? 'input-error' : ''}
                     />
                     {passwordErrors.new_password2 && (
@@ -508,22 +439,22 @@ const Profile = () => {
                     className="btn btn-primary"
                     disabled={loadingPassword}
                   >
-                    {loadingPassword ? 'Changing...' : 'Change password'}
+                    {loadingPassword ? t('profile.changingPassword') : t('profile.changePassword')}
                   </button>
                 </form>
 
                 {/* Danger Zone */}
                 <div className="danger-zone-section">
-                  <h3>Danger Zone</h3>
+                  <h3>{t('profile.dangerZone')}</h3>
                   <div className="danger-content">
                     <p className="danger-warning">
-                      This action is irreversible. All your data will be permanently deleted.
+                      {t('profile.deleteAccountWarning')}
                     </p>
                     <button
                       className="btn btn-danger"
                       onClick={handleOpenDeleteModal}
                     >
-                      Delete my account
+                      {t('profile.deleteAccount')}
                     </button>
                   </div>
                 </div>
@@ -538,18 +469,18 @@ const Profile = () => {
         <div className="modal-overlay" onClick={handleCloseDeleteModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>Confirm Account Deletion</h2>
+              <h2>{t('profile.confirmDeleteAccount')}</h2>
               <button className="modal-close" onClick={handleCloseDeleteModal}>
                 ×
               </button>
             </div>
             <div className="modal-body">
               <p className="modal-warning">
-                This action is irreversible. All your data will be permanently deleted.
+                {t('profile.deleteAccountWarning')}
               </p>
-              <p className="modal-instruction">
-                Please type <strong>{user?.username}</strong> to confirm deletion.
-              </p>
+              <p className="modal-instruction" dangerouslySetInnerHTML={{
+                __html: t('profile.confirmDeleteAccountMessage', { username: user?.username })
+              }} />
 
               {deleteError && (
                 <div className="alert alert-error">
@@ -574,14 +505,14 @@ const Profile = () => {
                 onClick={handleCloseDeleteModal}
                 disabled={loadingDelete}
               >
-                Cancel
+                {t('common.cancel')}
               </button>
               <button
                 className="btn btn-danger"
                 onClick={handleDeleteAccount}
                 disabled={loadingDelete || deleteConfirmUsername !== user?.username}
               >
-                {loadingDelete ? 'Deleting...' : 'Delete my account'}
+                {loadingDelete ? t('profile.deletingAccount') : t('profile.deleteAccount')}
               </button>
             </div>
           </div>
