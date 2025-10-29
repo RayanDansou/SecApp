@@ -352,10 +352,7 @@ body.dark-mode .language-option:hover {
   justify-content: center;
 }
 
-/* Padding pour compenser la navbar fixed */
-body {
-  padding-top: 88px;
-}
+/* Padding déplacé vers Layout.css pour ne s'appliquer qu'aux pages avec navbar */
 
 /* Responsive */
 @media (max-width: 1024px) {
@@ -415,10 +412,6 @@ body {
   .user-dropdown-menu {
     right: 0;
   }
-
-  body {
-    padding-top: 120px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -450,9 +443,5 @@ body {
     width: 36px;
     height: 36px;
     font-size: 12px;
-  }
-
-  body {
-    padding-top: 140px;
   }
 }

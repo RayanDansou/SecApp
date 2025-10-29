@@ -10,4 +10,18 @@
   flex: 1;
   background-color: var(--bg-secondary);
   transition: background-color 0.3s ease;
+  padding-top: 88px; /* Compensation pour la navbar fixed */
+}
+
+/* Responsive: ajuster le padding selon la taille de la navbar */
+@media (max-width: 768px) {
+  .layout-content {
+    padding-top: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .layout-content {
+    padding-top: 140px;
+  }
 }
