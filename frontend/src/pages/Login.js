@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
+import Logo from '../components/Logo';
 import './Login.css';
 
 const Login = () => {
@@ -50,7 +51,7 @@ const Login = () => {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <h1>{t('common.appName')}</h1>
+          <Logo size={60} showText={true} variant="light" />
           <p>{t('auth.loginSubtitle')}</p>
         </div>
 

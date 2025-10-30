@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { LogOut, Moon, Sun, Settings, Shield, ChevronRight } from 'lucide-react';
+import Logo from './Logo';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -67,7 +68,7 @@ const Navbar = () => {
     <nav className={`navbar ${isScrolled ? 'navbar-scrolled' : ''}`}>
       <div className="navbar-container">
         <div className="nav-brand" onClick={() => navigate('/dashboard')}>
-          <h2>{t('common.appName')}</h2>
+          <Logo size={32} showText={true} />
         </div>
 
         <div className="nav-links">

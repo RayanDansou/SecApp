@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
+import Logo from '../components/Logo';
 import './Register.css';
 
 const Register = () => {
@@ -117,7 +118,7 @@ const Register = () => {
     <div className="register-container">
       <div className="register-card">
         <div className="register-header">
-          <h1>{t('common.appName')}</h1>
+          <Logo size={60} showText={true} variant="light" />
           <p>{t('auth.registerSubtitle')}</p>
         </div>
 
