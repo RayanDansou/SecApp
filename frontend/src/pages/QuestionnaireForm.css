@@ -172,7 +172,7 @@
 }
 
 .input-error:focus {
-  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
+  box-shadow: 0 0 0 3px rgba(135, 10, 5, 0.1) !important;
 }
 
 .error-message {

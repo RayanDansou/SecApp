@@ -144,7 +144,7 @@ body.dark-mode .users-table tbody tr:hover {
 }
 
 .btn-danger-small:hover:not(:disabled) {
-  background-color: #c82333;
+  background-color: #6b0804;
 }
 
 .btn-danger-small:disabled {
@@ -258,7 +258,7 @@ body.dark-mode .modal-close:hover {
   line-height: 1.6;
   margin-bottom: 20px;
   padding: 12px;
-  background-color: rgba(220, 53, 69, 0.1);
+  background-color: rgba(135, 10, 5, 0.1);
   border-left: 3px solid var(--danger);
   border-radius: 4px;
   font-weight: 500;
@@ -322,7 +322,7 @@ body.dark-mode .modal-close:hover {
 }
 
 .btn-danger:hover:not(:disabled) {
-  background-color: #c82333;
+  background-color: #6b0804;
 }
 
 .btn:disabled {

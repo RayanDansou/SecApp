@@ -44,8 +44,8 @@ body.dark-mode .status-validation {
 }
 
 .status-rejected {
-  background-color: var(--error-bg, #ffebee);
-  color: var(--error, #d32f2f);
+  background-color: var(--error-bg, #fde8e7);
+  color: var(--error, #870a05);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 

@@ -242,11 +242,11 @@ body.dark-mode .dropdown-item:hover {
 }
 
 .dropdown-item-danger:hover {
-  background-color: rgba(220, 53, 69, 0.1);
+  background-color: rgba(135, 10, 5, 0.1);
 }
 
 body.dark-mode .dropdown-item-danger:hover {
-  background-color: rgba(239, 68, 68, 0.15);
+  background-color: rgba(201, 69, 63, 0.15);
 }
 
 /* Submenu */
