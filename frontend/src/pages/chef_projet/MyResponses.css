@@ -28,7 +28,7 @@
 .btn-back {
   background-color: transparent;
   border: none;
-  color: #4285f4;
+  color: #0D8FDB;
   font-size: 1rem;
   cursor: pointer;
   padding: 8px 0;
@@ -37,11 +37,11 @@
 }
 
 .btn-back:hover {
-  color: #357ae8;
+  color: #0B7AC2;
 }
 
 .btn-new {
-  background-color: #4285f4;
+  background-color: #0D8FDB;
   color: white;
   border: none;
   padding: 12px 24px;
@@ -54,7 +54,7 @@
 }
 
 .btn-new:hover {
-  background-color: #357ae8;
+  background-color: #0B7AC2;
 }
 
 .loading {
@@ -111,7 +111,7 @@
 }
 
 .btn-start {
-  background-color: #4285f4;
+  background-color: #0D8FDB;
   color: white;
   border: none;
   padding: 12px 32px;
@@ -123,7 +123,7 @@
 }
 
 .btn-start:hover {
-  background-color: #357ae8;
+  background-color: #0B7AC2;
 }
 
 .responses-list {
@@ -239,12 +239,12 @@
 }
 
 .btn-continue {
-  background-color: #4285f4;
+  background-color: #0D8FDB;
   color: white;
 }
 
 .btn-continue:hover {
-  background-color: #357ae8;
+  background-color: #0B7AC2;
 }
 
 @media (max-width: 768px) {

@@ -118,7 +118,7 @@
 }
 
 .question-number {
-  background-color: #4285f4;
+  background-color: #0D8FDB;
   color: white;
   padding: 4px 12px;
   border-radius: 4px;
@@ -156,7 +156,7 @@
 
 .question-item textarea:focus {
   outline: none;
-  border-color: #4285f4;
+  border-color: #0D8FDB;
 }
 
 .question-item textarea:disabled {
@@ -190,12 +190,12 @@
 }
 
 .btn-primary {
-  background-color: #4285f4;
+  background-color: #0D8FDB;
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #357ae8;
+  background-color: #0B7AC2;
 }
 
 .btn-secondary {

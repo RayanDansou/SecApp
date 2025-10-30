@@ -11,7 +11,7 @@
 .btn-back {
   background-color: transparent;
   border: none;
-  color: #4285f4;
+  color: #0D8FDB;
   font-size: 1rem;
   cursor: pointer;
   margin-bottom: 16px;
@@ -20,7 +20,7 @@
 }
 
 .btn-back:hover {
-  color: #357ae8;
+  color: #0B7AC2;
 }
 
 .header-content {
@@ -213,7 +213,7 @@
 }
 
 .answer-number {
-  background-color: #4285f4;
+  background-color: #0D8FDB;
   color: white;
   padding: 4px 12px;
   border-radius: 4px;
@@ -338,7 +338,7 @@
 
 .arrow {
   font-size: 1.5rem;
-  color: #4285f4;
+  color: #0D8FDB;
 }
 
 .form-group {
@@ -372,7 +372,7 @@
 
 .form-group textarea:focus {
   outline: none;
-  border-color: #4285f4;
+  border-color: #0D8FDB;
 }
 
 .modal-footer {
@@ -396,12 +396,12 @@
 }
 
 .btn-primary {
-  background-color: #4285f4;
+  background-color: #0D8FDB;
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #357ae8;
+  background-color: #0B7AC2;
 }
 
 .btn-primary:disabled {

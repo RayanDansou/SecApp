@@ -11,7 +11,7 @@
 .btn-back {
   background-color: transparent;
   border: none;
-  color: #4285f4;
+  color: #0D8FDB;
   font-size: 1rem;
   cursor: pointer;
   margin-bottom: 16px;
@@ -20,7 +20,7 @@
 }
 
 .btn-back:hover {
-  color: #357ae8;
+  color: #0B7AC2;
 }
 
 .header-content {
@@ -46,7 +46,7 @@
 }
 
 .btn-create {
-  background-color: #4285f4;
+  background-color: #0D8FDB;
   color: white;
   border: none;
   padding: 12px 24px;
@@ -59,7 +59,7 @@
 }
 
 .btn-create:hover {
-  background-color: #357ae8;
+  background-color: #0B7AC2;
 }
 
 .filters {
@@ -82,14 +82,14 @@
 }
 
 .filter-btn:hover {
-  border-color: #4285f4;
-  color: #4285f4;
+  border-color: #0D8FDB;
+  color: #0D8FDB;
 }
 
 .filter-btn.active {
-  background-color: #4285f4;
+  background-color: #0D8FDB;
   color: white;
-  border-color: #4285f4;
+  border-color: #0D8FDB;
 }
 
 .loading {
@@ -138,7 +138,7 @@
 }
 
 .btn-primary {
-  background-color: #4285f4;
+  background-color: #0D8FDB;
   color: white;
   border: none;
   padding: 12px 32px;
@@ -150,7 +150,7 @@
 }
 
 .btn-primary:hover {
-  background-color: #357ae8;
+  background-color: #0B7AC2;
 }
 
 .templates-list {

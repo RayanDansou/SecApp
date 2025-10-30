@@ -64,7 +64,7 @@
 }
 
 .users-table thead {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0D8FDB 0%, #0B7AC2 100%);
 }
 
 .users-table th {
@@ -87,11 +87,11 @@
 }
 
 .users-table tbody tr:hover {
-  background-color: rgba(102, 126, 234, 0.05);
+  background-color: rgba(13, 143, 219, 0.05);
 }
 
 body.dark-mode .users-table tbody tr:hover {
-  background-color: rgba(102, 126, 234, 0.1);
+  background-color: rgba(13, 143, 219, 0.1);
 }
 
 .users-table td {
@@ -123,7 +123,7 @@ body.dark-mode .users-table tbody tr:hover {
 
 .role-badge {
   display: inline-block;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3B4D5C;
   color: white;
   padding: 4px 12px;
   border-radius: 16px;

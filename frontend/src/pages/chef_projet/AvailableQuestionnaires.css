@@ -138,7 +138,7 @@
 }
 
 .start-button {
-  background-color: #4285f4;
+  background-color: #0D8FDB;
   color: white;
   border: none;
   padding: 12px 24px;
@@ -151,7 +151,7 @@
 }
 
 .start-button:hover {
-  background-color: #357ae8;
+  background-color: #0B7AC2;
 }
 
 @media (max-width: 768px) {
