@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
-import { LogOut, Moon, Sun, Settings, Shield, ChevronRight } from 'lucide-react';
+import { LogOut, Moon, Sun, Settings, Shield, ChevronRight, Menu, X } from 'lucide-react';
 import Logo from './Logo';
 import './Navbar.css';
 
@@ -16,7 +16,9 @@ const Navbar = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
+  const mobileMenuRef = useRef(null);
 
   const toggleLanguage = (lang) => {
     i18n.changeLanguage(lang);
@@ -34,6 +36,12 @@ const Navbar = () => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setShowUserMenu(false);
         setShowLanguageMenu(false);
+      }
+
+      // Fermer le menu mobile si on clique en dehors
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target) &&
+          !event.target.closest('.mobile-menu-button')) {
+        setMobileMenuOpen(false);
       }
     };
 
@@ -71,17 +79,26 @@ const Navbar = () => {
           <Logo size={32} showText={true} />
         </div>
 
-        <div className="nav-links">
-        <a onClick={() => navigate('/dashboard')} className="nav-link">
+        {/* Hamburger Menu Button - Mobile Only */}
+        <button
+          className="mobile-menu-button"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
+        <div ref={mobileMenuRef} className={`nav-links ${mobileMenuOpen ? 'mobile-menu-open' : ''}`}>
+        <a onClick={() => { navigate('/dashboard'); setMobileMenuOpen(false); }} className="nav-link">
           {t('navbar.dashboard')}
         </a>
 
         {user?.role === 'CHEF_PROJET' && (
           <>
-            <a onClick={() => navigate('/available-questionnaires')} className="nav-link">
+            <a onClick={() => { navigate('/available-questionnaires'); setMobileMenuOpen(false); }} className="nav-link">
               {t('questionnaire.questionnaires')}
             </a>
-            <a onClick={() => navigate('/my-responses')} className="nav-link">
+            <a onClick={() => { navigate('/my-responses'); setMobileMenuOpen(false); }} className="nav-link">
               {t('questionnaire.myResponses')}
             </a>
           </>
@@ -89,23 +106,23 @@ const Navbar = () => {
 
         {user?.role === 'ANALYSTE' && (
           <>
-            <a onClick={() => navigate('/analyste/submitted-responses')} className="nav-link">
+            <a onClick={() => { navigate('/analyste/submitted-responses'); setMobileMenuOpen(false); }} className="nav-link">
               {t('analyste.submittedResponses')}
             </a>
-            <a onClick={() => navigate('/analyste/my-templates')} className="nav-link">
+            <a onClick={() => { navigate('/analyste/my-templates'); setMobileMenuOpen(false); }} className="nav-link">
               {t('template.myTemplates')}
             </a>
           </>
         )}
 
         {user?.role === 'BUSINESS_OWNER' && (
-          <a onClick={() => navigate('/business-owner/validated-responses')} className="nav-link">
+          <a onClick={() => { navigate('/business-owner/validated-responses'); setMobileMenuOpen(false); }} className="nav-link">
             {t('businessOwner.validatedResponses')}
           </a>
         )}
 
         {user?.role === 'ADMIN' && (
-          <a onClick={() => navigate('/admin/users')} className="nav-link">
+          <a onClick={() => { navigate('/admin/users'); setMobileMenuOpen(false); }} className="nav-link">
             {t('admin.userManagement')}
           </a>
         )}

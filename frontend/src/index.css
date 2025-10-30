@@ -96,3 +96,65 @@ code {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary-hover);
 }
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  /* Améliorer les zones tactiles pour mobile */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px; /* iOS recommandé */
+  }
+
+  /* Scrollbar plus fin sur mobile */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 13px;
+  }
+
+  /* Réduire les scrollbars sur petits écrans */
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  /* Optimiser le touch scrolling */
+  * {
+    -webkit-tap-highlight-color: rgba(13, 143, 219, 0.1);
+  }
+}
+
+/* Améliorer la lisibilité sur petits écrans */
+@media (max-width: 360px) {
+  body {
+    font-size: 12px;
+  }
+}
+
+/* Orientation paysage sur mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  body {
+    font-size: 12px;
+  }
+}
+
+/* Améliorer les performances d'animation sur mobile */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

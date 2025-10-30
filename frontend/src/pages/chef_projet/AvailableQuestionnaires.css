@@ -154,8 +154,84 @@
   background-color: #0B7AC2;
 }
 
+@media (max-width: 1024px) {
+  .questionnaires-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
+  .available-questionnaires {
+    padding: 24px 16px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
   .questionnaires-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .questionnaire-card {
+    padding: 16px;
+  }
+
+  .card-header h3 {
+    font-size: 18px;
+  }
+
+  .card-description {
+    font-size: 14px;
+  }
+
+  .start-button {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .available-questionnaires {
+    padding: 16px 12px;
+  }
+
+  .page-header h1 {
+    font-size: 20px;
+  }
+
+  .questionnaires-grid {
+    gap: 12px;
+  }
+
+  .questionnaire-card {
+    padding: 12px;
+  }
+
+  .card-header h3 {
+    font-size: 16px;
+  }
+
+  .card-description {
+    font-size: 13px;
+  }
+
+  .card-meta {
+    font-size: 12px;
+    flex-wrap: wrap;
+  }
+
+  .meta-label {
+    font-size: 11px;
+  }
+
+  .meta-value {
+    font-size: 12px;
+  }
+
+  .start-button {
+    padding: 8px 16px;
+    font-size: 14px;
   }
 }
