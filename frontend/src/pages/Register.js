@@ -118,7 +118,9 @@ const Register = () => {
     <div className="register-container">
       <div className="register-card">
         <div className="register-header">
-          <Logo size={60} showText={true} variant="light" />
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+            <Logo size={60} showText={true} />
+          </div>
           <p>{t('auth.registerSubtitle')}</p>
         </div>
 

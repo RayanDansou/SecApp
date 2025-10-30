@@ -51,7 +51,9 @@ const Login = () => {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <Logo size={60} showText={true} variant="light" />
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+            <Logo size={60} showText={true} />
+          </div>
           <p>{t('auth.loginSubtitle')}</p>
         </div>
 
