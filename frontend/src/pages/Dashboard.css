@@ -17,6 +17,7 @@
   margin-bottom: 32px;
   box-shadow: 0 2px 8px var(--shadow);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden; /* Prevent overflow */
 }
 
 .welcome-card h1 {
@@ -24,11 +25,13 @@
   color: var(--text-primary);
   font-size: 28px;
   transition: color 0.3s ease;
+  word-wrap: break-word; /* Break long words */
+  overflow-wrap: break-word;
 }
 
 .user-info {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
 }
 
@@ -51,6 +54,9 @@
   color: var(--text-primary);
   font-weight: 500;
   transition: color 0.3s ease;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .role-badge {
@@ -312,15 +318,22 @@
   }
 
   .welcome-card {
-    padding: 24px 16px;
+    padding: 20px 16px;
+    border-radius: 8px;
   }
 
   .welcome-card h1 {
-    font-size: 24px;
+    font-size: 22px;
+    margin-bottom: 20px;
   }
 
   .user-info {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .info-item {
+    gap: 6px;
   }
 
   .dashboard-cards {
@@ -363,29 +376,45 @@
 @media (max-width: 480px) {
   .dashboard-content {
     padding: 16px 12px;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   .welcome-card {
-    padding: 20px 12px;
-    margin-bottom: 24px;
+    padding: 16px 12px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px var(--shadow);
   }
 
   .welcome-card h1 {
-    font-size: 20px;
-    margin-bottom: 16px;
+    font-size: 18px;
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .user-info {
+    gap: 10px;
+  }
+
+  .info-item {
+    gap: 4px;
   }
 
   .info-label {
-    font-size: 11px;
+    font-size: 10px;
+    letter-spacing: 0.3px;
   }
 
   .info-value {
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.4;
   }
 
   .role-badge {
-    font-size: 12px;
-    padding: 3px 10px;
+    font-size: 11px;
+    padding: 3px 8px;
+    white-space: nowrap;
   }
 
   .dashboard-cards {
