@@ -288,6 +288,8 @@
     "cannotAnalyzeDraft": "Impossible d'analyser un brouillon",
     "selectLanguage": "Langue de l'analyse :",
     "quickValidationHint": "Analyse terminée. Vous pouvez maintenant valider ou rejeter le questionnaire.",
+    "lowCoherenceWarning": "Score de cohérence trop faible ({{score}}%). La validation est bloquée. Vous pouvez uniquement rejeter ou mettre en attente ce questionnaire.",
+    "validationBlocked": "Validation bloquée : score de cohérence trop faible",
     "processingTime": "Temps de traitement",
     "analyzedBy": "Analysé par",
     "coherenceScore": "Score de Cohérence Global",

@@ -8,6 +8,7 @@ const StatusHistory = ({ responseId }) => {
 
   useEffect(() => {
     loadHistory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseId]);
 
   const loadHistory = async () => {

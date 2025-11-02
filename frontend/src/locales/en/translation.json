@@ -288,6 +288,8 @@
     "cannotAnalyzeDraft": "Cannot analyze a draft",
     "selectLanguage": "Analysis language:",
     "quickValidationHint": "Analysis complete. You can now validate or reject the questionnaire.",
+    "lowCoherenceWarning": "Coherence score too low ({{score}}%). Validation is blocked. You can only reject or set to pending this questionnaire.",
+    "validationBlocked": "Validation blocked: coherence score too low",
     "processingTime": "Processing time",
     "analyzedBy": "Analyzed by",
     "coherenceScore": "Overall Coherence Score",

@@ -19,18 +19,11 @@ const ResponseDetail = () => {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [aiAnalyses, setAiAnalyses] = useState([]);
   const [latestAnalysis, setLatestAnalysis] = useState(null);
-
-  useEffect(() => {
-    loadResponse();
-    loadAIAnalyses();
-  }, [id]);
 
   const loadAIAnalyses = async () => {
     try {
       const analyses = await questionnaireService.getAIAnalyses(id);
-      setAiAnalyses(analyses);
       if (analyses?.length > 0) {
         setLatestAnalysis(analyses[0]);
       }
@@ -39,6 +32,12 @@ const ResponseDetail = () => {
       console.log('No AI analyses yet');
     }
   };
+
+  useEffect(() => {
+    loadResponse();
+    loadAIAnalyses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const loadResponse = async () => {
     try {

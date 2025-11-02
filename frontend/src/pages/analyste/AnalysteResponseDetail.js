@@ -36,6 +36,7 @@ const AnalysteResponseDetail = () => {
   useEffect(() => {
     loadResponse();
     loadAIAnalyses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const loadResponse = async () => {
@@ -141,6 +142,60 @@ const AnalysteResponseDetail = () => {
       await questionnaireService.changeResponseStatus(id, statusChange);
       handleCloseStatusModal();
       loadResponse(); // Recharger pour voir le nouveau statut
+    } catch (err) {
+      setError(err.error || t('errors.generic'));
+    } finally {
+      setChangingStatus(false);
+    }
+  };
+
+  const handleQuickValidation = async (targetStatus) => {
+    // Demander confirmation
+    const confirmMessage = targetStatus === 'REJETE'
+      ? t('analyste.confirmReject', { defaultValue: 'Êtes-vous sûr de vouloir rejeter ce questionnaire ?' })
+      : targetStatus === 'VALIDE'
+      ? t('analyste.confirmValidate', { defaultValue: 'Êtes-vous sûr de vouloir valider ce questionnaire ?' })
+      : t('analyste.confirmStatusChange', { defaultValue: 'Êtes-vous sûr de vouloir changer le statut ?' });
+
+    if (!window.confirm(confirmMessage)) {
+      return;
+    }
+
+    setChangingStatus(true);
+    setError('');
+
+    try {
+      const currentStatus = response.status;
+
+      // Pour le rejet, on peut passer directement depuis n'importe quel statut
+      if (targetStatus === 'REJETE') {
+        await questionnaireService.changeResponseStatus(id, { new_status: 'REJETE', comment: '' });
+      }
+      // Pour mettre en attente (depuis SOUMIS uniquement)
+      else if (targetStatus === 'EN_ATTENTE') {
+        await questionnaireService.changeResponseStatus(id, { new_status: 'EN_ATTENTE', comment: '' });
+      }
+      // Pour la validation, il faut passer par les statuts intermédiaires
+      else if (targetStatus === 'VALIDE') {
+        // SOUMIS → EN_ATTENTE → EN_VALIDATION → VALIDE
+        if (currentStatus === 'SOUMIS') {
+          await questionnaireService.changeResponseStatus(id, { new_status: 'EN_ATTENTE', comment: '' });
+          await questionnaireService.changeResponseStatus(id, { new_status: 'EN_VALIDATION', comment: '' });
+          await questionnaireService.changeResponseStatus(id, { new_status: 'VALIDE', comment: '' });
+        }
+        // EN_ATTENTE → EN_VALIDATION → VALIDE
+        else if (currentStatus === 'EN_ATTENTE') {
+          await questionnaireService.changeResponseStatus(id, { new_status: 'EN_VALIDATION', comment: '' });
+          await questionnaireService.changeResponseStatus(id, { new_status: 'VALIDE', comment: '' });
+        }
+        // EN_VALIDATION → VALIDE
+        else if (currentStatus === 'EN_VALIDATION') {
+          await questionnaireService.changeResponseStatus(id, { new_status: 'VALIDE', comment: '' });
+        }
+      }
+
+      await loadResponse(); // Recharger pour voir le nouveau statut
+      await loadAIAnalyses(); // Recharger les analyses
     } catch (err) {
       setError(err.error || t('errors.generic'));
     } finally {
@@ -258,19 +313,42 @@ const AnalysteResponseDetail = () => {
             {/* Quick validation button after AI analysis */}
             {response?.status !== 'VALIDE' && response?.status !== 'REJETE' && (
               <div className="ai-quick-validation">
-                <p className="quick-validation-hint">
-                  {t('aiAnalysis.quickValidationHint', { defaultValue: 'Analyse terminée. Vous pouvez maintenant valider ou rejeter le questionnaire.' })}
-                </p>
+                {latestAnalysis.coherence_score < 20 ? (
+                  <div className="validation-warning">
+                    <p className="warning-text">
+                      ⚠️ {t('aiAnalysis.lowCoherenceWarning', {
+                        defaultValue: 'Score de cohérence trop faible (<20%). La validation est bloquée. Vous pouvez uniquement rejeter ou mettre en attente ce questionnaire.',
+                        score: latestAnalysis.coherence_score
+                      })}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="quick-validation-hint">
+                    {t('aiAnalysis.quickValidationHint', { defaultValue: 'Analyse terminée. Vous pouvez maintenant valider ou rejeter le questionnaire.' })}
+                  </p>
+                )}
+
                 <div className="quick-validation-actions">
+                  {latestAnalysis.coherence_score < 20 && response.status === 'SOUMIS' && (
+                    <button
+                      onClick={() => handleQuickValidation('EN_ATTENTE')}
+                      className="btn-quick-pending"
+                      disabled={changingStatus}
+                    >
+                      {t('analyste.setPending', { defaultValue: 'Mettre en attente' })}
+                    </button>
+                  )}
+
                   <button
-                    onClick={() => handleOpenStatusModal('VALIDE')}
+                    onClick={() => handleQuickValidation('VALIDE')}
                     className="btn-quick-validate"
-                    disabled={changingStatus}
+                    disabled={changingStatus || latestAnalysis.coherence_score < 20}
+                    title={latestAnalysis.coherence_score < 20 ? t('aiAnalysis.validationBlocked', { defaultValue: 'Validation bloquée : score de cohérence trop faible' }) : ''}
                   >
                     {t('analyste.validateQuestionnaire', { defaultValue: 'Valider le questionnaire' })}
                   </button>
                   <button
-                    onClick={() => handleOpenStatusModal('REJETE')}
+                    onClick={() => handleQuickValidation('REJETE')}
                     className="btn-quick-reject"
                     disabled={changingStatus}
                   >
