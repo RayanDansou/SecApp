@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
+from rest_framework.parsers import MultiPartParser, FormParser
+
 
 from .models import (
     Questionnaire,
@@ -180,6 +182,7 @@ class QuestionnaireDocumentViewSet(viewsets.ModelViewSet):
     Accès: ANALYSTE propriétaire pour create/delete, tous pour list/retrieve
     """
     serializer_class = QuestionnaireDocumentSerializer
+    parser_classes = (MultiPartParser, FormParser)
 
     def get_permissions(self):
         if self.action in ['create', 'destroy']:
@@ -397,6 +400,7 @@ class ResponseDocumentViewSet(viewsets.ModelViewSet):
     Accès: propriétaire pour create/delete, CanViewResponse pour list/retrieve
     """
     serializer_class = ResponseDocumentSerializer
+    parser_classes = (MultiPartParser, FormParser) 
 
     def get_permissions(self):
         if self.action in ['create', 'destroy']:
