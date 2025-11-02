@@ -7,7 +7,9 @@ from .views import (
     ChangePasswordView,
     RefreshTokenView,
     DeleteAccountView,
-    UserListView
+    UserListView,
+    PasswordResetRequestView,
+    PasswordResetConfirmView
 )
 
 app_name = 'users'
@@ -22,6 +24,10 @@ urlpatterns = [
     # Profil utilisateur
     path('profile/', UserProfileView.as_view(), name='profile'),
     path('change-password/', ChangePasswordView.as_view(), name='change_password'),
+
+    # Réinitialisation de mot de passe
+    path('password-reset/request/', PasswordResetRequestView.as_view(), name='password_reset_request'),
+    path('password-reset/confirm/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 
     # Gestion des comptes
     path('delete-account/', DeleteAccountView.as_view(), name='delete_account'),

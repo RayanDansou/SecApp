@@ -57,7 +57,21 @@
     "signIn": "Connectez-vous",
     "loggingIn": "Connexion...",
     "registering": "Inscription...",
-    "selectRole": "Sélectionnez un rôle"
+    "selectRole": "Sélectionnez un rôle",
+    "forgotPassword": "Mot de passe oublié ?",
+    "forgotPasswordTitle": "Réinitialiser votre mot de passe",
+    "forgotPasswordSubtitle": "Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe",
+    "sendResetLink": "Envoyer le lien",
+    "sendingResetLink": "Envoi...",
+    "resetLinkSent": "Lien de réinitialisation envoyé ! Consultez votre email.",
+    "backToLogin": "Retour à la connexion",
+    "resetPasswordTitle": "Créer un nouveau mot de passe",
+    "resetPasswordSubtitle": "Entrez votre nouveau mot de passe ci-dessous",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "resettingPassword": "Réinitialisation...",
+    "passwordResetSuccess": "Mot de passe réinitialisé avec succès ! Vous pouvez maintenant vous connecter.",
+    "passwordResetError": "Lien de réinitialisation invalide ou expiré",
+    "enterEmail": "Entrez votre adresse email"
   },
   "roles": {
     "CHEF_PROJET": "Chef de Projet",

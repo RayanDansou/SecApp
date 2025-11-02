@@ -5,13 +5,18 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.contrib.auth import authenticate
-from .models import User
+from django.conf import settings
+import os
+from .models import User, PasswordResetToken
 from .serializers import (
     UserSerializer,
     UserRegistrationSerializer,
     LoginSerializer,
-    ChangePasswordSerializer
+    ChangePasswordSerializer,
+    PasswordResetRequestSerializer,
+    PasswordResetConfirmSerializer
 )
+from .email_service import email_service
 
 
 class LoginView(APIView):
@@ -101,6 +106,17 @@ class RegisterView(generics.CreateAPIView):
 
         # Génération des tokens pour auto-login après registration
         refresh = RefreshToken.for_user(user)
+
+        # Envoyer l'email de bienvenue
+        try:
+            email_service.send_welcome_email(
+                email=user.email,
+                username=user.username,
+                role=user.role
+            )
+        except Exception as e:
+            print(f"Erreur lors de l'envoi de l'email de bienvenue: {str(e)}")
+            # On continue même si l'email échoue
 
         return Response({
             'user': UserSerializer(user).data,
@@ -234,3 +250,97 @@ class UserListView(generics.ListAPIView):
         else:
             # Les non-admins ne voient que leur propre profil
             return User.objects.filter(id=self.request.user.id)
+
+
+class PasswordResetRequestView(APIView):
+    """
+    Endpoint pour demander une réinitialisation de mot de passe - POST /api/auth/password-reset/request/
+    """
+    permission_classes = [AllowAny]
+    serializer_class = PasswordResetRequestSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        email = serializer.validated_data['email']
+
+        try:
+            user = User.objects.get(email=email)
+
+            # Créer un token de réinitialisation
+            reset_token = PasswordResetToken.create_token(user)
+
+            # Générer le lien de réinitialisation
+            frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:3333')
+            reset_link = f"{frontend_url}/reset-password?token={reset_token.token}"
+
+            # Envoyer l'email
+            try:
+                email_service.send_password_reset_email(
+                    email=user.email,
+                    reset_link=reset_link,
+                    username=user.username
+                )
+            except Exception as e:
+                print(f"Erreur lors de l'envoi de l'email: {str(e)}")
+                # On continue même si l'email échoue pour ne pas révéler si l'utilisateur existe
+
+            return Response(
+                {'message': 'Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.'},
+                status=status.HTTP_200_OK
+            )
+
+        except User.DoesNotExist:
+            # Pour des raisons de sécurité, on retourne le même message
+            # que si l'utilisateur existe (pour ne pas révéler l'existence du compte)
+            return Response(
+                {'message': 'Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.'},
+                status=status.HTTP_200_OK
+            )
+
+
+class PasswordResetConfirmView(APIView):
+    """
+    Endpoint pour confirmer la réinitialisation de mot de passe - POST /api/auth/password-reset/confirm/
+    """
+    permission_classes = [AllowAny]
+    serializer_class = PasswordResetConfirmSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        token_str = serializer.validated_data['token']
+        new_password = serializer.validated_data['new_password']
+
+        try:
+            # Récupérer le token
+            reset_token = PasswordResetToken.objects.get(token=token_str)
+
+            # Vérifier si le token est valide
+            if not reset_token.is_valid():
+                return Response(
+                    {'error': 'Le lien de réinitialisation est invalide ou a expiré.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Mettre à jour le mot de passe
+            user = reset_token.user
+            user.set_password(new_password)
+            user.save()
+
+            # Marquer le token comme utilisé
+            reset_token.used = True
+            reset_token.save()
+
+            return Response(
+                {'message': 'Mot de passe réinitialisé avec succès.'},
+                status=status.HTTP_200_OK
+            )
+
+        except PasswordResetToken.DoesNotExist:
+            return Response(
+                {'error': 'Le lien de réinitialisation est invalide.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )

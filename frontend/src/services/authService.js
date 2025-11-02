@@ -202,6 +202,42 @@ class AuthService {
     const user = this.getCurrentUser();
     return roles.includes(user?.role);
   }
+
+  /**
+   * Demande de réinitialisation de mot de passe
+   * @param {string} email - Email de l'utilisateur
+   * @returns {Promise} Message de confirmation
+   */
+  async requestPasswordReset(email) {
+    try {
+      const response = await api.post('/api/auth/password-reset/request/', {
+        email,
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { error: 'Erreur lors de la demande de réinitialisation' };
+    }
+  }
+
+  /**
+   * Réinitialisation du mot de passe avec token
+   * @param {string} token - Token de réinitialisation
+   * @param {string} newPassword - Nouveau mot de passe
+   * @param {string} newPassword2 - Confirmation du nouveau mot de passe
+   * @returns {Promise} Message de confirmation
+   */
+  async resetPassword(token, newPassword, newPassword2) {
+    try {
+      const response = await api.post('/api/auth/password-reset/confirm/', {
+        token,
+        new_password: newPassword,
+        new_password2: newPassword2,
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { error: 'Erreur lors de la réinitialisation du mot de passe' };
+    }
+  }
 }
 
 export default new AuthService();

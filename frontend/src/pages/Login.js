@@ -104,6 +104,9 @@ const Login = () => {
 
         <div className="login-footer">
           <p>
+            <Link to="/forgot-password">{t('auth.forgotPassword')}</Link>
+          </p>
+          <p>
             {t('auth.noAccount')}{' '}
             <Link to="/register">{t('auth.signUp')}</Link>
           </p>
