@@ -251,7 +251,36 @@ const AnalysteResponseDetail = () => {
 
         {aiError && <div className="error-message">{aiError}</div>}
 
-        {latestAnalysis && <AIAnalysisResults analysis={latestAnalysis} />}
+        {latestAnalysis && (
+          <>
+            <AIAnalysisResults analysis={latestAnalysis} />
+
+            {/* Quick validation button after AI analysis */}
+            {response?.status !== 'VALIDE' && response?.status !== 'REJETE' && (
+              <div className="ai-quick-validation">
+                <p className="quick-validation-hint">
+                  {t('aiAnalysis.quickValidationHint', { defaultValue: 'Analyse terminée. Vous pouvez maintenant valider ou rejeter le questionnaire.' })}
+                </p>
+                <div className="quick-validation-actions">
+                  <button
+                    onClick={() => handleOpenStatusModal('VALIDE')}
+                    className="btn-quick-validate"
+                    disabled={changingStatus}
+                  >
+                    {t('analyste.validateQuestionnaire', { defaultValue: 'Valider le questionnaire' })}
+                  </button>
+                  <button
+                    onClick={() => handleOpenStatusModal('REJETE')}
+                    className="btn-quick-reject"
+                    disabled={changingStatus}
+                  >
+                    {t('analyste.rejectQuestionnaire', { defaultValue: 'Rejeter le questionnaire' })}
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        )}
 
         {!latestAnalysis && !analyzingWithAI && (
           <div className="ai-analysis-placeholder">

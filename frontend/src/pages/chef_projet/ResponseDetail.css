@@ -209,6 +209,29 @@
   background-color: #0B7AC2;
 }
 
+/* AI Analysis Section */
+.ai-analysis-section {
+  margin: 32px 0;
+  padding: 24px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  transition: background-color 0.3s ease;
+}
+
+.ai-analysis-header {
+  margin-bottom: 20px;
+}
+
+.ai-analysis-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
 @media (max-width: 768px) {
   .header-content {
     flex-direction: column;

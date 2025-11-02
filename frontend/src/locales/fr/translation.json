@@ -217,6 +217,8 @@
     "changeStatus": "Changer le statut",
     "confirmReject": "Êtes-vous sûr de vouloir rejeter ce questionnaire ?",
     "confirmValidate": "Êtes-vous sûr de vouloir valider ce questionnaire ?",
+    "validateQuestionnaire": "Valider le questionnaire",
+    "rejectQuestionnaire": "Rejeter le questionnaire",
     "confirmStatusChange": "Êtes-vous sûr de vouloir changer le statut ?",
     "projectManager": "Chef de projet",
     "projectManagerAnswers": "Réponses du chef de projet"
@@ -285,6 +287,7 @@
     "noAnalysisYet": "Aucune analyse IA disponible. Cliquez sur le bouton ci-dessus pour déclencher une analyse.",
     "cannotAnalyzeDraft": "Impossible d'analyser un brouillon",
     "selectLanguage": "Langue de l'analyse :",
+    "quickValidationHint": "Analyse terminée. Vous pouvez maintenant valider ou rejeter le questionnaire.",
     "processingTime": "Temps de traitement",
     "analyzedBy": "Analysé par",
     "coherenceScore": "Score de Cohérence Global",

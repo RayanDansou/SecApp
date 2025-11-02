@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Brain } from 'lucide-react';
 import questionnaireService from '../../services/questionnaireService';
 import StatusBadge from '../../components/questionnaires/StatusBadge';
 import StatusHistory from '../../components/questionnaires/StatusHistory';
 import CommentsList from '../../components/questionnaires/CommentsList';
 import DocumentsManager from '../../components/questionnaires/DocumentsManager';
+import AIAnalysisResults from '../../components/questionnaires/AIAnalysisResults';
 import './ResponseDetail.css';
 
 const ResponseDetail = () => {
@@ -17,10 +19,26 @@ const ResponseDetail = () => {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [aiAnalyses, setAiAnalyses] = useState([]);
+  const [latestAnalysis, setLatestAnalysis] = useState(null);
 
   useEffect(() => {
     loadResponse();
+    loadAIAnalyses();
   }, [id]);
+
+  const loadAIAnalyses = async () => {
+    try {
+      const analyses = await questionnaireService.getAIAnalyses(id);
+      setAiAnalyses(analyses);
+      if (analyses?.length > 0) {
+        setLatestAnalysis(analyses[0]);
+      }
+    } catch (err) {
+      // Silencieux si pas encore d'analyse
+      console.log('No AI analyses yet');
+    }
+  };
 
   const loadResponse = async () => {
     try {
@@ -135,6 +153,19 @@ const ResponseDetail = () => {
           <p className="no-answers">{t('questionnaire.noResponses')}</p>
         )}
       </div>
+
+      {/* AI Analysis Section - visible only for VALIDE or REJETE status */}
+      {(response.status === 'VALIDE' || response.status === 'REJETE') && latestAnalysis && (
+        <div className="ai-analysis-section">
+          <div className="ai-analysis-header">
+            <h2>
+              <Brain size={20} />
+              {t('aiAnalysis.title', { defaultValue: 'Analyse IA - Cohérence Architecture' })}
+            </h2>
+          </div>
+          <AIAnalysisResults analysis={latestAnalysis} />
+        </div>
+      )}
 
       <DocumentsManager
         documents={documents}

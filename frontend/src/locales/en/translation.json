@@ -217,6 +217,8 @@
     "changeStatus": "Change status",
     "confirmReject": "Are you sure you want to reject this questionnaire?",
     "confirmValidate": "Are you sure you want to validate this questionnaire?",
+    "validateQuestionnaire": "Validate questionnaire",
+    "rejectQuestionnaire": "Reject questionnaire",
     "confirmStatusChange": "Are you sure you want to change the status?",
     "projectManager": "Project Manager",
     "projectManagerAnswers": "Project Manager's Answers"
@@ -285,6 +287,7 @@
     "noAnalysisYet": "No AI analysis available yet. Click the button above to trigger an analysis.",
     "cannotAnalyzeDraft": "Cannot analyze a draft",
     "selectLanguage": "Analysis language:",
+    "quickValidationHint": "Analysis complete. You can now validate or reject the questionnaire.",
     "processingTime": "Processing time",
     "analyzedBy": "Analyzed by",
     "coherenceScore": "Overall Coherence Score",
