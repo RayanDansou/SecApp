@@ -438,6 +438,38 @@ class QuestionnaireService {
       throw error.response?.data || { error: 'Erreur lors de la récupération de l\'historique' };
     }
   }
+
+  // ========================================
+  // AI Analysis (ANALYSTE)
+  // ========================================
+
+  /**
+   * Déclencher une analyse IA d'une réponse au questionnaire (ANALYSTE uniquement)
+   * @param {number} responseId - ID de la réponse
+   * @returns {Promise} Résultats de l'analyse IA
+   */
+  async triggerAIAnalysis(responseId) {
+    try {
+      const response = await api.post(`/api/responses/${responseId}/analyze_with_ai/`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { error: 'Erreur lors de l\'analyse IA' };
+    }
+  }
+
+  /**
+   * Récupérer les analyses IA d'une réponse
+   * @param {number} responseId - ID de la réponse
+   * @returns {Promise} Liste des analyses IA
+   */
+  async getAIAnalyses(responseId) {
+    try {
+      const response = await api.get(`/api/responses/${responseId}/ai_analyses/`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { error: 'Erreur lors de la récupération des analyses IA' };
+    }
+  }
 }
 
 export default new QuestionnaireService();

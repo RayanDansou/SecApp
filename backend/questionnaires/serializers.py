@@ -7,7 +7,8 @@ from .models import (
     Answer,
     ResponseDocument,
     Comment,
-    StatusHistory
+    StatusHistory,
+    AIAnalysis
 )
 from users.serializers import UserSerializer
 
@@ -426,3 +427,43 @@ class QuestionnaireResponseStatusChangeSerializer(serializers.Serializer):
             )
 
         return value
+
+
+# ===========================
+# AI Analysis Serializers
+# ===========================
+
+class AIAnalysisSerializer(serializers.ModelSerializer):
+    """
+    Serializer pour les résultats d'analyse IA
+    """
+    analyst = UserSerializer(read_only=True)
+    questionnaire_title = serializers.CharField(source='response.questionnaire.title', read_only=True)
+    responder_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = AIAnalysis
+        fields = (
+            'id',
+            'response',
+            'analyst',
+            'questionnaire_title',
+            'responder_name',
+            'coherence_score',
+            'confidentiality_score',
+            'integrity_score',
+            'availability_score',
+            'analysis_summary',
+            'inconsistencies',
+            'strengths',
+            'weaknesses',
+            'recommendations',
+            'question_analysis',
+            'model_used',
+            'processing_time',
+            'created_at'
+        )
+        read_only_fields = ('id', 'analyst', 'created_at')
+
+    def get_responder_name(self, obj):
+        return f"{obj.response.responder.first_name} {obj.response.responder.last_name}"

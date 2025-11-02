@@ -358,3 +358,115 @@ class StatusHistory(models.Model):
 
     def __str__(self):
         return f"{self.old_status or 'Création'} → {self.new_status} ({self.changed_at.strftime('%d/%m/%Y %H:%M')})"
+
+
+class AIAnalysis(models.Model):
+    """
+    Résultats de l'analyse IA sur la cohérence entre les réponses et les documents techniques.
+    """
+
+    response = models.ForeignKey(
+        QuestionnaireResponse,
+        on_delete=models.CASCADE,
+        related_name='ai_analyses',
+        verbose_name="Réponse au questionnaire"
+    )
+
+    analyst = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='ai_analyses_requested',
+        verbose_name="Analyste demandeur",
+        limit_choices_to={'role': 'ANALYSTE'}
+    )
+
+    # Score global de cohérence (0-100)
+    coherence_score = models.IntegerField(
+        verbose_name="Score de cohérence global",
+        help_text="Score de 0 à 100 indiquant la cohérence entre réponses et documents"
+    )
+
+    # Scores CIA (Confidentialité, Intégrité, Disponibilité)
+    confidentiality_score = models.IntegerField(
+        verbose_name="Score de confidentialité",
+        help_text="Score CIA - Confidentialité"
+    )
+
+    integrity_score = models.IntegerField(
+        verbose_name="Score d'intégrité",
+        help_text="Score CIA - Intégrité"
+    )
+
+    availability_score = models.IntegerField(
+        verbose_name="Score de disponibilité",
+        help_text="Score CIA - Disponibilité"
+    )
+
+    # Résultats détaillés de l'analyse
+    analysis_summary = models.TextField(
+        verbose_name="Résumé de l'analyse",
+        help_text="Résumé général de l'analyse IA"
+    )
+
+    inconsistencies = models.JSONField(
+        verbose_name="Incohérences détectées",
+        help_text="Liste des incohérences entre réponses et documents",
+        default=list,
+        blank=True
+    )
+
+    strengths = models.JSONField(
+        verbose_name="Points forts",
+        help_text="Points positifs identifiés par l'IA",
+        default=list,
+        blank=True
+    )
+
+    weaknesses = models.JSONField(
+        verbose_name="Points faibles",
+        help_text="Points d'amélioration identifiés par l'IA",
+        default=list,
+        blank=True
+    )
+
+    recommendations = models.JSONField(
+        verbose_name="Recommandations",
+        help_text="Recommandations de sécurité de l'IA",
+        default=list,
+        blank=True
+    )
+
+    # Analyse par question (optionnel)
+    question_analysis = models.JSONField(
+        verbose_name="Analyse par question",
+        help_text="Analyse détaillée question par question",
+        default=dict,
+        blank=True
+    )
+
+    # Métadonnées
+    model_used = models.CharField(
+        max_length=100,
+        verbose_name="Modèle IA utilisé",
+        help_text="Ex: gpt-4o-mini"
+    )
+
+    processing_time = models.FloatField(
+        verbose_name="Temps de traitement (secondes)",
+        null=True,
+        blank=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Date de création"
+    )
+
+    class Meta:
+        verbose_name = "Analyse IA"
+        verbose_name_plural = "Analyses IA"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Analyse IA - {self.response.questionnaire.title} ({self.coherence_score}%)"

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Brain, Loader } from 'lucide-react';
 import questionnaireService from '../../services/questionnaireService';
 import StatusBadge from '../../components/questionnaires/StatusBadge';
 import StatusHistory from '../../components/questionnaires/StatusHistory';
 import CommentsList from '../../components/questionnaires/CommentsList';
 import DocumentsManager from '../../components/questionnaires/DocumentsManager';
+import AIAnalysisResults from '../../components/questionnaires/AIAnalysisResults';
 import './AnalysteResponseDetail.css';
 
 const AnalysteResponseDetail = () => {
@@ -24,8 +26,15 @@ const AnalysteResponseDetail = () => {
   });
   const [changingStatus, setChangingStatus] = useState(false);
 
+  // AI Analysis state
+  const [aiAnalyses, setAiAnalyses] = useState([]);
+  const [latestAnalysis, setLatestAnalysis] = useState(null);
+  const [analyzingWithAI, setAnalyzingWithAI] = useState(false);
+  const [aiError, setAiError] = useState('');
+
   useEffect(() => {
     loadResponse();
+    loadAIAnalyses();
   }, [id]);
 
   const loadResponse = async () => {
@@ -37,6 +46,34 @@ const AnalysteResponseDetail = () => {
       setError(err.error || t('errors.generic'));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadAIAnalyses = async () => {
+    try {
+      const analyses = await questionnaireService.getAIAnalyses(id);
+      setAiAnalyses(analyses);
+      if (analyses && analyses.length > 0) {
+        setLatestAnalysis(analyses[0]); // La plus récente en premier
+      }
+    } catch (err) {
+      // Silencieux si pas encore d'analyse
+      console.log('No AI analyses yet');
+    }
+  };
+
+  const handleAIAnalysis = async () => {
+    setAnalyzingWithAI(true);
+    setAiError('');
+
+    try {
+      const analysis = await questionnaireService.triggerAIAnalysis(id);
+      setLatestAnalysis(analysis);
+      setAiAnalyses([analysis, ...aiAnalyses]);
+    } catch (err) {
+      setAiError(err.error || t('aiAnalysis.error', { defaultValue: 'Erreur lors de l\'analyse IA' }));
+    } finally {
+      setAnalyzingWithAI(false);
     }
   };
 
@@ -153,6 +190,48 @@ const AnalysteResponseDetail = () => {
       </div>
 
       {error && <div className="error-message">{error}</div>}
+
+      {/* AI Analysis Section */}
+      <div className="ai-analysis-section">
+        <div className="ai-analysis-header">
+          <h3>
+            <Brain size={20} />
+            {t('aiAnalysis.title', { defaultValue: 'Analyse IA - Cohérence Architecture' })}
+          </h3>
+          <button
+            onClick={handleAIAnalysis}
+            disabled={analyzingWithAI || response?.status === 'BROUILLON'}
+            className="btn-ai-analyze"
+            title={response?.status === 'BROUILLON' ? t('aiAnalysis.cannotAnalyzeDraft', { defaultValue: 'Impossible d\'analyser un brouillon' }) : ''}
+          >
+            {analyzingWithAI ? (
+              <>
+                <Loader size={18} className="spinner" />
+                {t('aiAnalysis.analyzing', { defaultValue: 'Analyse en cours...' })}
+              </>
+            ) : (
+              <>
+                <Brain size={18} />
+                {latestAnalysis
+                  ? t('aiAnalysis.reanalyze', { defaultValue: 'Relancer l\'analyse IA' })
+                  : t('aiAnalysis.analyze', { defaultValue: 'Analyser avec IA' })
+                }
+              </>
+            )}
+          </button>
+        </div>
+
+        {aiError && <div className="error-message">{aiError}</div>}
+
+        {latestAnalysis && <AIAnalysisResults analysis={latestAnalysis} />}
+
+        {!latestAnalysis && !analyzingWithAI && (
+          <div className="ai-analysis-placeholder">
+            <Brain size={48} />
+            <p>{t('aiAnalysis.noAnalysisYet', { defaultValue: 'Aucune analyse IA disponible. Cliquez sur le bouton ci-dessus pour déclencher une analyse.' })}</p>
+          </div>
+        )}
+      </div>
 
       {/* Actions de changement de statut */}
       {availableStatuses.length > 0 && (

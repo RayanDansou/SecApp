@@ -15,7 +15,8 @@ from .models import (
     Answer,
     ResponseDocument,
     Comment,
-    StatusHistory
+    StatusHistory,
+    AIAnalysis
 )
 from .serializers import (
     QuestionnaireListSerializer,
@@ -34,7 +35,9 @@ from .serializers import (
     ResponseDocumentSerializer,
     CommentSerializer,
     StatusHistorySerializer,
+    AIAnalysisSerializer,
 )
+from .ai_service import AIAnalysisService, extract_document_content
 
 
 # ===========================
@@ -351,6 +354,107 @@ class QuestionnaireResponseViewSet(viewsets.ModelViewSet):
             QuestionnaireResponseDetailSerializer(response).data,
             status=status.HTTP_200_OK
         )
+
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated, IsAnalyste])
+    def analyze_with_ai(self, request, pk=None):
+        """
+        Déclenche une analyse IA de la cohérence entre les réponses et les documents techniques
+        Accessible uniquement à l'ANALYSTE
+        """
+        response_obj = self.get_object()
+
+        # Vérifier que le questionnaire a été soumis
+        if response_obj.status == QuestionnaireResponse.Status.BROUILLON:
+            return Response(
+                {'error': 'Impossible d\'analyser un questionnaire en brouillon'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            # Préparer les données du questionnaire
+            questionnaire_data = {
+                'title': response_obj.questionnaire.title,
+                'description': response_obj.questionnaire.description
+            }
+
+            # Préparer les réponses
+            answers = []
+            for answer in response_obj.answers.all():
+                answers.append({
+                    'question_number': answer.question.order,
+                    'question_text': answer.question.text,
+                    'answer_text': answer.answer_text,
+                    'is_required': answer.question.is_required
+                })
+
+            # Extraire le contenu des documents techniques (si disponibles)
+            documents_content = []
+            for doc in response_obj.documents.all():
+                try:
+                    content = extract_document_content(doc.file.path)
+                    documents_content.append(content)
+                except Exception as e:
+                    # Si extraction échoue, continuer sans ce document
+                    documents_content.append(f"[Erreur extraction: {doc.filename}]")
+
+            # Initialiser le service IA
+            ai_service = AIAnalysisService()
+
+            # Lancer l'analyse
+            analysis_result = ai_service.analyze_questionnaire_response(
+                questionnaire_data=questionnaire_data,
+                answers=answers,
+                documents_content=documents_content if documents_content else None
+            )
+
+            # Vérifier s'il y a une erreur
+            if 'error' in analysis_result and not analysis_result.get('coherence_score'):
+                return Response(
+                    {'error': analysis_result['error']},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+
+            # Créer l'entrée AIAnalysis en base de données
+            ai_analysis = AIAnalysis.objects.create(
+                response=response_obj,
+                analyst=request.user,
+                coherence_score=analysis_result.get('coherence_score', 0),
+                confidentiality_score=analysis_result.get('confidentiality_score', 0),
+                integrity_score=analysis_result.get('integrity_score', 0),
+                availability_score=analysis_result.get('availability_score', 0),
+                analysis_summary=analysis_result.get('analysis_summary', ''),
+                inconsistencies=analysis_result.get('inconsistencies', []),
+                strengths=analysis_result.get('strengths', []),
+                weaknesses=analysis_result.get('weaknesses', []),
+                recommendations=analysis_result.get('recommendations', []),
+                question_analysis=analysis_result.get('question_analysis', {}),
+                model_used=analysis_result.get('model_used', 'gpt-4o-mini'),
+                processing_time=analysis_result.get('processing_time', 0)
+            )
+
+            # Retourner le résultat sérialisé
+            serializer = AIAnalysisSerializer(ai_analysis)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            return Response(
+                {'error': f'Erreur lors de l\'analyse IA: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    def ai_analyses(self, request, pk=None):
+        """
+        Récupère toutes les analyses IA pour une réponse donnée
+        Accessible selon les permissions de visualisation de la réponse
+        """
+        response_obj = self.get_object()
+
+        # Récupérer toutes les analyses IA pour cette réponse
+        analyses = AIAnalysis.objects.filter(response=response_obj).order_by('-created_at')
+
+        serializer = AIAnalysisSerializer(analyses, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class AnswerViewSet(viewsets.ModelViewSet):
