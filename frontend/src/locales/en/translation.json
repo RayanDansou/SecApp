@@ -57,7 +57,21 @@
     "signIn": "Sign in",
     "loggingIn": "Signing in...",
     "registering": "Registering...",
-    "selectRole": "Select a role"
+    "selectRole": "Select a role",
+    "forgotPassword": "Forgot password?",
+    "forgotPasswordTitle": "Reset your password",
+    "forgotPasswordSubtitle": "Enter your email address and we'll send you a link to reset your password",
+    "sendResetLink": "Send reset link",
+    "sendingResetLink": "Sending...",
+    "resetLinkSent": "Password reset link sent! Check your email.",
+    "backToLogin": "Back to login",
+    "resetPasswordTitle": "Create a new password",
+    "resetPasswordSubtitle": "Enter your new password below",
+    "resetPassword": "Reset password",
+    "resettingPassword": "Resetting...",
+    "passwordResetSuccess": "Password reset successfully! You can now log in.",
+    "passwordResetError": "Invalid or expired reset link",
+    "enterEmail": "Enter your email address"
   },
   "roles": {
     "CHEF_PROJET": "Project Manager",

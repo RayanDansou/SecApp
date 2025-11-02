@@ -95,3 +95,38 @@ class ChangePasswordSerializer(serializers.Serializer):
                 {"new_password": "Les nouveaux mots de passe ne correspondent pas."}
             )
         return attrs
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    """
+    Serializer pour la demande de réinitialisation de mot de passe
+    """
+    email = serializers.EmailField(required=True)
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    """
+    Serializer pour la confirmation de réinitialisation de mot de passe
+    """
+    token = serializers.CharField(required=True)
+    new_password = serializers.CharField(
+        required=True,
+        write_only=True,
+        validators=[validate_password],
+        style={'input_type': 'password'}
+    )
+    new_password2 = serializers.CharField(
+        required=True,
+        write_only=True,
+        style={'input_type': 'password'}
+    )
+
+    def validate(self, attrs):
+        """
+        Validation des mots de passe
+        """
+        if attrs['new_password'] != attrs['new_password2']:
+            raise serializers.ValidationError(
+                {"new_password": "Les mots de passe ne correspondent pas."}
+            )
+        return attrs
