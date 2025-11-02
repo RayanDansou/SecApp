@@ -29,7 +29,8 @@ class AIAnalysisService:
         self,
         questionnaire_data: Dict[str, Any],
         answers: List[Dict[str, str]],
-        documents_content: List[str] = None
+        documents_content: List[str] = None,
+        language: str = 'fr'
     ) -> Dict[str, Any]:
         """
         Analyse la cohérence entre les réponses et les documents techniques
@@ -38,6 +39,7 @@ class AIAnalysisService:
             questionnaire_data: Données du questionnaire (titre, description)
             answers: Liste des réponses (question, answer_text)
             documents_content: Contenu extrait des documents techniques (optionnel)
+            language: Langue de l'analyse ('fr' ou 'en')
 
         Returns:
             Dict contenant les résultats de l'analyse
@@ -45,7 +47,7 @@ class AIAnalysisService:
         start_time = time.time()
 
         # Construire le prompt pour l'IA
-        prompt = self._build_analysis_prompt(questionnaire_data, answers, documents_content)
+        prompt = self._build_analysis_prompt(questionnaire_data, answers, documents_content, language)
 
         try:
             # Appeler Azure OpenAI
@@ -54,7 +56,7 @@ class AIAnalysisService:
                 messages=[
                     {
                         "role": "system",
-                        "content": self._get_system_prompt()
+                        "content": self._get_system_prompt(language)
                     },
                     {
                         "role": "user",
@@ -96,9 +98,61 @@ class AIAnalysisService:
                 'processing_time': time.time() - start_time
             }
 
-    def _get_system_prompt(self) -> str:
-        """Retourne le prompt système pour l'IA"""
-        return """Tu es un expert en sécurité informatique spécialisé dans l'analyse de cohérence des architectures techniques.
+    def _get_system_prompt(self, language: str = 'fr') -> str:
+        """Retourne le prompt système pour l'IA dans la langue demandée"""
+
+        if language == 'en':
+            return """You are an IT security expert specialized in analyzing the coherence of technical architectures.
+
+Your role is to analyze the responses to a security questionnaire and compare them with the technical architecture documents provided (if available).
+
+You must evaluate:
+1. The overall coherence between responses and documents
+2. CIA security scores (Confidentiality, Integrity, Availability) from 0 to 100
+3. Potential inconsistencies
+4. Architecture strengths
+5. Weaknesses and risks
+6. Concrete recommendations to improve security
+
+ALWAYS provide your response in the following strict JSON format:
+{
+    "coherence_score": <score 0-100>,
+    "confidentiality_score": <score 0-100>,
+    "integrity_score": <score 0-100>,
+    "availability_score": <score 0-100>,
+    "analysis_summary": "<summary in 2-3 sentences>",
+    "inconsistencies": [
+        {
+            "type": "<inconsistency type>",
+            "description": "<detailed description>",
+            "severity": "<low|medium|high|critical>"
+        }
+    ],
+    "strengths": [
+        "<strength 1>",
+        "<strength 2>"
+    ],
+    "weaknesses": [
+        "<weakness 1>",
+        "<weakness 2>"
+    ],
+    "recommendations": [
+        {
+            "priority": "<high|medium|low>",
+            "category": "<security category>",
+            "recommendation": "<detailed recommendation>"
+        }
+    ],
+    "question_analysis": {
+        "<question number>": {
+            "assessment": "<response assessment>",
+            "risk_level": "<low|medium|high>",
+            "comment": "<comment>"
+        }
+    }
+}"""
+        else:  # French (default)
+            return """Tu es un expert en sécurité informatique spécialisé dans l'analyse de cohérence des architectures techniques.
 
 Ton rôle est d'analyser les réponses à un questionnaire de sécurité et de les comparer avec les documents d'architecture technique fournis (si disponibles).
 
@@ -152,11 +206,74 @@ Fournis TOUJOURS ta réponse au format JSON strict suivant:
         self,
         questionnaire_data: Dict[str, Any],
         answers: List[Dict[str, str]],
-        documents_content: List[str] = None
+        documents_content: List[str] = None,
+        language: str = 'fr'
     ) -> str:
-        """Construit le prompt utilisateur pour l'analyse"""
+        """Construit le prompt utilisateur pour l'analyse dans la langue demandée"""
 
-        prompt = f"""# Analyse de Sécurité GuardianIQ
+        if language == 'en':
+            prompt = f"""# GuardianIQ Security Analysis
+
+## Questionnaire: {questionnaire_data.get('title', 'Untitled')}
+
+**Questionnaire description:**
+{questionnaire_data.get('description', 'No description')}
+
+---
+
+## Project Manager Responses
+
+"""
+
+            # Add questions and answers
+            for idx, answer in enumerate(answers, 1):
+                prompt += f"""
+### Question {idx}
+**Q:** {answer.get('question_text', 'N/A')}
+**A:** {answer.get('answer_text', 'No answer')}
+
+"""
+
+            # Add documents if available
+            if documents_content and len(documents_content) > 0:
+                prompt += """
+---
+
+## Technical Architecture Documents
+
+"""
+                for idx, doc_content in enumerate(documents_content, 1):
+                    truncated_content = doc_content[:3000] if len(doc_content) > 3000 else doc_content
+                    prompt += f"""
+### Document {idx}
+{truncated_content}
+{'[...]' if len(doc_content) > 3000 else ''}
+
+"""
+            else:
+                prompt += """
+---
+
+**Note:** No technical architecture documents provided. Analysis based solely on responses.
+
+"""
+
+            prompt += """
+---
+
+## Analysis Instructions
+
+Perform an in-depth analysis of:
+1. Coherence between the provided responses and technical documents (if available)
+2. Security risks identified in the responses
+3. Security maturity level of the project
+4. Recommendations to improve the security posture
+
+Provide your analysis in the JSON format requested in the system instructions.
+"""
+
+        else:  # French (default)
+            prompt = f"""# Analyse de Sécurité GuardianIQ
 
 ## Questionnaire: {questionnaire_data.get('title', 'Sans titre')}
 
@@ -169,41 +286,41 @@ Fournis TOUJOURS ta réponse au format JSON strict suivant:
 
 """
 
-        # Ajouter les questions et réponses
-        for idx, answer in enumerate(answers, 1):
-            prompt += f"""
+            # Ajouter les questions et réponses
+            for idx, answer in enumerate(answers, 1):
+                prompt += f"""
 ### Question {idx}
 **Q:** {answer.get('question_text', 'N/A')}
 **R:** {answer.get('answer_text', 'Pas de réponse')}
 
 """
 
-        # Ajouter les documents si disponibles
-        if documents_content and len(documents_content) > 0:
-            prompt += """
+            # Ajouter les documents si disponibles
+            if documents_content and len(documents_content) > 0:
+                prompt += """
 ---
 
 ## Documents d'Architecture Technique
 
 """
-            for idx, doc_content in enumerate(documents_content, 1):
-                # Limiter la longueur du contenu du document
-                truncated_content = doc_content[:3000] if len(doc_content) > 3000 else doc_content
-                prompt += f"""
+                for idx, doc_content in enumerate(documents_content, 1):
+                    # Limiter la longueur du contenu du document
+                    truncated_content = doc_content[:3000] if len(doc_content) > 3000 else doc_content
+                    prompt += f"""
 ### Document {idx}
 {truncated_content}
 {'[...]' if len(doc_content) > 3000 else ''}
 
 """
-        else:
-            prompt += """
+            else:
+                prompt += """
 ---
 
 **Note:** Aucun document d'architecture technique n'a été fourni. Analyse basée uniquement sur les réponses.
 
 """
 
-        prompt += """
+            prompt += """
 ---
 
 ## Instructions d'Analyse

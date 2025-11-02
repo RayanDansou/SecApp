@@ -284,6 +284,7 @@
     "error": "Erreur lors de l'analyse IA",
     "noAnalysisYet": "Aucune analyse IA disponible. Cliquez sur le bouton ci-dessus pour déclencher une analyse.",
     "cannotAnalyzeDraft": "Impossible d'analyser un brouillon",
+    "selectLanguage": "Langue de l'analyse :",
     "processingTime": "Temps de traitement",
     "analyzedBy": "Analysé par",
     "coherenceScore": "Score de Cohérence Global",

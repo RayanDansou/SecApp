@@ -31,6 +31,7 @@ const AnalysteResponseDetail = () => {
   const [latestAnalysis, setLatestAnalysis] = useState(null);
   const [analyzingWithAI, setAnalyzingWithAI] = useState(false);
   const [aiError, setAiError] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('fr');
 
   useEffect(() => {
     loadResponse();
@@ -67,7 +68,7 @@ const AnalysteResponseDetail = () => {
     setAiError('');
 
     try {
-      const analysis = await questionnaireService.triggerAIAnalysis(id);
+      const analysis = await questionnaireService.triggerAIAnalysis(id, selectedLanguage);
       setLatestAnalysis(analysis);
       setAiAnalyses([analysis, ...aiAnalyses]);
     } catch (err) {
@@ -198,27 +199,54 @@ const AnalysteResponseDetail = () => {
             <Brain size={20} />
             {t('aiAnalysis.title', { defaultValue: 'Analyse IA - Cohérence Architecture' })}
           </h3>
-          <button
-            onClick={handleAIAnalysis}
-            disabled={analyzingWithAI || response?.status === 'BROUILLON'}
-            className="btn-ai-analyze"
-            title={response?.status === 'BROUILLON' ? t('aiAnalysis.cannotAnalyzeDraft', { defaultValue: 'Impossible d\'analyser un brouillon' }) : ''}
-          >
-            {analyzingWithAI ? (
-              <>
-                <Loader size={18} className="spinner" />
-                {t('aiAnalysis.analyzing', { defaultValue: 'Analyse en cours...' })}
-              </>
-            ) : (
-              <>
-                <Brain size={18} />
-                {latestAnalysis
-                  ? t('aiAnalysis.reanalyze', { defaultValue: 'Relancer l\'analyse IA' })
-                  : t('aiAnalysis.analyze', { defaultValue: 'Analyser avec IA' })
-                }
-              </>
-            )}
-          </button>
+
+          <div className="ai-analysis-controls">
+            {/* Language selector */}
+            <div className="language-selector">
+              <label>{t('aiAnalysis.selectLanguage', { defaultValue: 'Langue de l\'analyse :' })}</label>
+              <div className="language-buttons">
+                <button
+                  type="button"
+                  className={`language-btn ${selectedLanguage === 'fr' ? 'active' : ''}`}
+                  onClick={() => setSelectedLanguage('fr')}
+                  disabled={analyzingWithAI}
+                >
+                  Français
+                </button>
+                <button
+                  type="button"
+                  className={`language-btn ${selectedLanguage === 'en' ? 'active' : ''}`}
+                  onClick={() => setSelectedLanguage('en')}
+                  disabled={analyzingWithAI}
+                >
+                  English
+                </button>
+              </div>
+            </div>
+
+            {/* Analyze button */}
+            <button
+              onClick={handleAIAnalysis}
+              disabled={analyzingWithAI || response?.status === 'BROUILLON'}
+              className="btn-ai-analyze"
+              title={response?.status === 'BROUILLON' ? t('aiAnalysis.cannotAnalyzeDraft', { defaultValue: 'Impossible d\'analyser un brouillon' }) : ''}
+            >
+              {analyzingWithAI ? (
+                <>
+                  <Loader size={18} className="spinner" />
+                  {t('aiAnalysis.analyzing', { defaultValue: 'Analyse en cours...' })}
+                </>
+              ) : (
+                <>
+                  <Brain size={18} />
+                  {latestAnalysis
+                    ? t('aiAnalysis.reanalyze', { defaultValue: 'Relancer l\'analyse IA' })
+                    : t('aiAnalysis.analyze', { defaultValue: 'Analyser avec IA' })
+                  }
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
         {aiError && <div className="error-message">{aiError}</div>}

@@ -448,9 +448,11 @@ class QuestionnaireService {
    * @param {number} responseId - ID de la réponse
    * @returns {Promise} Résultats de l'analyse IA
    */
-  async triggerAIAnalysis(responseId) {
+  async triggerAIAnalysis(responseId, language = 'fr') {
     try {
-      const response = await api.post(`/api/responses/${responseId}/analyze_with_ai/`);
+      const response = await api.post(`/api/responses/${responseId}/analyze_with_ai/`, {
+        language: language
+      });
       return response.data;
     } catch (error) {
       throw error.response?.data || { error: 'Erreur lors de l\'analyse IA' };

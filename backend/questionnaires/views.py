@@ -360,6 +360,9 @@ class QuestionnaireResponseViewSet(viewsets.ModelViewSet):
         """
         Déclenche une analyse IA de la cohérence entre les réponses et les documents techniques
         Accessible uniquement à l'ANALYSTE
+
+        Paramètres (optionnels dans le body):
+            - language: 'fr' ou 'en' (défaut: 'fr')
         """
         response_obj = self.get_object()
 
@@ -371,6 +374,11 @@ class QuestionnaireResponseViewSet(viewsets.ModelViewSet):
             )
 
         try:
+            # Récupérer la langue demandée (défaut: français)
+            language = request.data.get('language', 'fr')
+            if language not in ['fr', 'en']:
+                language = 'fr'  # Fallback si langue invalide
+
             # Préparer les données du questionnaire
             questionnaire_data = {
                 'title': response_obj.questionnaire.title,
@@ -400,11 +408,12 @@ class QuestionnaireResponseViewSet(viewsets.ModelViewSet):
             # Initialiser le service IA
             ai_service = AIAnalysisService()
 
-            # Lancer l'analyse
+            # Lancer l'analyse avec la langue demandée
             analysis_result = ai_service.analyze_questionnaire_response(
                 questionnaire_data=questionnaire_data,
                 answers=answers,
-                documents_content=documents_content if documents_content else None
+                documents_content=documents_content if documents_content else None,
+                language=language
             )
 
             # Vérifier s'il y a une erreur
@@ -429,6 +438,7 @@ class QuestionnaireResponseViewSet(viewsets.ModelViewSet):
                 recommendations=analysis_result.get('recommendations', []),
                 question_analysis=analysis_result.get('question_analysis', {}),
                 model_used=analysis_result.get('model_used', 'gpt-4o-mini'),
+                language=language,
                 processing_time=analysis_result.get('processing_time', 0)
             )
 

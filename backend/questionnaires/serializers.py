@@ -460,6 +460,7 @@ class AIAnalysisSerializer(serializers.ModelSerializer):
             'recommendations',
             'question_analysis',
             'model_used',
+            'language',
             'processing_time',
             'created_at'
         )

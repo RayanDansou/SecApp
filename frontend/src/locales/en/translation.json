@@ -284,6 +284,7 @@
     "error": "Error during AI analysis",
     "noAnalysisYet": "No AI analysis available yet. Click the button above to trigger an analysis.",
     "cannotAnalyzeDraft": "Cannot analyze a draft",
+    "selectLanguage": "Analysis language:",
     "processingTime": "Processing time",
     "analyzedBy": "Analyzed by",
     "coherenceScore": "Overall Coherence Score",

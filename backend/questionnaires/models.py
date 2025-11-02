@@ -452,6 +452,17 @@ class AIAnalysis(models.Model):
         help_text="Ex: gpt-4o-mini"
     )
 
+    language = models.CharField(
+        max_length=10,
+        verbose_name="Langue de l'analyse",
+        help_text="Langue dans laquelle l'analyse a été générée (fr ou en)",
+        default='fr',
+        choices=[
+            ('fr', 'Français'),
+            ('en', 'English')
+        ]
+    )
+
     processing_time = models.FloatField(
         verbose_name="Temps de traitement (secondes)",
         null=True,
