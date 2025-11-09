@@ -278,6 +278,21 @@ class QuestionnaireResponseViewSet(viewsets.ModelViewSet):
             return QuestionnaireResponseStatusChangeSerializer
         return QuestionnaireResponseDetailSerializer
 
+    def create(self, request, *_args, **_kwargs):
+        """Surcharge pour retourner le détail complet après création"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        # Utiliser le DetailSerializer pour la réponse
+        response_instance = serializer.instance
+        detail_serializer = QuestionnaireResponseDetailSerializer(
+            response_instance,
+            context={'request': request}
+        )
+        headers = self.get_success_headers(detail_serializer.data)
+        return Response(detail_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
     def perform_create(self, serializer):
         """Associe la réponse au chef de projet connecté"""
         serializer.save(responder=self.request.user)

@@ -15,6 +15,7 @@ const FillQuestionnaire = () => {
   const [response, setResponse] = useState(null);
   const [answers, setAnswers] = useState({});
   const [documents, setDocuments] = useState([]);
+  const [pendingFiles, setPendingFiles] = useState([]); // Fichiers en attente d'upload
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -88,6 +89,11 @@ const FillQuestionnaire = () => {
     }
   }, [response]);
 
+  // Debug: logger les fichiers en attente
+  useEffect(() => {
+    console.log('PendingFiles state changé:', pendingFiles.length, 'fichiers');
+  }, [pendingFiles]);
+
   const handleAnswerChange = (questionId, value) => {
     setAnswers(prev => ({
       ...prev,
@@ -106,16 +112,39 @@ const FillQuestionnaire = () => {
         answer_text: answerText
       }));
 
+      let responseId;
+
       if (response) {
         // Mettre à jour la réponse existante
         await questionnaireService.updateResponse(response.id, { answers: answersData });
+        responseId = response.id;
       } else {
         // Créer une nouvelle réponse
+        const questionnaireId = isEditMode ? questionnaire.id : parseInt(id);
         const newResponse = await questionnaireService.createResponse({
-          questionnaire_id: parseInt(id),
+          questionnaire_id: questionnaireId,
           answers: answersData
         });
         setResponse(newResponse);
+        responseId = newResponse.id;
+      }
+
+      // Uploader les fichiers en attente
+      if (pendingFiles.length > 0) {
+        console.log('Upload de', pendingFiles.length, 'fichiers en attente...');
+        for (let i = 0; i < pendingFiles.length; i++) {
+          const file = pendingFiles[i];
+          console.log(`Upload fichier ${i + 1}/${pendingFiles.length}:`, file.name);
+          try {
+            const doc = await questionnaireService.uploadResponseDocument(responseId, file);
+            console.log('Document uploadé:', doc);
+            setDocuments(prev => [...prev, doc]);
+          } catch (uploadErr) {
+            console.error('Erreur upload fichier:', uploadErr);
+            throw uploadErr;
+          }
+        }
+        setPendingFiles([]);
       }
 
       setSuccess(t('questionnaire.draftSaved') + ' ! Redirection...');
@@ -125,20 +154,14 @@ const FillQuestionnaire = () => {
         navigate('/my-responses', { state: { message: t('questionnaire.draftSaved') } });
       }, 1500);
     } catch (err) {
-      setError(err.error || t('errors.generic'));
+      console.error('Erreur dans handleSave:', err);
+      setError(err.error || err.message || t('errors.generic'));
     } finally {
       setSaving(false);
     }
   };
 
   const handleSubmit = async () => {
-    if (!response) {
-      // Sauvegarder d'abord si pas encore fait
-      await handleSave();
-      // Attendre un peu pour que la réponse soit créée
-      await new Promise(resolve => setTimeout(resolve, 500));
-    }
-
     // Vérifier que toutes les questions obligatoires ont une réponse
     const missingRequired = questionnaire.questions.filter(
       q => q.is_required && !answers[q.id]?.trim()
@@ -157,15 +180,52 @@ const FillQuestionnaire = () => {
     setError('');
 
     try {
-      const responseId = response?.id;
+      let responseId = response?.id;
+
+      // Si pas encore de réponse, la créer
       if (!responseId) {
-        throw new Error(t('errors.generic'));
+        console.log('Création de la réponse...');
+        const answersData = Object.entries(answers).map(([questionId, answerText]) => ({
+          question_id: parseInt(questionId),
+          answer_text: answerText
+        }));
+
+        const questionnaireId = isEditMode ? questionnaire.id : parseInt(id);
+        const newResponse = await questionnaireService.createResponse({
+          questionnaire_id: questionnaireId,
+          answers: answersData
+        });
+        responseId = newResponse.id;
+        setResponse(newResponse);
+        console.log('Réponse créée avec ID:', responseId);
+
+        // Uploader les fichiers en attente
+        if (pendingFiles.length > 0) {
+          console.log('Upload de', pendingFiles.length, 'fichiers en attente...');
+          for (let i = 0; i < pendingFiles.length; i++) {
+            const file = pendingFiles[i];
+            console.log(`Upload fichier ${i + 1}/${pendingFiles.length}:`, file.name);
+            try {
+              const doc = await questionnaireService.uploadResponseDocument(responseId, file);
+              console.log('Document uploadé:', doc);
+            } catch (uploadErr) {
+              console.error('Erreur upload fichier:', uploadErr);
+              throw uploadErr;
+            }
+          }
+          setPendingFiles([]);
+          console.log('Tous les fichiers ont été uploadés');
+        }
       }
 
+      // Soumettre la réponse
+      console.log('Soumission de la réponse...');
       await questionnaireService.submitResponse(responseId);
+      console.log('Réponse soumise avec succès');
       navigate('/my-responses', { state: { message: t('questionnaire.responseSubmitted') } });
     } catch (err) {
-      setError(err.error || t('errors.generic'));
+      console.error('Erreur dans handleSubmit:', err);
+      setError(err.error || err.message || t('errors.generic'));
     } finally {
       setSubmitting(false);
     }
@@ -173,7 +233,15 @@ const FillQuestionnaire = () => {
 
   const handleDocumentUpload = async (file) => {
     if (!response) {
-      setError(t('questionnaire.saveFirst', { defaultValue: 'Veuillez d\'abord sauvegarder vos réponses' }));
+      // Pas encore de réponse : ajouter à la liste des fichiers en attente
+      console.log('Ajout fichier en attente:', file.name, 'Type:', file.type, 'Taille:', file.size);
+      setPendingFiles(prev => {
+        const newFiles = [...prev, file];
+        console.log('Fichiers en attente après ajout:', newFiles.length);
+        return newFiles;
+      });
+      setSuccess(t('documents.documentAddedPending', { defaultValue: 'Document ajouté (sera uploadé lors de la soumission)' }));
+      setTimeout(() => setSuccess(''), 3000);
       return;
     }
 
@@ -188,6 +256,16 @@ const FillQuestionnaire = () => {
   };
 
   const handleDocumentDelete = async (docId) => {
+    // Vérifier si c'est un fichier en attente
+    if (typeof docId === 'string' && docId.startsWith('pending-')) {
+      const index = parseInt(docId.replace('pending-', ''));
+      setPendingFiles(prev => prev.filter((_, i) => i !== index));
+      setSuccess(t('documents.documentRemoved', { defaultValue: 'Document retiré' }));
+      setTimeout(() => setSuccess(''), 3000);
+      return;
+    }
+
+    // Sinon, c'est un document déjà uploadé
     try {
       await questionnaireService.deleteResponseDocument(response.id, docId);
       setDocuments(prev => prev.filter(d => d.id !== docId));
@@ -197,6 +275,31 @@ const FillQuestionnaire = () => {
       throw err;
     }
   };
+
+  // Combiner documents uploadés et fichiers en attente pour l'affichage
+  const allDocuments = [
+    ...documents,
+    ...pendingFiles.map((file, index) => ({
+      id: `pending-${index}`,
+      filename: file.name,
+      uploaded_at: new Date().toISOString(),
+      file: '#', // Pas besoin de l'URL pour les documents en attente
+      isPending: true
+    }))
+  ];
+
+  // Nettoyage des URL d'objets créés
+  useEffect(() => {
+    return () => {
+      // Nettoyer les URL créées pour les fichiers en attente
+      pendingFiles.forEach((file) => {
+        if (file instanceof File) {
+          const url = URL.createObjectURL(file);
+          URL.revokeObjectURL(url);
+        }
+      });
+    };
+  }, [pendingFiles]);
 
   if (loading) {
     return (
@@ -261,7 +364,7 @@ const FillQuestionnaire = () => {
       </div>
 
       <DocumentsManager
-        documents={documents}
+        documents={allDocuments}
         onUpload={handleDocumentUpload}
         onDelete={handleDocumentDelete}
         canUpload={!isReadOnly}

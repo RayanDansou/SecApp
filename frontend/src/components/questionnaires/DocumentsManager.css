@@ -138,3 +138,21 @@
 .action-button.delete:hover {
   background-color: var(--error-bg);
 }
+
+/* Documents en attente */
+.document-item.pending {
+  border: 2px dashed #ffa500;
+  background-color: rgba(255, 165, 0, 0.05);
+}
+
+.pending-badge {
+  display: inline-block;
+  background-color: #ffa500;
+  color: white;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: 8px;
+  font-weight: 600;
+  vertical-align: middle;
+}

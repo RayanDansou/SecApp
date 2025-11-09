@@ -119,34 +119,41 @@ const DocumentsManager = ({
       ) : (
         <div className="documents-list">
           {documents.map((doc) => (
-            <div key={doc.id} className="document-item">
+            <div key={doc.id} className={`document-item ${doc.isPending ? 'pending' : ''}`}>
               <div className="document-icon">
                 {getFileIcon(doc.filename)}
               </div>
               <div className="document-info">
-                <div className="document-name">{doc.filename}</div>
+                <div className="document-name">
+                  {doc.filename}
+                  {doc.isPending && <span className="pending-badge">⏳ En attente</span>}
+                </div>
                 <div className="document-meta">
-                  Ajouté le {formatDate(doc.uploaded_at)}
+                  {doc.isPending ? 'Sera uploadé lors de la sauvegarde/soumission' : `Ajouté le ${formatDate(doc.uploaded_at)}`}
                 </div>
               </div>
               <div className="document-actions">
-                <a
-                  href={doc.file}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="action-button view"
-                  title="Voir le document"
-                >
-                  👁️
-                </a>
-                <a
-                  href={doc.file}
-                  download
-                  className="action-button download"
-                  title="Télécharger"
-                >
-                  ⬇️
-                </a>
+                {!doc.isPending && (
+                  <>
+                    <a
+                      href={doc.file}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="action-button view"
+                      title="Voir le document"
+                    >
+                      👁️
+                    </a>
+                    <a
+                      href={doc.file}
+                      download
+                      className="action-button download"
+                      title="Télécharger"
+                    >
+                      ⬇️
+                    </a>
+                  </>
+                )}
                 {canDelete && (
                   <button
                     onClick={() => handleDelete(doc.id)}
