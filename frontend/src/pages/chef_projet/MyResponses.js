@@ -41,10 +41,6 @@ const MyResponses = () => {
     navigate(`/response/${id}`);
   };
 
-  const handleContinueResponse = (id) => {
-    navigate(`/response/${id}/edit`);
-  };
-
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
       year: 'numeric',
@@ -133,11 +129,6 @@ const MyResponses = () => {
                 <button onClick={() => handleViewResponse(response.id)} className="btn-view">
                   {t('questionnaire.viewDetails')}
                 </button>
-                {response.status === 'BROUILLON' && (
-                  <button onClick={() => handleContinueResponse(response.id)} className="btn-continue">
-                    {t('questionnaire.continueQuestionnaire')}
-                  </button>
-                )}
               </div>
             </div>
           ))}

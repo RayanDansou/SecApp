@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import questionnaireService from '../../services/questionnaireService';
 import DocumentsManager from '../../components/questionnaires/DocumentsManager';
@@ -8,6 +8,7 @@ import './FillQuestionnaire.css';
 const FillQuestionnaire = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
 
   const [questionnaire, setQuestionnaire] = useState(null);
@@ -20,33 +21,55 @@ const FillQuestionnaire = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  // Détecter si on est en mode édition ou création
+  const isEditMode = location.pathname.includes('/response/') && location.pathname.includes('/edit');
+
   useEffect(() => {
     loadQuestionnaire();
   }, [id]);
 
   const loadQuestionnaire = async () => {
     try {
-      const data = await questionnaireService.getQuestionnaire(id);
-      setQuestionnaire(data);
+      if (isEditMode) {
+        // Mode édition : charger la réponse existante
+        const responseData = await questionnaireService.getResponse(id);
+        setResponse(responseData);
 
-      // Vérifier si l'utilisateur a déjà une réponse en cours
-      try {
-        const responses = await questionnaireService.getResponses();
-        const existingResponse = responses.find(r => r.questionnaire.id === parseInt(id));
+        // Charger le questionnaire template associé
+        const questionnaireData = await questionnaireService.getQuestionnaire(responseData.questionnaire.id);
+        setQuestionnaire(questionnaireData);
 
-        if (existingResponse) {
-          setResponse(existingResponse);
-          // Charger les réponses existantes
-          const responseData = await questionnaireService.getResponse(existingResponse.id);
-          const answersMap = {};
-          responseData.answers.forEach(answer => {
-            answersMap[answer.question.id] = answer.answer_text;
-          });
-          setAnswers(answersMap);
-          setDocuments(responseData.documents || []);
+        // Charger les réponses existantes
+        const answersMap = {};
+        responseData.answers.forEach(answer => {
+          answersMap[answer.question.id] = answer.answer_text;
+        });
+        setAnswers(answersMap);
+        setDocuments(responseData.documents || []);
+      } else {
+        // Mode création : charger le questionnaire template
+        const data = await questionnaireService.getQuestionnaire(id);
+        setQuestionnaire(data);
+
+        // Vérifier si l'utilisateur a déjà une réponse en cours
+        try {
+          const responses = await questionnaireService.getResponses();
+          const existingResponse = responses.find(r => r.questionnaire.id === parseInt(id));
+
+          if (existingResponse) {
+            setResponse(existingResponse);
+            // Charger les réponses existantes
+            const responseData = await questionnaireService.getResponse(existingResponse.id);
+            const answersMap = {};
+            responseData.answers.forEach(answer => {
+              answersMap[answer.question.id] = answer.answer_text;
+            });
+            setAnswers(answersMap);
+            setDocuments(responseData.documents || []);
+          }
+        } catch (err) {
+          // Pas de réponse existante, c'est normal
         }
-      } catch (err) {
-        // Pas de réponse existante, c'est normal
       }
     } catch (err) {
       setError(err.error || t('errors.generic'));
@@ -54,6 +77,16 @@ const FillQuestionnaire = () => {
       setLoading(false);
     }
   };
+
+  // Vérifier si l'utilisateur peut éditer cette réponse
+  useEffect(() => {
+    if (response && response.status !== 'BROUILLON') {
+      setError(t('errors.cannotEditSubmitted', { defaultValue: 'Vous ne pouvez pas modifier un questionnaire qui a été soumis.' }));
+      setTimeout(() => {
+        navigate('/my-responses');
+      }, 2000);
+    }
+  }, [response]);
 
   const handleAnswerChange = (questionId, value) => {
     setAnswers(prev => ({
