@@ -124,6 +124,12 @@ const AnalysteResponseDetail = () => {
       return;
     }
 
+    // Vérifier que le commentaire est présent pour un rejet
+    if (statusChange.new_status === 'REJETE' && !statusChange.comment.trim()) {
+      setError(t('analyste.commentRequiredForReject', { defaultValue: 'Un commentaire est obligatoire pour un rejet' }));
+      return;
+    }
+
     // Demander confirmation
     const confirmMessage = statusChange.new_status === 'REJETE'
       ? t('analyste.confirmReject', { defaultValue: 'Êtes-vous sûr de vouloir rejeter ce questionnaire ?' })
@@ -150,10 +156,42 @@ const AnalysteResponseDetail = () => {
   };
 
   const handleQuickValidation = async (targetStatus) => {
-    // Demander confirmation
-    const confirmMessage = targetStatus === 'REJETE'
-      ? t('analyste.confirmReject', { defaultValue: 'Êtes-vous sûr de vouloir rejeter ce questionnaire ?' })
-      : targetStatus === 'VALIDE'
+    // Pour le rejet, demander un commentaire obligatoire
+    if (targetStatus === 'REJETE') {
+      const comment = prompt(t('analyste.enterRejectReason', { defaultValue: 'Veuillez entrer la raison du rejet :' }));
+
+      // Si l'utilisateur annule ou entre un commentaire vide
+      if (comment === null) {
+        return; // Annulation
+      }
+
+      if (!comment.trim()) {
+        setError(t('analyste.commentRequiredForReject', { defaultValue: 'Un commentaire est obligatoire pour un rejet' }));
+        return;
+      }
+
+      // Demander confirmation
+      if (!window.confirm(t('analyste.confirmReject', { defaultValue: 'Êtes-vous sûr de vouloir rejeter ce questionnaire ?' }))) {
+        return;
+      }
+
+      setChangingStatus(true);
+      setError('');
+
+      try {
+        await questionnaireService.changeResponseStatus(id, { new_status: 'REJETE', comment: comment.trim() });
+        await loadResponse();
+        await loadAIAnalyses();
+      } catch (err) {
+        setError(err.error || t('errors.generic'));
+      } finally {
+        setChangingStatus(false);
+      }
+      return;
+    }
+
+    // Pour les autres statuts (VALIDE, EN_ATTENTE)
+    const confirmMessage = targetStatus === 'VALIDE'
       ? t('analyste.confirmValidate', { defaultValue: 'Êtes-vous sûr de vouloir valider ce questionnaire ?' })
       : t('analyste.confirmStatusChange', { defaultValue: 'Êtes-vous sûr de vouloir changer le statut ?' });
 
@@ -167,12 +205,8 @@ const AnalysteResponseDetail = () => {
     try {
       const currentStatus = response.status;
 
-      // Pour le rejet, on peut passer directement depuis n'importe quel statut
-      if (targetStatus === 'REJETE') {
-        await questionnaireService.changeResponseStatus(id, { new_status: 'REJETE', comment: '' });
-      }
       // Pour mettre en attente (depuis SOUMIS uniquement)
-      else if (targetStatus === 'EN_ATTENTE') {
+      if (targetStatus === 'EN_ATTENTE') {
         await questionnaireService.changeResponseStatus(id, { new_status: 'EN_ATTENTE', comment: '' });
       }
       // Pour la validation, il faut passer par les statuts intermédiaires
@@ -368,8 +402,8 @@ const AnalysteResponseDetail = () => {
         )}
       </div>
 
-      {/* Actions de changement de statut */}
-      {availableStatuses.length > 0 && (
+      {/* Actions de changement de statut - Masqué si les boutons IA sont visibles */}
+      {availableStatuses.length > 0 && !latestAnalysis && (
         <div className="status-actions">
           <h3>{t('analyste.validationActions')}</h3>
           <div className="action-buttons">

@@ -428,6 +428,18 @@ class QuestionnaireResponseStatusChangeSerializer(serializers.Serializer):
 
         return value
 
+    def validate(self, data):
+        """Validation globale : commentaire obligatoire pour le rejet"""
+        new_status = data.get('new_status')
+        comment = data.get('comment', '').strip()
+
+        if new_status == QuestionnaireResponse.Status.REJETE and not comment:
+            raise serializers.ValidationError({
+                'comment': 'Un commentaire est obligatoire pour un rejet'
+            })
+
+        return data
+
 
 # ===========================
 # AI Analysis Serializers
