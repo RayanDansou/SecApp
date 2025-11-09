@@ -93,15 +93,15 @@ const AnalysteResponseDetail = () => {
     const transitions = {
       'SOUMIS': [
         { value: 'EN_ATTENTE', label: t('analyste.setPending', { defaultValue: 'Mettre en attente' }) },
-        { value: 'REJETE', label: t('analyste.reject') }
+        { value: 'REJETE', label: t('analyste.rejectQuestionnaire', { defaultValue: 'Rejeter le questionnaire' }) }
       ],
       'EN_ATTENTE': [
         { value: 'EN_VALIDATION', label: t('analyste.setInValidation', { defaultValue: 'Mettre en validation' }) },
-        { value: 'REJETE', label: t('analyste.reject') }
+        { value: 'REJETE', label: t('analyste.rejectQuestionnaire', { defaultValue: 'Rejeter le questionnaire' }) }
       ],
       'EN_VALIDATION': [
-        { value: 'VALIDE', label: t('analyste.validate') },
-        { value: 'REJETE', label: t('analyste.reject') }
+        { value: 'VALIDE', label: t('analyste.validateQuestionnaire', { defaultValue: 'Valider le questionnaire' }) },
+        { value: 'REJETE', label: t('analyste.rejectQuestionnaire', { defaultValue: 'Rejeter le questionnaire' }) }
       ]
     };
     return transitions[currentStatus] || [];
@@ -340,61 +340,9 @@ const AnalysteResponseDetail = () => {
 
         {aiError && <div className="error-message">{aiError}</div>}
 
-        {latestAnalysis && (
-          <>
-            <AIAnalysisResults analysis={latestAnalysis} />
-
-            {/* Quick validation button after AI analysis */}
-            {response?.status !== 'VALIDE' && response?.status !== 'REJETE' && (
-              <div className="ai-quick-validation">
-                {latestAnalysis.coherence_score < 20 ? (
-                  <div className="validation-warning">
-                    <p className="warning-text">
-                      ⚠️ {t('aiAnalysis.lowCoherenceWarning', {
-                        defaultValue: 'Score de cohérence trop faible (<20%). La validation est bloquée. Vous pouvez uniquement rejeter ou mettre en attente ce questionnaire.',
-                        score: latestAnalysis.coherence_score
-                      })}
-                    </p>
-                  </div>
-                ) : (
-                  <p className="quick-validation-hint">
-                    {t('aiAnalysis.quickValidationHint', { defaultValue: 'Analyse terminée. Vous pouvez maintenant valider ou rejeter le questionnaire.' })}
-                  </p>
-                )}
-
-                <div className="quick-validation-actions">
-                  {latestAnalysis.coherence_score < 20 && response.status === 'SOUMIS' && (
-                    <button
-                      onClick={() => handleQuickValidation('EN_ATTENTE')}
-                      className="btn-quick-pending"
-                      disabled={changingStatus}
-                    >
-                      {t('analyste.setPending', { defaultValue: 'Mettre en attente' })}
-                    </button>
-                  )}
-
-                  <button
-                    onClick={() => handleQuickValidation('VALIDE')}
-                    className="btn-quick-validate"
-                    disabled={changingStatus || latestAnalysis.coherence_score < 20}
-                    title={latestAnalysis.coherence_score < 20 ? t('aiAnalysis.validationBlocked', { defaultValue: 'Validation bloquée : score de cohérence trop faible' }) : ''}
-                  >
-                    {t('analyste.validateQuestionnaire', { defaultValue: 'Valider le questionnaire' })}
-                  </button>
-                  <button
-                    onClick={() => handleQuickValidation('REJETE')}
-                    className="btn-quick-reject"
-                    disabled={changingStatus}
-                  >
-                    {t('analyste.rejectQuestionnaire', { defaultValue: 'Rejeter le questionnaire' })}
-                  </button>
-                </div>
-              </div>
-            )}
-          </>
-        )}
-
-        {!latestAnalysis && !analyzingWithAI && (
+        {latestAnalysis ? (
+          <AIAnalysisResults analysis={latestAnalysis} />
+        ) : !analyzingWithAI && (
           <div className="ai-analysis-placeholder">
             <Brain size={48} />
             <p>{t('aiAnalysis.noAnalysisYet', { defaultValue: 'Aucune analyse IA disponible. Cliquez sur le bouton ci-dessus pour déclencher une analyse.' })}</p>
@@ -402,21 +350,71 @@ const AnalysteResponseDetail = () => {
         )}
       </div>
 
-      {/* Actions de changement de statut - Masqué si les boutons IA sont visibles */}
-      {availableStatuses.length > 0 && !latestAnalysis && (
+      {/* Actions de validation - Zone dynamique unique */}
+      {response?.status !== 'VALIDE' && response?.status !== 'REJETE' && (
         <div className="status-actions">
           <h3>{t('analyste.validationActions')}</h3>
-          <div className="action-buttons">
-            {availableStatuses.map((statusOption) => (
-              <button
-                key={statusOption.value}
-                onClick={() => handleOpenStatusModal(statusOption.value)}
-                className={`btn-status ${statusOption.value === 'VALIDE' ? 'btn-validate' : statusOption.value === 'REJETE' ? 'btn-reject' : 'btn-pending'}`}
-              >
-                {statusOption.label}
-              </button>
-            ))}
-          </div>
+
+          {latestAnalysis ? (
+            // Afficher les boutons IA si analyse disponible
+            <>
+              {latestAnalysis.coherence_score < 20 ? (
+                <div className="validation-warning">
+                  <p className="warning-text">
+                    ⚠️ {t('aiAnalysis.lowCoherenceWarning', {
+                      defaultValue: 'Score de cohérence trop faible (<20%). La validation est bloquée. Vous pouvez uniquement rejeter ou mettre en attente ce questionnaire.',
+                      score: latestAnalysis.coherence_score
+                    })}
+                  </p>
+                </div>
+              ) : (
+                <p className="quick-validation-hint">
+                  {t('aiAnalysis.quickValidationHint', { defaultValue: 'Analyse terminée. Vous pouvez maintenant valider ou rejeter le questionnaire.' })}
+                </p>
+              )}
+
+              <div className="quick-validation-actions">
+                {latestAnalysis.coherence_score < 20 && response.status === 'SOUMIS' && (
+                  <button
+                    onClick={() => handleQuickValidation('EN_ATTENTE')}
+                    className="btn-quick-pending"
+                    disabled={changingStatus}
+                  >
+                    {t('analyste.setPending', { defaultValue: 'Mettre en attente' })}
+                  </button>
+                )}
+
+                <button
+                  onClick={() => handleQuickValidation('VALIDE')}
+                  className="btn-quick-validate"
+                  disabled={changingStatus || latestAnalysis.coherence_score < 20}
+                  title={latestAnalysis.coherence_score < 20 ? t('aiAnalysis.validationBlocked', { defaultValue: 'Validation bloquée : score de cohérence trop faible' }) : ''}
+                >
+                  {t('analyste.validateQuestionnaire', { defaultValue: 'Valider le questionnaire' })}
+                </button>
+                <button
+                  onClick={() => handleQuickValidation('REJETE')}
+                  className="btn-quick-reject"
+                  disabled={changingStatus}
+                >
+                  {t('analyste.rejectQuestionnaire', { defaultValue: 'Rejeter le questionnaire' })}
+                </button>
+              </div>
+            </>
+          ) : availableStatuses.length > 0 && (
+            // Afficher les boutons classiques si pas d'analyse IA
+            <div className="quick-validation-actions">
+              {availableStatuses.map((statusOption) => (
+                <button
+                  key={statusOption.value}
+                  onClick={() => handleOpenStatusModal(statusOption.value)}
+                  className={statusOption.value === 'VALIDE' ? 'btn-quick-validate' : statusOption.value === 'REJETE' ? 'btn-quick-reject' : 'btn-quick-pending'}
+                >
+                  {statusOption.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
