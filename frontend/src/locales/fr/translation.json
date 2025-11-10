@@ -348,5 +348,22 @@
     "serverError": "Erreur serveur",
     "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter.",
     "formIncomplete": "Veuillez remplir tous les champs obligatoires"
+  },
+  "footer": {
+    "description": "Une solution complète pour la gestion de la sécurité et la validation des questionnaires.",
+    "navigation": "Navigation",
+    "resources": "Ressources",
+    "legal": "Légal",
+    "questionnaires": "Questionnaires",
+    "profile": "Profil",
+    "documentation": "Documentation",
+    "api": "API",
+    "support": "Support",
+    "terms": "Conditions d'utilisation",
+    "privacy": "Politique de confidentialité",
+    "cookies": "Politique des cookies",
+    "rights": "Tous droits réservés.",
+    "madeWith": "Fait avec",
+    "byTeam": "par l'équipe GuardianIQ"
   }
 }

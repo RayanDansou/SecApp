@@ -348,5 +348,22 @@
     "serverError": "Server error",
     "sessionExpired": "Your session has expired. Please log in again.",
     "formIncomplete": "Please fill in all required fields"
+  },
+  "footer": {
+    "description": "A comprehensive solution for security management and questionnaire validation.",
+    "navigation": "Navigation",
+    "resources": "Resources",
+    "legal": "Legal",
+    "questionnaires": "Questionnaires",
+    "profile": "Profile",
+    "documentation": "Documentation",
+    "api": "API",
+    "support": "Support",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookie Policy",
+    "rights": "All rights reserved.",
+    "madeWith": "Made with",
+    "byTeam": "by the GuardianIQ team"
   }
 }
