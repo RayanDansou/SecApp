@@ -71,13 +71,24 @@
     "resettingPassword": "Resetting...",
     "passwordResetSuccess": "Password reset successfully! You can now log in.",
     "passwordResetError": "Invalid or expired reset link",
-    "enterEmail": "Enter your email address"
+    "enterEmail": "Enter your email address",
+    "signInWithGoogle": "Sign in with Google",
+    "signUpWithGoogle": "Sign up with Google"
   },
   "roles": {
     "CHEF_PROJET": "Project Manager",
     "ANALYSTE": "Security Analyst",
     "BUSINESS_OWNER": "Business Owner",
     "ADMIN": "Administrator"
+  },
+  "roleSelection": {
+    "title": "Choose your role",
+    "description": "Please select the role that corresponds to your function in the application.",
+    "descriptions": {
+      "CHEF_PROJET": "Create and submit security questionnaires for your projects",
+      "ANALYSTE": "Validate questionnaires and provide security recommendations",
+      "BUSINESS_OWNER": "Review validated questionnaires and recommendations"
+    }
   },
   "dashboard": {
     "title": "Dashboard",

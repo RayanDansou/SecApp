@@ -71,13 +71,24 @@
     "resettingPassword": "Réinitialisation...",
     "passwordResetSuccess": "Mot de passe réinitialisé avec succès ! Vous pouvez maintenant vous connecter.",
     "passwordResetError": "Lien de réinitialisation invalide ou expiré",
-    "enterEmail": "Entrez votre adresse email"
+    "enterEmail": "Entrez votre adresse email",
+    "signInWithGoogle": "Se connecter avec Google",
+    "signUpWithGoogle": "S'inscrire avec Google"
   },
   "roles": {
     "CHEF_PROJET": "Chef de Projet",
     "ANALYSTE": "Analyste Sécurité",
     "BUSINESS_OWNER": "Business Owner",
     "ADMIN": "Administrateur"
+  },
+  "roleSelection": {
+    "title": "Choisissez votre rôle",
+    "description": "Veuillez sélectionner le rôle qui correspond à votre fonction dans l'application.",
+    "descriptions": {
+      "CHEF_PROJET": "Créer et soumettre des questionnaires de sécurité pour vos projets",
+      "ANALYSTE": "Valider les questionnaires et fournir des recommandations de sécurité",
+      "BUSINESS_OWNER": "Consulter les questionnaires validés et les recommandations"
+    }
   },
   "dashboard": {
     "title": "Tableau de bord",

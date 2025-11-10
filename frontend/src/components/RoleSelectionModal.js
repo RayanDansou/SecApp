@@ -16,7 +16,7 @@ const RoleSelectionModal = ({ isOpen, onClose, onConfirm, loading }) => {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Choisissez votre rôle</h2>
+          <h2>{t('roleSelection.title')}</h2>
           <button className="modal-close" onClick={onClose} disabled={loading}>
             ×
           </button>
@@ -24,7 +24,7 @@ const RoleSelectionModal = ({ isOpen, onClose, onConfirm, loading }) => {
 
         <div className="modal-body">
           <p className="modal-description">
-            Veuillez sélectionner le rôle qui correspond à votre fonction dans l'application.
+            {t('roleSelection.description')}
           </p>
 
           <div className="role-options">
@@ -40,7 +40,7 @@ const RoleSelectionModal = ({ isOpen, onClose, onConfirm, loading }) => {
               <div className="role-info">
                 <div className="role-title">{t('roles.CHEF_PROJET')}</div>
                 <div className="role-description">
-                  Créer et soumettre des questionnaires de sécurité pour vos projets
+                  {t('roleSelection.descriptions.CHEF_PROJET')}
                 </div>
               </div>
             </label>
@@ -57,7 +57,7 @@ const RoleSelectionModal = ({ isOpen, onClose, onConfirm, loading }) => {
               <div className="role-info">
                 <div className="role-title">{t('roles.ANALYSTE')}</div>
                 <div className="role-description">
-                  Valider les questionnaires et fournir des recommandations de sécurité
+                  {t('roleSelection.descriptions.ANALYSTE')}
                 </div>
               </div>
             </label>
@@ -74,7 +74,7 @@ const RoleSelectionModal = ({ isOpen, onClose, onConfirm, loading }) => {
               <div className="role-info">
                 <div className="role-title">{t('roles.BUSINESS_OWNER')}</div>
                 <div className="role-description">
-                  Consulter les questionnaires validés et les recommandations
+                  {t('roleSelection.descriptions.BUSINESS_OWNER')}
                 </div>
               </div>
             </label>
@@ -87,14 +87,14 @@ const RoleSelectionModal = ({ isOpen, onClose, onConfirm, loading }) => {
             onClick={onClose}
             disabled={loading}
           >
-            Annuler
+            {t('common.cancel')}
           </button>
           <button
             className="btn btn-primary"
             onClick={handleConfirm}
             disabled={loading}
           >
-            {loading ? 'Création du compte...' : 'Confirmer'}
+            {loading ? t('auth.registering') : t('common.confirm')}
           </button>
         </div>
       </div>
