@@ -151,7 +151,12 @@ const Login = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">{t('auth.password')}</label>
+            <div className="password-label-header">
+              <label htmlFor="password">{t('auth.password')}</label>
+              <Link to="/forgot-password" className="forgot-password-link">
+                {t('auth.forgotPassword')}
+              </Link>
+            </div>
             <input
               type="password"
               id="password"
@@ -191,9 +196,6 @@ const Login = () => {
         </div>
 
         <div className="login-footer">
-          <p>
-            <Link to="/forgot-password">{t('auth.forgotPassword')}</Link>
-          </p>
           <p>
             {t('auth.noAccount')}{' '}
             <Link to="/register">{t('auth.signUp')}</Link>

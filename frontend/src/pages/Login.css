@@ -59,6 +59,26 @@
   margin-bottom: 20px;
 }
 
+.password-label-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.forgot-password-link {
+  font-size: 12px;
+  color: #0D8FDB;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.forgot-password-link:hover {
+  color: #0B7AC2;
+  text-decoration: underline;
+}
+
 .form-group label {
   display: block;
   font-size: 14px;
@@ -66,6 +86,10 @@
   color: var(--text-primary);
   margin-bottom: 8px;
   transition: color 0.3s ease;
+}
+
+.password-label-header label {
+  margin-bottom: 0;
 }
 
 .form-group input {
@@ -177,6 +201,16 @@
     font-size: 13px;
   }
 
+  .password-label-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .forgot-password-link {
+    font-size: 11px;
+  }
+
   .form-group label {
     font-size: 13px;
   }
@@ -237,6 +271,7 @@
 .google-login-wrapper {
   display: flex;
   justify-content: center;
+  margin-top: 24px;
   margin-bottom: 20px;
 }
 
