@@ -52,11 +52,33 @@ const Login = () => {
     }
   };
 
-  const handleGoogleSuccess = (credentialResponse) => {
-    // Stocker le credential et ouvrir le modal de sélection de rôle
-    setGoogleCredential(credentialResponse.credential);
-    setShowRoleModal(true);
+  const handleGoogleSuccess = async (credentialResponse) => {
     setError('');
+    setLoading(true);
+
+    try {
+      // Vérifier si le compte existe
+      const checkResult = await authService.googleCheckAccount(credentialResponse.credential);
+
+      if (checkResult.exists) {
+        // Compte existant : connexion directe sans modal
+        const result = await authService.googleLogin(credentialResponse.credential);
+
+        if (result.user && result.tokens) {
+          window.location.href = '/dashboard';
+        } else {
+          setError(t('errors.generic'));
+        }
+      } else {
+        // Nouveau compte : afficher le modal de sélection de rôle
+        setGoogleCredential(credentialResponse.credential);
+        setShowRoleModal(true);
+      }
+    } catch (err) {
+      setError(err.error || t('errors.generic'));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoogleError = () => {

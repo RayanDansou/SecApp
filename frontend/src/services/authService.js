@@ -240,6 +240,22 @@ class AuthService {
   }
 
   /**
+   * Vérifier si un compte Google existe
+   * @param {string} credential - Token Google credential
+   * @returns {Promise} {exists: boolean, email: string}
+   */
+  async googleCheckAccount(credential) {
+    try {
+      const response = await api.post('/api/auth/google/check/', {
+        credential,
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { error: 'Erreur lors de la vérification du compte' };
+    }
+  }
+
+  /**
    * Connexion avec Google OAuth
    * @param {string} credential - Token Google credential
    * @param {string} role - Rôle de l'utilisateur (optionnel, utilisé seulement si nouveau compte)

@@ -16,6 +16,89 @@ import os
 User = get_user_model()
 
 
+class GoogleCheckAccountView(APIView):
+    """
+    Endpoint pour vérifier si un compte Google existe
+    POST /api/auth/google/check/
+
+    Payload:
+    {
+        "credential": "google_id_token"
+    }
+
+    Retourne:
+    {
+        "exists": true/false,
+        "email": "user@example.com"
+    }
+    """
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        try:
+            # Récupérer le token Google
+            google_token = request.data.get('credential')
+
+            if not google_token:
+                return Response(
+                    {'error': 'Google credential requis'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Vérifier le token Google
+            try:
+                google_client_id = os.getenv('GOOGLE_CLIENT_ID')
+
+                if not google_client_id:
+                    return Response(
+                        {'error': 'Configuration Google OAuth manquante'},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                    )
+
+                # Vérifier et décoder le token Google
+                idinfo = id_token.verify_oauth2_token(
+                    google_token,
+                    requests.Request(),
+                    google_client_id
+                )
+
+                # Vérifier que le token provient bien de Google
+                if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+                    return Response(
+                        {'error': 'Token invalide'},
+                        status=status.HTTP_401_UNAUTHORIZED
+                    )
+
+                # Extraire l'email
+                email = idinfo.get('email')
+
+                if not email:
+                    return Response(
+                        {'error': 'Email non fourni par Google'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+
+            except ValueError as e:
+                return Response(
+                    {'error': f'Token Google invalide: {str(e)}'},
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+
+            # Vérifier si l'utilisateur existe
+            user_exists = User.objects.filter(email=email).exists()
+
+            return Response({
+                'exists': user_exists,
+                'email': email
+            }, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(
+                {'error': f'Erreur lors de la vérification du compte: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
 class GoogleLoginView(APIView):
     """
     Endpoint pour l'authentification Google via OAuth

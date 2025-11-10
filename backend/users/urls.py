@@ -11,7 +11,7 @@ from .views import (
     PasswordResetRequestView,
     PasswordResetConfirmView
 )
-from .google_auth import GoogleLoginView, GoogleRegisterView
+from .google_auth import GoogleLoginView, GoogleRegisterView, GoogleCheckAccountView
 
 app_name = 'users'
 
@@ -23,6 +23,7 @@ urlpatterns = [
     path('refresh/', RefreshTokenView.as_view(), name='token_refresh'),
 
     # Authentification Google
+    path('google/check/', GoogleCheckAccountView.as_view(), name='google_check'),
     path('google/login/', GoogleLoginView.as_view(), name='google_login'),
     path('google/register/', GoogleRegisterView.as_view(), name='google_register'),
 
