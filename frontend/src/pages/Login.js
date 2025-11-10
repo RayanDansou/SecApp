@@ -5,6 +5,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../contexts/AuthContext';
 import authService from '../services/authService';
 import Logo from '../components/Logo';
+import RoleSelectionModal from '../components/RoleSelectionModal';
 import './Login.css';
 
 const Login = () => {
@@ -15,6 +16,8 @@ const Login = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [googleCredential, setGoogleCredential] = useState(null);
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -49,28 +52,48 @@ const Login = () => {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
+  const handleGoogleSuccess = (credentialResponse) => {
+    // Stocker le credential et ouvrir le modal de sélection de rôle
+    setGoogleCredential(credentialResponse.credential);
+    setShowRoleModal(true);
     setError('');
+  };
+
+  const handleGoogleError = () => {
+    setError('Erreur lors de la connexion avec Google');
+  };
+
+  const handleRoleConfirm = async (selectedRole) => {
     setLoading(true);
+    setError('');
 
     try {
-      const result = await authService.googleLogin(credentialResponse.credential);
+      const result = await authService.googleLogin(
+        googleCredential,
+        selectedRole
+      );
 
       if (result.user && result.tokens) {
-        // Recharger le contexte d'authentification
+        // Fermer le modal et recharger le contexte d'authentification
+        setShowRoleModal(false);
         window.location.href = '/dashboard';
       } else {
         setError(t('errors.generic'));
+        setShowRoleModal(false);
       }
     } catch (err) {
       setError(err.error || t('errors.generic'));
+      setShowRoleModal(false);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleError = () => {
-    setError('Erreur lors de la connexion avec Google');
+  const handleRoleModalClose = () => {
+    if (!loading) {
+      setShowRoleModal(false);
+      setGoogleCredential(null);
+    }
   };
 
   return (
@@ -155,6 +178,14 @@ const Login = () => {
           </p>
         </div>
       </div>
+
+      {/* Modal de sélection de rôle pour Google OAuth (première connexion) */}
+      <RoleSelectionModal
+        isOpen={showRoleModal}
+        onClose={handleRoleModalClose}
+        onConfirm={handleRoleConfirm}
+        loading={loading}
+      />
     </div>
   );
 };

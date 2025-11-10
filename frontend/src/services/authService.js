@@ -242,12 +242,14 @@ class AuthService {
   /**
    * Connexion avec Google OAuth
    * @param {string} credential - Token Google credential
+   * @param {string} role - Rôle de l'utilisateur (optionnel, utilisé seulement si nouveau compte)
    * @returns {Promise} Données utilisateur et tokens
    */
-  async googleLogin(credential) {
+  async googleLogin(credential, role = 'CHEF_PROJET') {
     try {
       const response = await api.post('/api/auth/google/login/', {
         credential,
+        role,
       });
 
       if (response.data.tokens) {

@@ -39,8 +39,9 @@ class GoogleLoginView(APIView):
 
     def post(self, request):
         try:
-            # Récupérer le token Google
+            # Récupérer le token Google et le rôle optionnel
             google_token = request.data.get('credential')
+            role = request.data.get('role', User.Role.CHEF_PROJET)
 
             if not google_token:
                 return Response(
@@ -91,6 +92,11 @@ class GoogleLoginView(APIView):
                     status=status.HTTP_401_UNAUTHORIZED
                 )
 
+            # Valider le rôle si fourni (pas de rôle ADMIN via Google)
+            valid_roles = [User.Role.CHEF_PROJET, User.Role.ANALYSTE, User.Role.BUSINESS_OWNER]
+            if role not in valid_roles:
+                role = User.Role.CHEF_PROJET
+
             # Chercher ou créer l'utilisateur
             user, created = User.objects.get_or_create(
                 email=email,
@@ -98,7 +104,7 @@ class GoogleLoginView(APIView):
                     'username': email.split('@')[0] + '_' + google_id[:8],
                     'first_name': first_name,
                     'last_name': last_name,
-                    'role': User.Role.CHEF_PROJET,  # Rôle par défaut
+                    'role': role,  # Utiliser le rôle fourni ou par défaut
                 }
             )
 

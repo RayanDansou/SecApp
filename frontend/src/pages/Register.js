@@ -5,6 +5,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../contexts/AuthContext';
 import authService from '../services/authService';
 import Logo from '../components/Logo';
+import RoleSelectionModal from '../components/RoleSelectionModal';
 import './Register.css';
 
 const Register = () => {
@@ -20,6 +21,8 @@ const Register = () => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [googleCredential, setGoogleCredential] = useState(null);
 
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -116,31 +119,48 @@ const Register = () => {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
+  const handleGoogleSuccess = (credentialResponse) => {
+    // Stocker le credential et ouvrir le modal de sélection de rôle
+    setGoogleCredential(credentialResponse.credential);
+    setShowRoleModal(true);
     setErrors({});
+  };
+
+  const handleGoogleError = () => {
+    setErrors({ general: 'Erreur lors de l\'inscription avec Google' });
+  };
+
+  const handleRoleConfirm = async (selectedRole) => {
     setLoading(true);
+    setErrors({});
 
     try {
       const result = await authService.googleRegister(
-        credentialResponse.credential,
-        formData.role
+        googleCredential,
+        selectedRole
       );
 
       if (result.user && result.tokens) {
-        // Recharger le contexte d'authentification
+        // Fermer le modal et recharger le contexte d'authentification
+        setShowRoleModal(false);
         window.location.href = '/dashboard';
       } else {
         setErrors({ general: t('errors.generic') });
+        setShowRoleModal(false);
       }
     } catch (err) {
       setErrors({ general: err.error || t('errors.generic') });
+      setShowRoleModal(false);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleError = () => {
-    setErrors({ general: 'Erreur lors de l\'inscription avec Google' });
+  const handleRoleModalClose = () => {
+    if (!loading) {
+      setShowRoleModal(false);
+      setGoogleCredential(null);
+    }
   };
 
   return (
@@ -318,6 +338,14 @@ const Register = () => {
           </p>
         </div>
       </div>
+
+      {/* Modal de sélection de rôle pour Google OAuth */}
+      <RoleSelectionModal
+        isOpen={showRoleModal}
+        onClose={handleRoleModalClose}
+        onConfirm={handleRoleConfirm}
+        loading={loading}
+      />
     </div>
   );
 };
