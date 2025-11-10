@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../contexts/AuthContext';
+import authService from '../services/authService';
 import Logo from '../components/Logo';
 import './Register.css';
 
@@ -112,6 +114,33 @@ const Register = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setErrors({});
+    setLoading(true);
+
+    try {
+      const result = await authService.googleRegister(
+        credentialResponse.credential,
+        formData.role
+      );
+
+      if (result.user && result.tokens) {
+        // Recharger le contexte d'authentification
+        window.location.href = '/dashboard';
+      } else {
+        setErrors({ general: t('errors.generic') });
+      }
+    } catch (err) {
+      setErrors({ general: err.error || t('errors.generic') });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    setErrors({ general: 'Erreur lors de l\'inscription avec Google' });
   };
 
   return (
@@ -265,6 +294,22 @@ const Register = () => {
             {loading ? t('auth.registering') : t('auth.register')}
           </button>
         </form>
+
+        <div className="separator">
+          <span>OU</span>
+        </div>
+
+        <div className="google-login-wrapper">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            theme="outline"
+            size="large"
+            text="signup_with"
+            shape="rectangular"
+            locale="fr"
+          />
+        </div>
 
         <div className="register-footer">
           <p>

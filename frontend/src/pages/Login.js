@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../contexts/AuthContext';
+import authService from '../services/authService';
 import Logo from '../components/Logo';
 import './Login.css';
 
@@ -45,6 +47,30 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setError('');
+    setLoading(true);
+
+    try {
+      const result = await authService.googleLogin(credentialResponse.credential);
+
+      if (result.user && result.tokens) {
+        // Recharger le contexte d'authentification
+        window.location.href = '/dashboard';
+      } else {
+        setError(t('errors.generic'));
+      }
+    } catch (err) {
+      setError(err.error || t('errors.generic'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    setError('Erreur lors de la connexion avec Google');
   };
 
   return (
@@ -101,6 +127,23 @@ const Login = () => {
             {loading ? t('auth.loggingIn') : t('auth.login')}
           </button>
         </form>
+
+        <div className="separator">
+          <span>OU</span>
+        </div>
+
+        <div className="google-login-wrapper">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            useOneTap
+            theme="outline"
+            size="large"
+            text="signin_with"
+            shape="rectangular"
+            locale="fr"
+          />
+        </div>
 
         <div className="login-footer">
           <p>

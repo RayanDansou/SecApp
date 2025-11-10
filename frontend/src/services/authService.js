@@ -238,6 +238,54 @@ class AuthService {
       throw error.response?.data || { error: 'Erreur lors de la réinitialisation du mot de passe' };
     }
   }
+
+  /**
+   * Connexion avec Google OAuth
+   * @param {string} credential - Token Google credential
+   * @returns {Promise} Données utilisateur et tokens
+   */
+  async googleLogin(credential) {
+    try {
+      const response = await api.post('/api/auth/google/login/', {
+        credential,
+      });
+
+      if (response.data.tokens) {
+        localStorage.setItem('access_token', response.data.tokens.access);
+        localStorage.setItem('refresh_token', response.data.tokens.refresh);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { error: 'Erreur lors de la connexion Google' };
+    }
+  }
+
+  /**
+   * Inscription avec Google OAuth
+   * @param {string} credential - Token Google credential
+   * @param {string} role - Rôle de l'utilisateur
+   * @returns {Promise} Données utilisateur et tokens
+   */
+  async googleRegister(credential, role = 'CHEF_PROJET') {
+    try {
+      const response = await api.post('/api/auth/google/register/', {
+        credential,
+        role,
+      });
+
+      if (response.data.tokens) {
+        localStorage.setItem('access_token', response.data.tokens.access);
+        localStorage.setItem('refresh_token', response.data.tokens.refresh);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { error: 'Erreur lors de l\'inscription Google' };
+    }
+  }
 }
 
 export default new AuthService();

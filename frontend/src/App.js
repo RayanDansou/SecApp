@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -31,12 +32,15 @@ import UserManagement from './pages/admin/UserManagement';
 import './App.css';
 
 function App() {
+  const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || '';
+
   return (
-    <Router>
-      <ThemeProvider>
-        <AuthProvider>
-          <div className="app">
-          <Routes>
+    <GoogleOAuthProvider clientId={googleClientId}>
+      <Router>
+        <ThemeProvider>
+          <AuthProvider>
+            <div className="app">
+            <Routes>
             {/* Routes publiques */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -184,11 +188,12 @@ function App() {
                 </div>
               }
             />
-          </Routes>
-        </div>
-        </AuthProvider>
-      </ThemeProvider>
-    </Router>
+            </Routes>
+          </div>
+          </AuthProvider>
+        </ThemeProvider>
+      </Router>
+    </GoogleOAuthProvider>
   );
 }
 
