@@ -12,6 +12,7 @@ from google.auth.transport import requests
 from django.conf import settings
 from django.contrib.auth import get_user_model
 import os
+from .message_translations import get_message, get_user_language
 
 User = get_user_model()
 
@@ -35,13 +36,14 @@ class GoogleCheckAccountView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
+        lang = get_user_language(request=request)
         try:
             # Récupérer le token Google
             google_token = request.data.get('credential')
 
             if not google_token:
                 return Response(
-                    {'error': 'Google credential requis'},
+                    {'error': get_message('google', 'google_credential_required', lang)},
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
@@ -51,7 +53,7 @@ class GoogleCheckAccountView(APIView):
 
                 if not google_client_id:
                     return Response(
-                        {'error': 'Configuration Google OAuth manquante'},
+                        {'error': get_message('google', 'google_config_missing', lang)},
                         status=status.HTTP_500_INTERNAL_SERVER_ERROR
                     )
 
@@ -65,7 +67,7 @@ class GoogleCheckAccountView(APIView):
                 # Vérifier que le token provient bien de Google
                 if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
                     return Response(
-                        {'error': 'Token invalide'},
+                        {'error': get_message('google', 'invalid_google_token', lang)},
                         status=status.HTTP_401_UNAUTHORIZED
                     )
 
@@ -74,13 +76,13 @@ class GoogleCheckAccountView(APIView):
 
                 if not email:
                     return Response(
-                        {'error': 'Email non fourni par Google'},
+                        {'error': get_message('google', 'email_not_provided', lang)},
                         status=status.HTTP_400_BAD_REQUEST
                     )
 
             except ValueError as e:
                 return Response(
-                    {'error': f'Token Google invalide: {str(e)}'},
+                    {'error': get_message('google', 'invalid_google_token', lang)},
                     status=status.HTTP_401_UNAUTHORIZED
                 )
 
@@ -94,7 +96,7 @@ class GoogleCheckAccountView(APIView):
 
         except Exception as e:
             return Response(
-                {'error': f'Erreur lors de la vérification du compte: {str(e)}'},
+                {'error': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
@@ -121,6 +123,7 @@ class GoogleLoginView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
+        lang = get_user_language(request=request)
         try:
             # Récupérer le token Google et le rôle optionnel
             google_token = request.data.get('credential')
@@ -128,7 +131,7 @@ class GoogleLoginView(APIView):
 
             if not google_token:
                 return Response(
-                    {'error': 'Google credential requis'},
+                    {'error': get_message('google', 'google_credential_required', lang)},
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
@@ -138,7 +141,7 @@ class GoogleLoginView(APIView):
 
                 if not google_client_id:
                     return Response(
-                        {'error': 'Configuration Google OAuth manquante'},
+                        {'error': get_message('google', 'google_config_missing', lang)},
                         status=status.HTTP_500_INTERNAL_SERVER_ERROR
                     )
 
@@ -152,7 +155,7 @@ class GoogleLoginView(APIView):
                 # Vérifier que le token provient bien de Google
                 if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
                     return Response(
-                        {'error': 'Token invalide'},
+                        {'error': get_message('google', 'invalid_google_token', lang)},
                         status=status.HTTP_401_UNAUTHORIZED
                     )
 
@@ -165,13 +168,13 @@ class GoogleLoginView(APIView):
 
                 if not email:
                     return Response(
-                        {'error': 'Email non fourni par Google'},
+                        {'error': get_message('google', 'email_not_provided', lang)},
                         status=status.HTTP_400_BAD_REQUEST
                     )
 
             except ValueError as e:
                 return Response(
-                    {'error': f'Token Google invalide: {str(e)}'},
+                    {'error': get_message('google', 'invalid_google_token', lang)},
                     status=status.HTTP_401_UNAUTHORIZED
                 )
 
@@ -203,7 +206,8 @@ class GoogleLoginView(APIView):
                     email_service.send_welcome_email(
                         email=user.email,
                         username=user.username,
-                        role=user.role
+                        role=user.role,
+                        language=lang
                     )
                 except Exception as e:
                     print(f"Erreur lors de l'envoi de l'email de bienvenue: {str(e)}")
@@ -212,7 +216,7 @@ class GoogleLoginView(APIView):
             # Vérifier que le compte est actif
             if not user.is_active:
                 return Response(
-                    {'error': 'Compte désactivé'},
+                    {'error': get_message('auth', 'account_disabled', lang)},
                     status=status.HTTP_403_FORBIDDEN
                 )
 
@@ -229,12 +233,12 @@ class GoogleLoginView(APIView):
                     'access': str(refresh.access_token),
                 },
                 'created': created,
-                'message': 'Compte créé avec succès' if created else 'Connexion réussie'
+                'message': get_message('google', 'account_created', lang) if created else get_message('google', 'google_auth_success', lang)
             }, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response(
-                {'error': f'Erreur lors de l\'authentification Google: {str(e)}'},
+                {'error': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
@@ -262,6 +266,7 @@ class GoogleRegisterView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
+        lang = get_user_language(request=request)
         try:
             # Récupérer le token Google et le rôle
             google_token = request.data.get('credential')
@@ -269,7 +274,7 @@ class GoogleRegisterView(APIView):
 
             if not google_token:
                 return Response(
-                    {'error': 'Google credential requis'},
+                    {'error': get_message('google', 'google_credential_required', lang)},
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
@@ -277,7 +282,7 @@ class GoogleRegisterView(APIView):
             valid_roles = [User.Role.CHEF_PROJET, User.Role.ANALYSTE, User.Role.BUSINESS_OWNER]
             if role not in valid_roles:
                 return Response(
-                    {'error': f'Rôle invalide. Choisissez parmi: {", ".join(valid_roles)}'},
+                    {'error': get_message('google', 'invalid_role', lang, roles=", ".join(valid_roles))},
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
@@ -287,7 +292,7 @@ class GoogleRegisterView(APIView):
 
                 if not google_client_id:
                     return Response(
-                        {'error': 'Configuration Google OAuth manquante'},
+                        {'error': get_message('google', 'google_config_missing', lang)},
                         status=status.HTTP_500_INTERNAL_SERVER_ERROR
                     )
 
@@ -301,7 +306,7 @@ class GoogleRegisterView(APIView):
                 # Vérifier que le token provient bien de Google
                 if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
                     return Response(
-                        {'error': 'Token invalide'},
+                        {'error': get_message('google', 'invalid_google_token', lang)},
                         status=status.HTTP_401_UNAUTHORIZED
                     )
 
@@ -313,20 +318,20 @@ class GoogleRegisterView(APIView):
 
                 if not email:
                     return Response(
-                        {'error': 'Email non fourni par Google'},
+                        {'error': get_message('google', 'email_not_provided', lang)},
                         status=status.HTTP_400_BAD_REQUEST
                     )
 
             except ValueError as e:
                 return Response(
-                    {'error': f'Token Google invalide: {str(e)}'},
+                    {'error': get_message('google', 'invalid_google_token', lang)},
                     status=status.HTTP_401_UNAUTHORIZED
                 )
 
             # Vérifier si l'utilisateur existe déjà
             if User.objects.filter(email=email).exists():
                 return Response(
-                    {'error': 'Un compte existe déjà avec cet email. Utilisez la connexion Google.'},
+                    {'error': get_message('google', 'account_exists', lang)},
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
@@ -348,7 +353,8 @@ class GoogleRegisterView(APIView):
                 email_service.send_welcome_email(
                     email=user.email,
                     username=user.username,
-                    role=user.role
+                    role=user.role,
+                    language=lang
                 )
             except Exception as e:
                 print(f"Erreur lors de l'envoi de l'email de bienvenue: {str(e)}")
@@ -363,11 +369,11 @@ class GoogleRegisterView(APIView):
                     'refresh': str(refresh),
                     'access': str(refresh.access_token),
                 },
-                'message': 'Compte créé avec succès'
+                'message': get_message('google', 'account_created', lang)
             }, status=status.HTTP_201_CREATED)
 
         except Exception as e:
             return Response(
-                {'error': f'Erreur lors de l\'inscription Google: {str(e)}'},
+                {'error': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )

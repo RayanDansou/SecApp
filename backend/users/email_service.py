@@ -4,6 +4,12 @@ Service d'envoi d'emails via l'API Resend
 import os
 import resend
 from django.conf import settings
+from .email_templates import (
+    get_email_template,
+    get_role_display,
+    get_role_emoji,
+    get_common_translations
+)
 
 # Configurer la clé API Resend
 resend.api_key = os.getenv('RESEND_API_KEY')
@@ -13,19 +19,21 @@ class EmailService:
     """Service pour l'envoi d'emails via Resend"""
 
     @staticmethod
-    def get_email_template_base(content):
+    def get_email_template_base(content, language='fr'):
         """
         Template de base pour tous les emails avec le branding GuardianIQ
 
         Args:
             content (str): Contenu HTML de l'email
+            language (str): Langue de l'email ('fr' ou 'en')
 
         Returns:
             str: Template HTML complet
         """
+        common = get_common_translations(language)
         return f"""
         <!DOCTYPE html>
-        <html lang="fr">
+        <html lang="{language}">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -68,14 +76,14 @@ class EmailService:
                             <tr>
                                 <td style="padding: 30px 40px; background-color: #f8f9fa; border-radius: 0 0 8px 8px; border-top: 1px solid #e9ecef;">
                                     <p style="margin: 0 0 10px; color: #6c757d; font-size: 12px; text-align: center;">
-                                        Cet email a été envoyé automatiquement, merci de ne pas y répondre.
+                                        {common['automated_email']}
                                     </p>
                                     <p style="margin: 0; color: #6c757d; font-size: 12px; text-align: center;">
-                                        © 2025 <strong>GuardianIQ</strong> - Solution de gestion de la sécurité
+                                        {common['copyright']}
                                     </p>
                                     <p style="margin: 10px 0 0; color: #6c757d; font-size: 11px; text-align: center;">
-                                        <a href="{os.getenv('FRONTEND_URL', 'http://localhost:3333')}" style="color: #0D8FDB; text-decoration: none;">Accéder à la plateforme</a> •
-                                        <a href="mailto:contact@guardianiq.com" style="color: #0D8FDB; text-decoration: none;">Contact</a>
+                                        <a href="{os.getenv('FRONTEND_URL', 'http://localhost:3333')}" style="color: #0D8FDB; text-decoration: none;">{common['platform_link']}</a> •
+                                        <a href="mailto:contact@guardianiq.com" style="color: #0D8FDB; text-decoration: none;">{common['contact_link']}</a>
                                     </p>
                                 </td>
                             </tr>
@@ -88,7 +96,7 @@ class EmailService:
         """
 
     @staticmethod
-    def send_password_reset_email(email, reset_link, username):
+    def send_password_reset_email(email, reset_link, username, language='fr'):
         """
         Envoie un email de réinitialisation de mot de passe
 
@@ -96,23 +104,26 @@ class EmailService:
             email (str): Adresse email du destinataire
             reset_link (str): Lien de réinitialisation du mot de passe
             username (str): Nom d'utilisateur
+            language (str): Langue de l'email ('fr' ou 'en')
 
         Returns:
             dict: Réponse de l'API Resend
         """
         try:
+            t = get_email_template('password_reset', language)
+
             content = f"""
                 <h2 style="margin-top: 0; color: #212529; font-size: 24px; font-weight: 600;">
-                    Réinitialisation de votre mot de passe
+                    {t['title']}
                 </h2>
                 <p style="margin: 20px 0; color: #495057; font-size: 16px; line-height: 1.6;">
-                    Bonjour <strong style="color: #0D8FDB;">{username}</strong>,
+                    {t['greeting']} <strong style="color: #0D8FDB;">{username}</strong>,
                 </p>
                 <p style="margin: 20px 0; color: #495057; font-size: 16px; line-height: 1.6;">
-                    Vous avez demandé la réinitialisation de votre mot de passe pour votre compte <strong>GuardianIQ</strong>.
+                    {t['message_1']}
                 </p>
                 <p style="margin: 20px 0; color: #495057; font-size: 16px; line-height: 1.6;">
-                    Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :
+                    {t['message_2']}
                 </p>
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 30px auto;">
                     <tr>
@@ -127,27 +138,26 @@ class EmailService:
                                       padding: 14px 32px;
                                       text-decoration: none;
                                       text-align: center;">
-                                🔐 Réinitialiser mon mot de passe
+                                {t['button_text']}
                             </a>
                         </td>
                     </tr>
                 </table>
                 <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 25px 0; border-radius: 4px;">
                     <p style="margin: 0; color: #856404; font-size: 14px;">
-                        <strong>⚠️ Important :</strong> Ce lien expirera dans <strong>1 heure</strong>.
+                        <strong>{t['warning_title']}</strong> {t['warning_message']}
                     </p>
                 </div>
                 <p style="margin: 20px 0; color: #6c757d; font-size: 14px; line-height: 1.6;">
-                    Si vous n'avez pas demandé cette réinitialisation, vous pouvez ignorer cet email en toute sécurité.
-                    Votre mot de passe ne sera pas modifié.
+                    {t['footer_message']}
                 </p>
             """
 
             params = {
                 "from": os.getenv('RESEND_FROM_EMAIL', 'noreply@guardianiq.com'),
                 "to": [email],
-                "subject": "🔐 Réinitialisation de votre mot de passe - GuardianIQ",
-                "html": EmailService.get_email_template_base(content)
+                "subject": t['subject'],
+                "html": EmailService.get_email_template_base(content, language)
             }
 
             response = resend.Emails.send(params)
@@ -158,7 +168,7 @@ class EmailService:
             raise e
 
     @staticmethod
-    def send_welcome_email(email, username, role):
+    def send_welcome_email(email, username, role, language='fr'):
         """
         Envoie un email de bienvenue lors de la création d'un compte
 
@@ -166,37 +176,28 @@ class EmailService:
             email (str): Adresse email du destinataire
             username (str): Nom d'utilisateur
             role (str): Rôle de l'utilisateur
+            language (str): Langue de l'email ('fr' ou 'en')
 
         Returns:
             dict: Réponse de l'API Resend
         """
-        role_display = {
-            'CHEF_PROJET': 'Chef de Projet',
-            'ANALYSTE': 'Analyste Sécurité',
-            'BUSINESS_OWNER': 'Business Owner',
-            'ADMIN': 'Administrateur'
-        }.get(role, role)
-
-        role_emoji = {
-            'CHEF_PROJET': '👨‍💼',
-            'ANALYSTE': '🛡️',
-            'BUSINESS_OWNER': '📊',
-            'ADMIN': '⚙️'
-        }.get(role, '👤')
+        t = get_email_template('welcome', language)
+        role_display = get_role_display(role, language)
+        role_emoji = get_role_emoji(role)
 
         try:
             content = f"""
                 <h2 style="margin-top: 0; color: #212529; font-size: 24px; font-weight: 600;">
-                    🎉 Bienvenue sur GuardianIQ !
+                    {t['title']}
                 </h2>
                 <p style="margin: 20px 0; color: #495057; font-size: 16px; line-height: 1.6;">
-                    Bonjour <strong style="color: #0D8FDB;">{username}</strong>,
+                    {t['greeting']} <strong style="color: #0D8FDB;">{username}</strong>,
                 </p>
                 <p style="margin: 20px 0; color: #495057; font-size: 16px; line-height: 1.6;">
-                    Nous sommes ravis de vous accueillir sur <strong>GuardianIQ</strong>, votre nouvelle plateforme de gestion de la sécurité !
+                    {t['message_1']}
                 </p>
                 <p style="margin: 20px 0; color: #495057; font-size: 16px; line-height: 1.6;">
-                    Votre compte a été créé avec succès. Voici vos informations :
+                    {t['message_2']}
                 </p>
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 8px; margin: 25px 0;">
                     <tr>
@@ -204,7 +205,7 @@ class EmailService:
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                                 <tr>
                                     <td style="padding: 8px 0; font-size: 15px; color: #495057;">
-                                        <strong>👤 Nom d'utilisateur :</strong>
+                                        <strong>👤 {t['username_label']}</strong>
                                     </td>
                                     <td style="padding: 8px 0; font-size: 15px; color: #212529; text-align: right;">
                                         <strong>{username}</strong>
@@ -212,7 +213,7 @@ class EmailService:
                                 </tr>
                                 <tr>
                                     <td style="padding: 8px 0; font-size: 15px; color: #495057;">
-                                        <strong>📧 Email :</strong>
+                                        <strong>📧 {t['email_label']}</strong>
                                     </td>
                                     <td style="padding: 8px 0; font-size: 15px; color: #212529; text-align: right;">
                                         {email}
@@ -220,7 +221,7 @@ class EmailService:
                                 </tr>
                                 <tr>
                                     <td style="padding: 8px 0; font-size: 15px; color: #495057;">
-                                        <strong>{role_emoji} Rôle :</strong>
+                                        <strong>{role_emoji} {t['role_label']}</strong>
                                     </td>
                                     <td style="padding: 8px 0; font-size: 15px; text-align: right;">
                                         <span style="background-color: #0D8FDB; color: white; padding: 4px 12px; border-radius: 12px; font-weight: 600;">
@@ -233,7 +234,7 @@ class EmailService:
                     </tr>
                 </table>
                 <p style="margin: 25px 0; color: #495057; font-size: 16px; line-height: 1.6;">
-                    Vous pouvez maintenant vous connecter et commencer à utiliser toutes les fonctionnalités de la plateforme.
+                    {t['message_3']}
                 </p>
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 30px auto;">
                     <tr>
@@ -248,26 +249,26 @@ class EmailService:
                                       padding: 14px 32px;
                                       text-decoration: none;
                                       text-align: center;">
-                                🚀 Accéder à la plateforme
+                                {t['button_text']}
                             </a>
                         </td>
                     </tr>
                 </table>
                 <div style="background-color: #d1ecf1; border-left: 4px solid #0c5460; padding: 15px; margin: 25px 0; border-radius: 4px;">
                     <p style="margin: 0; color: #0c5460; font-size: 14px;">
-                        <strong>💡 Astuce :</strong> N'hésitez pas à explorer l'interface et à contacter notre équipe de support si vous avez des questions.
+                        <strong>{t['tip_title']}</strong> {t['tip_message']}
                     </p>
                 </div>
                 <p style="margin: 20px 0; color: #6c757d; font-size: 14px; line-height: 1.6;">
-                    Nous vous souhaitons une excellente expérience sur GuardianIQ !
+                    {t['footer_message']}
                 </p>
             """
 
             params = {
                 "from": os.getenv('RESEND_FROM_EMAIL', 'noreply@guardianiq.com'),
                 "to": [email],
-                "subject": "🎉 Bienvenue sur GuardianIQ !",
-                "html": EmailService.get_email_template_base(content)
+                "subject": t['subject'],
+                "html": EmailService.get_email_template_base(content, language)
             }
 
             response = resend.Emails.send(params)

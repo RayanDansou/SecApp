@@ -18,6 +18,7 @@ from .serializers import (
     ProfilePictureSerializer
 )
 from .email_service import email_service
+from .message_translations import get_message, get_user_language
 
 
 class LoginView(APIView):
@@ -29,6 +30,7 @@ class LoginView(APIView):
     serializer_class = LoginSerializer
 
     def post(self, request):
+        lang = get_user_language(request=request)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -39,13 +41,13 @@ class LoginView(APIView):
 
         if user is None:
             return Response(
-                {'error': 'Identifiants invalides'},
+                {'error': get_message('auth', 'invalid_credentials', lang)},
                 status=status.HTTP_401_UNAUTHORIZED
             )
 
         if not user.is_active:
             return Response(
-                {'error': 'Compte désactivé'},
+                {'error': get_message('auth', 'account_disabled', lang)},
                 status=status.HTTP_403_FORBIDDEN
             )
 
@@ -69,11 +71,12 @@ class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        lang = get_user_language(user=request.user, request=request)
         try:
             refresh_token = request.data.get('refresh_token')
             if not refresh_token:
                 return Response(
-                    {'error': 'Refresh token requis'},
+                    {'error': get_message('auth', 'refresh_token_required', lang)},
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
@@ -81,7 +84,7 @@ class LogoutView(APIView):
             token.blacklist()
 
             return Response(
-                {'message': 'Déconnexion réussie'},
+                {'message': get_message('auth', 'logout_success', lang)},
                 status=status.HTTP_200_OK
             )
         except Exception as e:
@@ -101,6 +104,7 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = UserRegistrationSerializer
 
     def create(self, request, *args, **kwargs):
+        lang = get_user_language(request=request)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
@@ -113,7 +117,8 @@ class RegisterView(generics.CreateAPIView):
             email_service.send_welcome_email(
                 email=user.email,
                 username=user.username,
-                role=user.role
+                role=user.role,
+                language=lang
             )
         except Exception as e:
             print(f"Erreur lors de l'envoi de l'email de bienvenue: {str(e)}")
@@ -125,7 +130,7 @@ class RegisterView(generics.CreateAPIView):
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
             },
-            'message': 'Utilisateur créé avec succès'
+            'message': get_message('auth', 'user_created', lang)
         }, status=status.HTTP_201_CREATED)
 
 
@@ -147,6 +152,7 @@ class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        lang = get_user_language(user=request.user, request=request)
         serializer = ChangePasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -155,7 +161,7 @@ class ChangePasswordView(APIView):
         # Vérification de l'ancien mot de passe
         if not user.check_password(serializer.validated_data['old_password']):
             return Response(
-                {'error': 'Ancien mot de passe incorrect'},
+                {'error': get_message('password', 'old_password_incorrect', lang)},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -164,7 +170,7 @@ class ChangePasswordView(APIView):
         user.save()
 
         return Response(
-            {'message': 'Mot de passe modifié avec succès'},
+            {'message': get_message('password', 'password_changed', lang)},
             status=status.HTTP_200_OK
         )
 
@@ -185,6 +191,7 @@ class UpdateProfilePictureView(generics.UpdateAPIView):
         """
         Met à jour la photo de profil de l'utilisateur
         """
+        lang = get_user_language(user=request.user, request=request)
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
@@ -199,7 +206,7 @@ class UpdateProfilePictureView(generics.UpdateAPIView):
         self.perform_update(serializer)
 
         return Response({
-            'message': 'Photo de profil mise à jour avec succès',
+            'message': get_message('profile', 'profile_picture_updated', lang),
             'user': serializer.data
         }, status=status.HTTP_200_OK)
 
@@ -220,13 +227,14 @@ class DeleteAccountView(APIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, user_id=None):
+        lang = get_user_language(user=request.user, request=request)
         try:
             # Si user_id est fourni, c'est un admin qui supprime un autre compte
             if user_id:
                 # Vérifier que l'utilisateur est admin
                 if request.user.role != User.Role.ADMIN:
                     return Response(
-                        {'error': 'Seuls les administrateurs peuvent supprimer d\'autres comptes'},
+                        {'error': get_message('account', 'admin_only', lang)},
                         status=status.HTTP_403_FORBIDDEN
                     )
 
@@ -235,14 +243,14 @@ class DeleteAccountView(APIView):
                     user_to_delete = User.objects.get(id=user_id)
                 except User.DoesNotExist:
                     return Response(
-                        {'error': 'Utilisateur non trouvé'},
+                        {'error': get_message('account', 'user_not_found', lang)},
                         status=status.HTTP_404_NOT_FOUND
                     )
 
                 # Empêcher un admin de se supprimer lui-même via cette route
                 if user_to_delete.id == request.user.id:
                     return Response(
-                        {'error': 'Utilisez l\'endpoint sans user_id pour supprimer votre propre compte'},
+                        {'error': get_message('account', 'cannot_delete_self', lang)},
                         status=status.HTTP_400_BAD_REQUEST
                     )
 
@@ -250,7 +258,7 @@ class DeleteAccountView(APIView):
                 user_to_delete.delete()
 
                 return Response(
-                    {'message': f'Compte de {deleted_username} supprimé avec succès'},
+                    {'message': get_message('account', 'account_deleted', lang, username=deleted_username)},
                     status=status.HTTP_200_OK
                 )
 
@@ -260,13 +268,13 @@ class DeleteAccountView(APIView):
                 request.user.delete()
 
                 return Response(
-                    {'message': f'Votre compte {deleted_username} a été supprimé avec succès'},
+                    {'message': get_message('account', 'self_account_deleted', lang, username=deleted_username)},
                     status=status.HTTP_200_OK
                 )
 
         except Exception as e:
             return Response(
-                {'error': f'Erreur lors de la suppression du compte: {str(e)}'},
+                {'error': get_message('account', 'delete_error', lang, error=str(e))},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
@@ -296,6 +304,7 @@ class PasswordResetRequestView(APIView):
     serializer_class = PasswordResetRequestSerializer
 
     def post(self, request):
+        lang = get_user_language(request=request)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -316,14 +325,15 @@ class PasswordResetRequestView(APIView):
                 email_service.send_password_reset_email(
                     email=user.email,
                     reset_link=reset_link,
-                    username=user.username
+                    username=user.username,
+                    language=lang
                 )
             except Exception as e:
                 print(f"Erreur lors de l'envoi de l'email: {str(e)}")
                 # On continue même si l'email échoue pour ne pas révéler si l'utilisateur existe
 
             return Response(
-                {'message': 'Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.'},
+                {'message': get_message('password', 'reset_link_sent', lang)},
                 status=status.HTTP_200_OK
             )
 
@@ -331,7 +341,7 @@ class PasswordResetRequestView(APIView):
             # Pour des raisons de sécurité, on retourne le même message
             # que si l'utilisateur existe (pour ne pas révéler l'existence du compte)
             return Response(
-                {'message': 'Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.'},
+                {'message': get_message('password', 'reset_link_sent', lang)},
                 status=status.HTTP_200_OK
             )
 
@@ -344,6 +354,7 @@ class PasswordResetConfirmView(APIView):
     serializer_class = PasswordResetConfirmSerializer
 
     def post(self, request):
+        lang = get_user_language(request=request)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -357,7 +368,7 @@ class PasswordResetConfirmView(APIView):
             # Vérifier si le token est valide
             if not reset_token.is_valid():
                 return Response(
-                    {'error': 'Le lien de réinitialisation est invalide ou a expiré.'},
+                    {'error': get_message('password', 'reset_link_invalid', lang)},
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
@@ -371,12 +382,12 @@ class PasswordResetConfirmView(APIView):
             reset_token.save()
 
             return Response(
-                {'message': 'Mot de passe réinitialisé avec succès.'},
+                {'message': get_message('password', 'password_reset_success', lang)},
                 status=status.HTTP_200_OK
             )
 
         except PasswordResetToken.DoesNotExist:
             return Response(
-                {'error': 'Le lien de réinitialisation est invalide.'},
+                {'error': get_message('password', 'reset_token_invalid', lang)},
                 status=status.HTTP_400_BAD_REQUEST
             )
