@@ -72,6 +72,26 @@ const Navbar = () => {
     return username.substring(0, 2).toUpperCase();
   };
 
+  // Avatars prédéfinis (même liste que dans ProfilePictureUpload)
+  const AVATARS = [
+    { id: 'avatar1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=b6e3f4' },
+    { id: 'avatar2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka&backgroundColor=c0aede' },
+    { id: 'avatar3', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Princess&backgroundColor=ffd5dc' },
+    { id: 'avatar4', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jasper&backgroundColor=d1d4f9' },
+    { id: 'avatar5', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Chloe&backgroundColor=ffdfbf' },
+    { id: 'avatar6', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Oscar&backgroundColor=c5e4e7' }
+  ];
+
+  const getProfilePictureUrl = () => {
+    if (user?.profile_picture) {
+      return user.profile_picture;
+    } else if (user?.avatar) {
+      const avatar = AVATARS.find(a => a.id === user.avatar);
+      return avatar?.url || AVATARS[0].url;
+    }
+    return null; // Pas de photo, on affichera les initiales
+  };
+
   return (
     <nav className={`navbar ${isScrolled ? 'navbar-scrolled' : ''}`}>
       <div className="navbar-container">
@@ -130,10 +150,17 @@ const Navbar = () => {
 
       <div className="nav-user" ref={userMenuRef}>
         <div className="user-avatar" onClick={() => setShowUserMenu(!showUserMenu)}>
-
-          <div className="avatar-circle">
-            {getInitials(user?.username)}
-          </div>
+          {getProfilePictureUrl() ? (
+            <img
+              src={getProfilePictureUrl()}
+              alt="Profile"
+              className="avatar-image"
+            />
+          ) : (
+            <div className="avatar-circle">
+              {getInitials(user?.username)}
+            </div>
+          )}
         </div>
 
         {showUserMenu && (

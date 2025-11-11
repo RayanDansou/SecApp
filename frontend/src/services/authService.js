@@ -89,7 +89,7 @@ class AuthService {
    */
   async updateProfile(profileData) {
     try {
-      const response = await api.put('/api/auth/profile/', profileData);
+      const response = await api.patch('/api/auth/profile/', profileData);
       localStorage.setItem('user', JSON.stringify(response.data));
       return response.data;
     } catch (error) {
@@ -302,6 +302,32 @@ class AuthService {
       return response.data;
     } catch (error) {
       throw error.response?.data || { error: 'Erreur lors de l\'inscription Google' };
+    }
+  }
+
+  /**
+   * Met à jour la photo de profil de l'utilisateur
+   * @param {FormData} formData - Données du formulaire (avatar ou profile_picture)
+   * @returns {Promise} Données de l'utilisateur mis à jour
+   */
+  async updateProfilePicture(formData) {
+    try {
+      const response = await api.patch('/api/auth/profile-picture/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      // Mettre à jour le localStorage avec les nouvelles données utilisateur
+      if (response.data.user) {
+        const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+        const updatedUser = { ...currentUser, ...response.data.user };
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+      }
+
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { error: 'Erreur lors de la mise à jour de la photo de profil' };
     }
   }
 }

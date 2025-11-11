@@ -26,7 +26,8 @@
     "title": "Titre",
     "required": "Obligatoire",
     "optional": "Optionnel",
-    "you": "Vous"
+    "you": "Vous",
+    "or": "OU"
   },
   "navbar": {
     "dashboard": "Tableau de bord",
@@ -147,7 +148,20 @@
     "confirmDeleteAccountMessage": "Veuillez taper <strong>{{username}}</strong> pour confirmer la suppression.",
     "accountDeleted": "Compte supprimé avec succès",
     "deletingAccount": "Suppression...",
-    "usernameDoesNotMatch": "Le nom d'utilisateur ne correspond pas"
+    "usernameDoesNotMatch": "Le nom d'utilisateur ne correspond pas",
+    "profilePicture": {
+      "title": "Photo de profil",
+      "subtitle": "Personnalisez votre photo de profil avec un avatar ou une image personnalisée.",
+      "currentPicture": "Photo actuelle",
+      "chooseAvatar": "Choisir un avatar",
+      "uploadPhoto": "Uploader une photo",
+      "clickToUpload": "Cliquez pour uploader une image",
+      "maxSize": "Maximum 2 MB (JPG, PNG, GIF)",
+      "fileTooLarge": "Le fichier est trop volumineux. Taille maximale : 2 MB",
+      "invalidFileType": "Type de fichier invalide. Utilisez JPG, PNG ou GIF",
+      "selectOption": "Veuillez sélectionner un avatar ou uploader une photo",
+      "success": "Photo de profil mise à jour avec succès"
+    }
   },
   "questionnaire": {
     "title": "Questionnaire",

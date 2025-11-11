@@ -9,7 +9,7 @@ import RoleSelectionModal from '../components/RoleSelectionModal';
 import './Register.css';
 
 const Register = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -316,7 +316,7 @@ const Register = () => {
         </form>
 
         <div className="separator">
-          <span>OU</span>
+          <span>{t('common.or')}</span>
         </div>
 
         <div className="google-login-wrapper">
@@ -327,7 +327,7 @@ const Register = () => {
             size="large"
             text="signup_with"
             shape="rectangular"
-            locale="fr"
+            locale={i18n.language}
           />
         </div>
 

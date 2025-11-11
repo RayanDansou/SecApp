@@ -5,6 +5,7 @@ from .views import (
     RegisterView,
     UserProfileView,
     ChangePasswordView,
+    UpdateProfilePictureView,
     RefreshTokenView,
     DeleteAccountView,
     UserListView,
@@ -29,6 +30,7 @@ urlpatterns = [
 
     # Profil utilisateur
     path('profile/', UserProfileView.as_view(), name='profile'),
+    path('profile-picture/', UpdateProfilePictureView.as_view(), name='profile_picture'),
     path('change-password/', ChangePasswordView.as_view(), name='change_password'),
 
     # Réinitialisation de mot de passe

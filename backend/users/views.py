@@ -1,4 +1,4 @@
-from rest_framework import status, generics
+from rest_framework import status, generics, parsers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -14,7 +14,8 @@ from .serializers import (
     LoginSerializer,
     ChangePasswordSerializer,
     PasswordResetRequestSerializer,
-    PasswordResetConfirmSerializer
+    PasswordResetConfirmSerializer,
+    ProfilePictureSerializer
 )
 from .email_service import email_service
 
@@ -166,6 +167,41 @@ class ChangePasswordView(APIView):
             {'message': 'Mot de passe modifié avec succès'},
             status=status.HTTP_200_OK
         )
+
+
+class UpdateProfilePictureView(generics.UpdateAPIView):
+    """
+    Endpoint pour mettre à jour la photo de profil - PATCH/PUT /api/auth/profile-picture/
+    Supporte l'upload d'une photo personnalisée ou la sélection d'un avatar prédéfini
+    """
+    serializer_class = ProfilePictureSerializer
+    permission_classes = [IsAuthenticated]
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser, parsers.JSONParser]
+
+    def get_object(self):
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        """
+        Met à jour la photo de profil de l'utilisateur
+        """
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+
+        # Supprimer l'ancienne photo si une nouvelle est uploadée
+        if 'profile_picture' in request.data and instance.profile_picture:
+            # Supprimer l'ancien fichier
+            if os.path.isfile(instance.profile_picture.path):
+                os.remove(instance.profile_picture.path)
+
+        self.perform_update(serializer)
+
+        return Response({
+            'message': 'Photo de profil mise à jour avec succès',
+            'user': serializer.data
+        }, status=status.HTTP_200_OK)
 
 
 class RefreshTokenView(TokenRefreshView):

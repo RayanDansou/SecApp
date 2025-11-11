@@ -17,6 +17,14 @@ class User(AbstractUser):
         BUSINESS_OWNER = 'BUSINESS_OWNER', 'Business Owner'
         ADMIN = 'ADMIN', 'Administrateur'
 
+    class Avatar(models.TextChoices):
+        AVATAR_1 = 'avatar1', 'Avatar 1'
+        AVATAR_2 = 'avatar2', 'Avatar 2'
+        AVATAR_3 = 'avatar3', 'Avatar 3'
+        AVATAR_4 = 'avatar4', 'Avatar 4'
+        AVATAR_5 = 'avatar5', 'Avatar 5'
+        AVATAR_6 = 'avatar6', 'Avatar 6'
+
     role = models.CharField(
         max_length=20,
         choices=Role.choices,
@@ -26,6 +34,22 @@ class User(AbstractUser):
 
     email = models.EmailField(unique=True, verbose_name="Email")
 
+    # Champs pour la photo de profil
+    avatar = models.CharField(
+        max_length=20,
+        choices=Avatar.choices,
+        null=True,
+        blank=True,
+        verbose_name="Avatar prédéfini"
+    )
+
+    profile_picture = models.ImageField(
+        upload_to='profile_pictures/',
+        null=True,
+        blank=True,
+        verbose_name="Photo de profil personnalisée"
+    )
+
     class Meta:
         verbose_name = "Utilisateur"
         verbose_name_plural = "Utilisateurs"
@@ -33,6 +57,27 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.get_role_display()})"
+
+    def get_profile_picture_url(self):
+        """
+        Retourne l'URL de la photo de profil (personnalisée ou avatar)
+        """
+        # Mapping des avatars vers les URLs DiceBear
+        AVATAR_URLS = {
+            'avatar1': 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=b6e3f4',
+            'avatar2': 'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka&backgroundColor=c0aede',
+            'avatar3': 'https://api.dicebear.com/7.x/avataaars/svg?seed=Princess&backgroundColor=ffd5dc',
+            'avatar4': 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jasper&backgroundColor=d1d4f9',
+            'avatar5': 'https://api.dicebear.com/7.x/avataaars/svg?seed=Chloe&backgroundColor=ffdfbf',
+            'avatar6': 'https://api.dicebear.com/7.x/avataaars/svg?seed=Oscar&backgroundColor=c5e4e7'
+        }
+
+        if self.profile_picture:
+            return self.profile_picture.url
+        elif self.avatar:
+            return f'/static/avatars/{self.avatar}.png'
+        else:
+            return f'/static/avatars/default.png'
 
 
 class PasswordResetToken(models.Model):

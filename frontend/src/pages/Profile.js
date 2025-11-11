@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import authService from '../services/authService';
+import ProfilePictureUpload from '../components/ProfilePictureUpload';
 import './Profile.css';
 
 const Profile = () => {
@@ -210,6 +211,22 @@ const Profile = () => {
     }
   };
 
+  // Mettre à jour la photo de profil
+  const handleUpdateProfilePicture = async (formData) => {
+    try {
+      const result = await authService.updateProfilePicture(formData);
+      // Mettre à jour le contexte
+      await updateProfile();
+      setProfileSuccess(t('profile.profilePicture.success'));
+      // Effacer le message après 3 secondes
+      setTimeout(() => setProfileSuccess(''), 3000);
+      return result;
+    } catch (error) {
+      setProfileErrors({ general: error.error || t('errors.generic') });
+      throw error;
+    }
+  };
+
   return (
     <div className="settings-container">
       <div className="settings-content">
@@ -228,6 +245,12 @@ const Profile = () => {
               onClick={() => setActiveTab('account')}
             >
               {t('profile.account')}
+            </button>
+            <button
+              className={`sidebar-tab ${activeTab === 'picture' ? 'active' : ''}`}
+              onClick={() => setActiveTab('picture')}
+            >
+              {t('profile.profilePicture.title')}
             </button>
             <button
               className={`sidebar-tab ${activeTab === 'security' ? 'active' : ''}`}
@@ -358,6 +381,20 @@ const Profile = () => {
                     </span>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {activeTab === 'picture' && (
+              <div className="settings-section">
+                <div className="section-header">
+                  <h2>{t('profile.profilePicture.title')}</h2>
+                  <p>{t('profile.profilePicture.subtitle')}</p>
+                </div>
+
+                <ProfilePictureUpload
+                  currentUser={user}
+                  onUpdate={handleUpdateProfilePicture}
+                />
               </div>
             )}
 

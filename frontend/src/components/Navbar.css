@@ -144,6 +144,15 @@ body.dark-mode .nav-link:hover {
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
 }
 
+.avatar-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
 /* Dropdown Menu */
 .user-dropdown-menu {
   position: absolute;
@@ -597,6 +606,11 @@ body.dark-mode .language-option:hover {
     font-size: 11px;
   }
 
+  .avatar-image {
+    width: 34px;
+    height: 34px;
+  }
+
   .dropdown-divider {
     margin: 4px 0;
   }
@@ -658,5 +672,10 @@ body.dark-mode .language-option:hover {
     width: 32px;
     height: 32px;
     font-size: 10px;
+  }
+
+  .avatar-image {
+    width: 32px;
+    height: 32px;
   }
 }

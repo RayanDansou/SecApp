@@ -7,11 +7,20 @@ class UserSerializer(serializers.ModelSerializer):
     """
     Serializer pour le modèle User
     """
+    profile_picture_url = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'role', 'first_name', 'last_name', 'date_joined', 'is_active')
-        read_only_fields = ('id', 'date_joined')
+        fields = ('id', 'username', 'email', 'role', 'first_name', 'last_name', 'date_joined', 'is_active',
+                  'avatar', 'profile_picture', 'profile_picture_url')
+        read_only_fields = ('id', 'date_joined', 'profile_picture_url')
+
+
+    def get_profile_picture_url(self, obj):
+        """
+        Retourne l'URL de la photo de profil
+        """
+        return obj.get_profile_picture_url()
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -129,4 +138,34 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 {"new_password": "Les mots de passe ne correspondent pas."}
             )
+        return attrs
+
+
+class ProfilePictureSerializer(serializers.ModelSerializer):
+    """
+    Serializer pour la mise à jour de la photo de profil
+    """
+    profile_picture_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('avatar', 'profile_picture', 'profile_picture_url')
+
+    def get_profile_picture_url(self, obj):
+        """
+        Retourne l'URL de la photo de profil
+        """
+        return obj.get_profile_picture_url()
+
+    def validate(self, attrs):
+        """
+        S'assure qu'on ne peut pas avoir à la fois un avatar et une photo personnalisée
+        """
+        # Si une photo personnalisée est uploadée, on retire l'avatar
+        if 'profile_picture' in attrs and attrs['profile_picture']:
+            attrs['avatar'] = None
+        # Si un avatar est sélectionné, on retire la photo personnalisée
+        elif 'avatar' in attrs and attrs['avatar']:
+            attrs['profile_picture'] = None
+
         return attrs
