@@ -28,7 +28,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  background: var(--danger-color);
+  background: #ef4444;
   color: white;
   font-size: 0.65rem;
   font-weight: bold;
@@ -39,7 +39,12 @@
   align-items: center;
   justify-content: center;
   padding: 0 4px;
-  border: 2px solid var(--bg-primary);
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .notification-badge {
+  border-color: #1a1a1a;
 }
 
 .notification-dropdown-menu {

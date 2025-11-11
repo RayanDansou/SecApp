@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
-import { Bell, X, Check, CheckCheck } from 'lucide-react';
+import { Bell, X } from 'lucide-react';
 import api from '../services/api';
 import './NotificationDropdown.css';
 
@@ -73,45 +73,6 @@ const NotificationDropdown = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
-  // Marquer une notification comme lue
-  const markAsRead = async (notificationId) => {
-    try {
-      await api.post(`/api/notifications/${notificationId}/mark_read/`);
-
-      // Mettre à jour localement pour un feedback immédiat
-      setNotifications(prev =>
-        prev.map(n => n.id === notificationId ? { ...n, is_read: true } : n)
-      );
-
-      // Rafraîchir le compteur
-      loadUnreadCount();
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
-      // En cas d'erreur, recharger les données
-      loadNotifications();
-    }
-  };
-
-  // Marquer toutes les notifications comme lues
-  const markAllAsRead = async () => {
-    try {
-      await api.post('/api/notifications/mark_all_read/');
-
-      // Mettre à jour localement pour un feedback immédiat
-      setNotifications(prev =>
-        prev.map(n => ({ ...n, is_read: true }))
-      );
-
-      // Rafraîchir le compteur
-      setUnreadCount(0);
-    } catch (error) {
-      console.error('Error marking all notifications as read:', error);
-      // En cas d'erreur, recharger les données
-      loadNotifications();
-      loadUnreadCount();
-    }
-  };
 
   // Supprimer une notification
   const deleteNotification = async (notificationId) => {
@@ -194,15 +155,6 @@ const NotificationDropdown = () => {
         <div className="notification-dropdown-menu">
           <div className="notification-header">
             <h3>{t('notifications.title')}</h3>
-            {unreadCount > 0 && (
-              <button
-                className="mark-all-read-btn"
-                onClick={markAllAsRead}
-                title={t('notifications.markAllRead')}
-              >
-                <CheckCheck size={18} />
-              </button>
-            )}
           </div>
 
           <div className="notification-list">
@@ -240,18 +192,6 @@ const NotificationDropdown = () => {
                     </div>
                   </div>
                   <div className="notification-actions">
-                    {!notification.is_read && (
-                      <button
-                        className="notification-action-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          markAsRead(notification.id);
-                        }}
-                        title={t('notifications.markAsRead')}
-                      >
-                        <Check size={16} />
-                      </button>
-                    )}
                     <button
                       className="notification-action-btn delete"
                       onClick={(e) => {
