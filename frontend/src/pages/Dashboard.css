@@ -28,12 +28,12 @@
   word-wrap: break-word; /* Break long words */
   overflow-wrap: break-word;
 }
-
+/* 
 .user-info {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
-}
+} */
 
 .info-item {
   display: flex;
@@ -326,11 +326,11 @@
     font-size: 22px;
     margin-bottom: 20px;
   }
-
+/* 
   .user-info {
     grid-template-columns: 1fr;
     gap: 12px;
-  }
+  } */
 
   .info-item {
     gap: 6px;
@@ -391,24 +391,34 @@
     font-size: 18px;
     margin-bottom: 12px;
     line-height: 1.3;
+    word-break: break-word;
   }
 
-  .user-info {
+  /* .user-info {
+    grid-template-columns: 1fr;
     gap: 10px;
-  }
+  } */
 
   .info-item {
+    display: flex;
+    flex-direction: column;
     gap: 4px;
+    min-width: 0;
+    margin-bottom: 12px;
   }
 
   .info-label {
     font-size: 10px;
     letter-spacing: 0.3px;
+    display: block;
   }
 
   .info-value {
     font-size: 13px;
     line-height: 1.4;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    display: block;
   }
 
   .role-badge {
@@ -468,5 +478,33 @@
   .badge {
     font-size: 10px;
     padding: 3px 8px;
+  }
+}
+
+
+
+/* Styles pour les écrans de taille moyenne et grande */
+.user-info {
+  display: flex;
+  flex-wrap: wrap; /* Permet aux éléments de passer à la ligne si nécessaire */
+  gap: 24px; /* Espace entre les éléments */
+  margin-top: 20px;
+}
+
+
+/* Pour les tablettes et les mobiles (écrans de moins de 768px) */
+@media (max-width: 768px) {
+  .welcome-card h1 {
+    font-size: 1.5rem; /* Réduire la taille du titre sur mobile */
+  }
+
+  .user-info {
+    flex-direction: column; /* Afficher les éléments en colonne */
+    align-items: flex-start; /* Aligner les éléments à gauche */
+    gap: 12px; /* Réduire l'espacement */
+  }
+
+  .dashboard-cards {
+    grid-template-columns: 1fr; /* Une seule colonne pour les cartes */
   }
 }

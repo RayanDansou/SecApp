@@ -608,14 +608,14 @@ body.dark-mode .language-option:hover {
   }
 
   .avatar-circle {
-    width: 34px;
-    height: 34px;
-    font-size: 11px;
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
   }
 
   .avatar-image {
-    width: 34px;
-    height: 34px;
+    width: 28px;
+    height: 28px;
   }
 
   .dropdown-divider {
@@ -676,13 +676,13 @@ body.dark-mode .language-option:hover {
   }
 
   .avatar-circle {
-    width: 32px;
-    height: 32px;
-    font-size: 10px;
+    width: 26px;
+    height: 26px;
+    font-size: 9px;
   }
 
   .avatar-image {
-    width: 32px;
-    height: 32px;
+    width: 26px;
+    height: 26px;
   }
 }

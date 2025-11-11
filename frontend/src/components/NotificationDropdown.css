@@ -260,3 +260,49 @@ body.dark-mode .notification-badge {
     right: -1rem;
   }
 }
+
+@media (max-width: 480px) {
+  .notification-bell {
+    padding: 0.35rem;
+  }
+
+  .notification-bell svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .notification-badge {
+    font-size: 0.55rem;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    border-width: 1.5px;
+  }
+
+  .notification-dropdown {
+    margin-right: 0.5rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .notification-bell {
+    padding: 0.3rem;
+  }
+
+  .notification-bell svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .notification-badge {
+    font-size: 0.5rem;
+    min-width: 14px;
+    height: 14px;
+    border-radius: 7px;
+    border-width: 1px;
+  }
+
+  .notification-dropdown {
+    margin-right: 0.4rem;
+  }
+}
