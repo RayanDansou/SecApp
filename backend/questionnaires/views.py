@@ -16,7 +16,8 @@ from .models import (
     ResponseDocument,
     Comment,
     StatusHistory,
-    AIAnalysis
+    AIAnalysis,
+    Notification
 )
 from .serializers import (
     QuestionnaireListSerializer,
@@ -36,6 +37,7 @@ from .serializers import (
     CommentSerializer,
     StatusHistorySerializer,
     AIAnalysisSerializer,
+    NotificationSerializer,
 )
 from .ai_service import AIAnalysisService, extract_document_content
 
@@ -598,3 +600,72 @@ class StatusHistoryViewSet(viewsets.ReadOnlyModelViewSet):
         return StatusHistory.objects.filter(
             response_id=response_id
         ).order_by('-changed_at')
+
+
+# ===========================
+# Notification ViewSet
+# ===========================
+
+class NotificationViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet pour les notifications de l'utilisateur
+
+    Permissions:
+    - list: utilisateur voit ses propres notifications
+    - retrieve: utilisateur voit uniquement ses propres notifications
+    - update/partial_update: utilisateur peut marquer ses notifications comme lues
+    - destroy: utilisateur peut supprimer ses propres notifications
+    - create: non autorisé (les notifications sont créées automatiquement via signals)
+    """
+    serializer_class = NotificationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ['get', 'patch', 'delete', 'head', 'options']  # Pas de POST/PUT
+
+    def get_queryset(self):
+        """Retourne uniquement les notifications de l'utilisateur connecté"""
+        return Notification.objects.filter(
+            recipient=self.request.user
+        ).order_by('-created_at')
+
+    @action(detail=False, methods=['get'])
+    def unread_count(self, request):
+        """
+        Retourne le nombre de notifications non lues
+        GET /api/notifications/unread_count/
+        """
+        count = Notification.objects.filter(
+            recipient=request.user,
+            is_read=False
+        ).count()
+        return Response({'unread_count': count}, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['post'])
+    def mark_all_read(self, request):
+        """
+        Marque toutes les notifications de l'utilisateur comme lues
+        POST /api/notifications/mark_all_read/
+        """
+        updated = Notification.objects.filter(
+            recipient=request.user,
+            is_read=False
+        ).update(is_read=True)
+
+        return Response(
+            {'message': f'{updated} notification(s) marquée(s) comme lue(s)'},
+            status=status.HTTP_200_OK
+        )
+
+    @action(detail=True, methods=['post'])
+    def mark_read(self, request, pk=None):
+        """
+        Marque une notification spécifique comme lue
+        POST /api/notifications/{id}/mark_read/
+        """
+        notification = self.get_object()
+        notification.is_read = True
+        notification.save()
+
+        return Response(
+            NotificationSerializer(notification).data,
+            status=status.HTTP_200_OK
+        )

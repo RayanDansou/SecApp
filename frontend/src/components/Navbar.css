@@ -109,6 +109,13 @@ body.dark-mode .nav-link:hover {
 }
 
 /* User Section */
+.nav-user-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
 .nav-user {
   position: relative;
   flex-shrink: 0;
@@ -423,7 +430,7 @@ body.dark-mode .language-option:hover {
     margin-right: 8px;
   }
 
-  .nav-user {
+  .nav-user-section {
     order: 3;
   }
 

@@ -9,6 +9,7 @@ from .views import (
     ResponseDocumentViewSet,
     CommentViewSet,
     StatusHistoryViewSet,
+    NotificationViewSet,
 )
 
 app_name = 'questionnaires'
@@ -17,6 +18,7 @@ app_name = 'questionnaires'
 router = DefaultRouter()
 router.register(r'questionnaires', QuestionnaireViewSet, basename='questionnaire')
 router.register(r'responses', QuestionnaireResponseViewSet, basename='response')
+router.register(r'notifications', NotificationViewSet, basename='notification')
 
 urlpatterns = [
     # Routes principales (questionnaires et responses)

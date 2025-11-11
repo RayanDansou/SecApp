@@ -374,6 +374,21 @@
     "sessionExpired": "Your session has expired. Please log in again.",
     "formIncomplete": "Please fill in all required fields"
   },
+  "notifications": {
+    "title": "Notifications",
+    "noNotifications": "No notifications",
+    "loading": "Loading notifications...",
+    "markAsRead": "Mark as read",
+    "markAllRead": "Mark all as read",
+    "delete": "Delete",
+    "justNow": "Just now",
+    "minutesAgo": "{{count}} minute ago",
+    "minutesAgo_plural": "{{count}} minutes ago",
+    "hoursAgo": "{{count}} hour ago",
+    "hoursAgo_plural": "{{count}} hours ago",
+    "daysAgo": "{{count}} day ago",
+    "daysAgo_plural": "{{count}} days ago"
+  },
   "footer": {
     "description": "A comprehensive solution for security management and questionnaire validation.",
     "navigation": "Navigation",

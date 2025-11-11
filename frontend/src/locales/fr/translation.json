@@ -374,6 +374,21 @@
     "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter.",
     "formIncomplete": "Veuillez remplir tous les champs obligatoires"
   },
+  "notifications": {
+    "title": "Notifications",
+    "noNotifications": "Aucune notification",
+    "loading": "Chargement des notifications...",
+    "markAsRead": "Marquer comme lue",
+    "markAllRead": "Tout marquer comme lu",
+    "delete": "Supprimer",
+    "justNow": "À l'instant",
+    "minutesAgo": "Il y a {{count}} minute",
+    "minutesAgo_plural": "Il y a {{count}} minutes",
+    "hoursAgo": "Il y a {{count}} heure",
+    "hoursAgo_plural": "Il y a {{count}} heures",
+    "daysAgo": "Il y a {{count}} jour",
+    "daysAgo_plural": "Il y a {{count}} jours"
+  },
   "footer": {
     "description": "Une solution complète pour la gestion de la sécurité et la validation des questionnaires.",
     "navigation": "Navigation",

@@ -8,7 +8,8 @@ from .models import (
     ResponseDocument,
     Comment,
     StatusHistory,
-    AIAnalysis
+    AIAnalysis,
+    Notification
 )
 from users.serializers import UserSerializer
 
@@ -480,3 +481,60 @@ class AIAnalysisSerializer(serializers.ModelSerializer):
 
     def get_responder_name(self, obj):
         return f"{obj.response.responder.first_name} {obj.response.responder.last_name}"
+
+
+# ===========================
+# Notification Serializers
+# ===========================
+
+class NotificationSerializer(serializers.ModelSerializer):
+    """
+    Serializer pour les notifications
+    """
+    sender_name = serializers.SerializerMethodField()
+    sender_avatar = serializers.SerializerMethodField()
+    response_id = serializers.IntegerField(source='response.id', read_only=True, allow_null=True)
+    response_title = serializers.CharField(source='response.questionnaire.title', read_only=True, allow_null=True)
+
+    class Meta:
+        model = Notification
+        fields = (
+            'id',
+            'recipient',
+            'sender',
+            'sender_name',
+            'sender_avatar',
+            'notification_type',
+            'title',
+            'message',
+            'response_id',
+            'response_title',
+            'is_read',
+            'created_at'
+        )
+        read_only_fields = (
+            'id',
+            'recipient',
+            'sender',
+            'sender_name',
+            'sender_avatar',
+            'notification_type',
+            'title',
+            'message',
+            'response_id',
+            'response_title',
+            'created_at'
+        )
+
+    def get_sender_name(self, obj):
+        """Retourne le nom complet de l'expéditeur ou 'Système'"""
+        if obj.sender:
+            full_name = obj.sender.get_full_name()
+            return full_name if full_name else obj.sender.username
+        return "Système"
+
+    def get_sender_avatar(self, obj):
+        """Retourne l'URL de l'avatar de l'expéditeur"""
+        if obj.sender:
+            return obj.sender.get_profile_picture_url()
+        return None

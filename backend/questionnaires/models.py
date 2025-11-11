@@ -481,3 +481,89 @@ class AIAnalysis(models.Model):
 
     def __str__(self):
         return f"Analyse IA - {self.response.questionnaire.title} ({self.coherence_score}%)"
+
+
+class Notification(models.Model):
+    """
+    Modèle pour les notifications des utilisateurs.
+    Les notifications datant de plus de 3 jours seront automatiquement supprimées.
+    """
+
+    class NotificationType(models.TextChoices):
+        STATUS_CHANGE = 'STATUS_CHANGE', 'Changement de statut'
+        NEW_RESPONSE = 'NEW_RESPONSE', 'Nouvelle réponse'
+        NEW_COMMENT = 'NEW_COMMENT', 'Nouveau commentaire'
+        RESPONSE_VALIDATED = 'RESPONSE_VALIDATED', 'Réponse validée'
+        RESPONSE_REJECTED = 'RESPONSE_REJECTED', 'Réponse rejetée'
+
+    recipient = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='notifications',
+        verbose_name="Destinataire"
+    )
+
+    sender = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='sent_notifications',
+        verbose_name="Expéditeur",
+        null=True,
+        blank=True
+    )
+
+    notification_type = models.CharField(
+        max_length=20,
+        choices=NotificationType.choices,
+        verbose_name="Type de notification"
+    )
+
+    title = models.CharField(
+        max_length=255,
+        verbose_name="Titre"
+    )
+
+    message = models.TextField(
+        verbose_name="Message"
+    )
+
+    # Liens vers les objets concernés
+    response = models.ForeignKey(
+        'QuestionnaireResponse',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='notifications',
+        verbose_name="Réponse concernée"
+    )
+
+    comment = models.ForeignKey(
+        'Comment',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='notifications',
+        verbose_name="Commentaire concerné"
+    )
+
+    is_read = models.BooleanField(
+        default=False,
+        verbose_name="Lu"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Date de création"
+    )
+
+    class Meta:
+        verbose_name = "Notification"
+        verbose_name_plural = "Notifications"
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['recipient', '-created_at']),
+            models.Index(fields=['recipient', 'is_read']),
+        ]
+
+    def __str__(self):
+        return f"Notification pour {self.recipient.username}: {self.title}"

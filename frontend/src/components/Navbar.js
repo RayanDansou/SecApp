@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { LogOut, Moon, Sun, Settings, Shield, ChevronRight, Menu, X } from 'lucide-react';
 import Logo from './Logo';
+import NotificationDropdown from './NotificationDropdown';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -148,8 +149,11 @@ const Navbar = () => {
         )}
       </div>
 
-      <div className="nav-user" ref={userMenuRef}>
-        <div className="user-avatar" onClick={() => setShowUserMenu(!showUserMenu)}>
+      <div className="nav-user-section">
+        <NotificationDropdown />
+
+        <div className="nav-user" ref={userMenuRef}>
+          <div className="user-avatar" onClick={() => setShowUserMenu(!showUserMenu)}>
           {getProfilePictureUrl() ? (
             <img
               src={getProfilePictureUrl()}
@@ -250,6 +254,7 @@ const Navbar = () => {
             </button>
           </div>
         )}
+        </div>
       </div>
       </div>
     </nav>
