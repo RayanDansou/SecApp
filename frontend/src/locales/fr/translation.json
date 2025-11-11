@@ -294,7 +294,11 @@
     "documentDeleted": "Document supprimé",
     "confirmDeleteDocument": "Êtes-vous sûr de vouloir supprimer ce document ?",
     "maxFileSize": "Taille maximale : 10 MB",
-    "allowedFormats": "Formats autorisés : PDF, Word, Excel"
+    "allowedFormats": "Formats autorisés : PDF, Word, Excel",
+    "fileTooLarge": "Le fichier est trop volumineux (maximum 10MB)",
+    "invalidFileType": "Type de fichier non autorisé. Utilisez PDF, DOC, DOCX ou TXT",
+    "uploadError": "Erreur lors de l'upload du document",
+    "deleteError": "Erreur lors de la suppression du document"
   },
   "comments": {
     "comments": "Commentaires",
@@ -372,7 +376,9 @@
     "validationError": "Erreur de validation",
     "serverError": "Erreur serveur",
     "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter.",
-    "formIncomplete": "Veuillez remplir tous les champs obligatoires"
+    "formIncomplete": "Veuillez remplir tous les champs obligatoires",
+    "googleLoginError": "Erreur lors de la connexion avec Google",
+    "googleSignupError": "Erreur lors de l'inscription avec Google"
   },
   "notifications": {
     "title": "Notifications",

@@ -127,7 +127,7 @@ const Register = () => {
   };
 
   const handleGoogleError = () => {
-    setErrors({ general: 'Erreur lors de l\'inscription avec Google' });
+    setErrors({ general: t('errors.googleSignupError') });
   };
 
   const handleRoleConfirm = async (selectedRole) => {

@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { formatDate as formatDateUtil } from '../../utils/dateFormatter';
 import './DocumentsManager.css';
 
 const DocumentsManager = ({
@@ -9,6 +11,7 @@ const DocumentsManager = ({
   canDelete = true,
   title = "Documents"
 }) => {
+  const { t, i18n } = useTranslation();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
@@ -19,7 +22,7 @@ const DocumentsManager = ({
 
     // Vérifier la taille du fichier (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
-      setError('Le fichier est trop volumineux (maximum 10MB)');
+      setError(t('documents.fileTooLarge'));
       return;
     }
 
@@ -31,7 +34,7 @@ const DocumentsManager = ({
       'text/plain'
     ];
     if (!allowedTypes.includes(file.type)) {
-      setError('Type de fichier non autorisé. Utilisez PDF, DOC, DOCX ou TXT');
+      setError(t('documents.invalidFileType'));
       return;
     }
 
@@ -45,21 +48,21 @@ const DocumentsManager = ({
         fileInputRef.current.value = '';
       }
     } catch (err) {
-      setError(err.error || 'Erreur lors de l\'upload du document');
+      setError(err.error || t('documents.uploadError'));
     } finally {
       setUploading(false);
     }
   };
 
   const handleDelete = async (docId) => {
-    if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce document ?')) {
+    if (!window.confirm(t('documents.confirmDeleteDocument'))) {
       return;
     }
 
     try {
       await onDelete(docId);
     } catch (err) {
-      setError(err.error || 'Erreur lors de la suppression du document');
+      setError(err.error || t('documents.deleteError'));
     }
   };
 
@@ -67,16 +70,6 @@ const DocumentsManager = ({
     if (bytes < 1024) return bytes + ' B';
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
     return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
   };
 
   const getFileIcon = (filename) => {
@@ -129,7 +122,7 @@ const DocumentsManager = ({
                   {doc.isPending && <span className="pending-badge">⏳ En attente</span>}
                 </div>
                 <div className="document-meta">
-                  {doc.isPending ? 'Sera uploadé lors de la sauvegarde/soumission' : `Ajouté le ${formatDate(doc.uploaded_at)}`}
+                  {doc.isPending ? 'Sera uploadé lors de la sauvegarde/soumission' : `Ajouté le ${formatDateUtil(doc.uploaded_at, i18n.language)}`}
                 </div>
               </div>
               <div className="document-actions">

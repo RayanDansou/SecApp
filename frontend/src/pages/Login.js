@@ -82,7 +82,7 @@ const Login = () => {
   };
 
   const handleGoogleError = () => {
-    setError('Erreur lors de la connexion avec Google');
+    setError(t('errors.googleLoginError'));
   };
 
   const handleRoleConfirm = async (selectedRole) => {

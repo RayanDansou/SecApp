@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import questionnaireService from '../../services/questionnaireService';
 import { useAuth } from '../../contexts/AuthContext';
+import { formatDate } from '../../utils/dateFormatter';
 import './CommentsList.css';
 
 const CommentsList = ({ responseId }) => {
+  const { i18n } = useTranslation();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(false);
@@ -41,15 +44,6 @@ const CommentsList = ({ responseId }) => {
     }
   };
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString('fr-FR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
 
   return (
     <div className="comments-section">
@@ -66,7 +60,7 @@ const CommentsList = ({ responseId }) => {
                   {comment.author.first_name} {comment.author.last_name}
                 </span>
                 <span className="comment-role">({comment.author.role})</span>
-                <span className="comment-date">{formatDate(comment.created_at)}</span>
+                <span className="comment-date">{formatDate(comment.created_at, i18n.language)}</span>
               </div>
               <div className="comment-content">{comment.content}</div>
             </div>

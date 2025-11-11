@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import questionnaireService from '../../services/questionnaireService';
+import { formatDate } from '../../utils/dateFormatter';
 import './StatusHistory.css';
 
 const StatusHistory = ({ responseId }) => {
+  const { i18n } = useTranslation();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,15 +25,6 @@ const StatusHistory = ({ responseId }) => {
     }
   };
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString('fr-FR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
 
   if (loading) {
     return <div className="history-loading">Chargement de l'historique...</div>;
@@ -54,7 +48,7 @@ const StatusHistory = ({ responseId }) => {
                     )}
                     <strong>{entry.new_status_display}</strong>
                   </span>
-                  <span className="history-date">{formatDate(entry.changed_at)}</span>
+                  <span className="history-date">{formatDate(entry.changed_at, i18n.language)}</span>
                 </div>
                 <div className="history-user">
                   Par: {entry.changed_by?.first_name} {entry.changed_by?.last_name}

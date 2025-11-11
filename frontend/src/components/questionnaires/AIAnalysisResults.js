@@ -1,24 +1,15 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Shield, AlertTriangle, CheckCircle, TrendingUp, TrendingDown, AlertCircle, Brain } from 'lucide-react';
+import { formatDate } from '../../utils/dateFormatter';
 import './AIAnalysisResults.css';
 
 const AIAnalysisResults = ({ analysis }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   if (!analysis) {
     return null;
   }
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString('fr-FR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
 
   const getScoreColor = (score) => {
     if (score >= 80) return 'score-excellent';
@@ -64,7 +55,7 @@ const AIAnalysisResults = ({ analysis }) => {
             {analysis.model_used}
           </span>
           <span className="analysis-date">
-            {formatDate(analysis.created_at)}
+            {formatDate(analysis.created_at, i18n.language)}
           </span>
           {analysis.processing_time && (
             <span className="processing-time">
