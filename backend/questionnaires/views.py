@@ -103,9 +103,10 @@ class CanViewResponse(permissions.BasePermission):
         if obj.responder == user:
             return True
 
-        # L'analyste peut voir les réponses soumises
+        # L'analyste peut voir les réponses soumises uniquement pour les questionnaires qu'il a créés
         if user.role == 'ANALYSTE' and obj.status != QuestionnaireResponse.Status.BROUILLON:
-            return True
+            # Vérifier que l'analyste a créé le questionnaire template
+            return obj.questionnaire.created_by == user
 
         # Le business owner peut voir les réponses validées ou rejetées
         if user.role == 'BUSINESS_OWNER' and obj.status in [
@@ -139,9 +140,10 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         return [permissions.IsAuthenticated()]
 
     def get_queryset(self):
-        """Retourne les questionnaires actifs pour tous, tous les questionnaires pour ANALYSTE"""
+        """Retourne les questionnaires actifs pour tous, uniquement les questionnaires créés par l'analyste pour ANALYSTE"""
         if self.request.user.role == 'ANALYSTE':
-            return Questionnaire.objects.all().order_by('-created_at')
+            # L'analyste ne voit que les questionnaires qu'il a créés
+            return Questionnaire.objects.filter(created_by=self.request.user).order_by('-created_at')
         return Questionnaire.objects.filter(is_active=True).order_by('-created_at')
 
     def get_serializer_class(self):
@@ -251,8 +253,10 @@ class QuestionnaireResponseViewSet(viewsets.ModelViewSet):
             return QuestionnaireResponse.objects.filter(responder=user).order_by('-created_at')
 
         elif user.role == 'ANALYSTE':
-            # L'analyste voit toutes les réponses soumises (pas les brouillons)
-            return QuestionnaireResponse.objects.exclude(
+            # L'analyste voit uniquement les réponses aux questionnaires qu'il a créés (pas les brouillons)
+            return QuestionnaireResponse.objects.filter(
+                questionnaire__created_by=user
+            ).exclude(
                 status=QuestionnaireResponse.Status.BROUILLON
             ).order_by('-created_at')
 
