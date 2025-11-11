@@ -4,6 +4,7 @@ from django.utils import timezone
 from datetime import timedelta
 from .models import QuestionnaireResponse, Comment, Notification
 from .notification_messages import get_notification_message, get_status_label
+from .email_service import send_notification_email
 
 
 @receiver(pre_save, sender=QuestionnaireResponse)
@@ -93,51 +94,102 @@ def create_response_notifications(sender, instance, created, **kwargs):
                 print(f"  - Notification créée: ID={notification.id}, recipient={notification.recipient.username}")
                 print("  ✓ Notification envoyée à l'analyste")
 
+                # Envoyer l'email de notification
+                send_notification_email(
+                    recipient_email=analyste.email,
+                    recipient_name=analyste.get_full_name() or analyste.username,
+                    recipient_language=analyste.preferred_language if hasattr(analyste, 'preferred_language') else 'fr',
+                    notification_type='NEW_RESPONSE',
+                    user=user_name,
+                    questionnaire=instance.questionnaire.title,
+                    response_id=instance.id
+                )
+
             # Notification pour le chef de projet lors de validation/rejet
             if new_status == QuestionnaireResponse.Status.VALIDE:
+                recipient = instance.responder
+                recipient_lang = recipient.preferred_language if hasattr(recipient, 'preferred_language') else 'fr'
+
                 title, message = get_notification_message(
                     'RESPONSE_VALIDATED',
-                    lang='fr',
+                    lang=recipient_lang,
                     questionnaire=instance.questionnaire.title
                 )
                 Notification.objects.create(
-                    recipient=instance.responder,
+                    recipient=recipient,
                     sender=None,  # Système
                     notification_type='RESPONSE_VALIDATED',
                     title=title,
                     message=message,
                     response=instance
                 )
+
+                # Envoyer l'email de notification
+                send_notification_email(
+                    recipient_email=recipient.email,
+                    recipient_name=recipient.get_full_name() or recipient.username,
+                    recipient_language=recipient_lang,
+                    notification_type='RESPONSE_VALIDATED',
+                    questionnaire=instance.questionnaire.title,
+                    response_id=instance.id
+                )
             elif new_status == QuestionnaireResponse.Status.REJETE:
+                recipient = instance.responder
+                recipient_lang = recipient.preferred_language if hasattr(recipient, 'preferred_language') else 'fr'
+
                 title, message = get_notification_message(
                     'RESPONSE_REJECTED',
-                    lang='fr',
+                    lang=recipient_lang,
                     questionnaire=instance.questionnaire.title
                 )
                 Notification.objects.create(
-                    recipient=instance.responder,
+                    recipient=recipient,
                     sender=None,  # Système
                     notification_type='RESPONSE_REJECTED',
                     title=title,
                     message=message,
                     response=instance
                 )
+
+                # Envoyer l'email de notification
+                send_notification_email(
+                    recipient_email=recipient.email,
+                    recipient_name=recipient.get_full_name() or recipient.username,
+                    recipient_language=recipient_lang,
+                    notification_type='RESPONSE_REJECTED',
+                    questionnaire=instance.questionnaire.title,
+                    response_id=instance.id
+                )
             elif new_status != QuestionnaireResponse.Status.SOUMIS:
                 # Pour les autres changements de statut (sauf SOUMIS qui est déjà géré)
-                status_label = get_status_label(new_status, lang='fr')
+                recipient = instance.responder
+                recipient_lang = recipient.preferred_language if hasattr(recipient, 'preferred_language') else 'fr'
+
+                status_label = get_status_label(new_status, lang=recipient_lang)
                 title, message = get_notification_message(
                     'STATUS_CHANGE',
-                    lang='fr',
+                    lang=recipient_lang,
                     questionnaire=instance.questionnaire.title,
                     status=status_label
                 )
                 Notification.objects.create(
-                    recipient=instance.responder,
+                    recipient=recipient,
                     sender=None,
                     notification_type='STATUS_CHANGE',
                     title=title,
                     message=message,
                     response=instance
+                )
+
+                # Envoyer l'email de notification
+                send_notification_email(
+                    recipient_email=recipient.email,
+                    recipient_name=recipient.get_full_name() or recipient.username,
+                    recipient_language=recipient_lang,
+                    notification_type='STATUS_CHANGE',
+                    questionnaire=instance.questionnaire.title,
+                    status=status_label,
+                    response_id=instance.id
                 )
 
 
@@ -151,15 +203,18 @@ def create_comment_notification(sender, instance, created, **kwargs):
 
         # Notifier le chef de projet (propriétaire de la réponse)
         if instance.author != response.responder:
+            recipient = response.responder
+            recipient_lang = recipient.preferred_language if hasattr(recipient, 'preferred_language') else 'fr'
             user_name = instance.author.get_full_name() or instance.author.username
+
             title, message = get_notification_message(
                 'NEW_COMMENT',
-                lang='fr',
+                lang=recipient_lang,
                 user=user_name,
                 questionnaire=response.questionnaire.title
             )
             Notification.objects.create(
-                recipient=response.responder,
+                recipient=recipient,
                 sender=instance.author,
                 notification_type='NEW_COMMENT',
                 title=title,
@@ -168,23 +223,48 @@ def create_comment_notification(sender, instance, created, **kwargs):
                 comment=instance
             )
 
+            # Envoyer l'email de notification
+            send_notification_email(
+                recipient_email=recipient.email,
+                recipient_name=recipient.get_full_name() or recipient.username,
+                recipient_language=recipient_lang,
+                notification_type='NEW_COMMENT',
+                user=user_name,
+                questionnaire=response.questionnaire.title,
+                response_id=response.id
+            )
+
         # Notifier l'analyste (créateur du questionnaire) si ce n'est pas lui qui commente
         if instance.author != response.questionnaire.created_by and response.responder != response.questionnaire.created_by:
+            recipient = response.questionnaire.created_by
+            recipient_lang = recipient.preferred_language if hasattr(recipient, 'preferred_language') else 'fr'
             user_name = instance.author.get_full_name() or instance.author.username
+
             title, message = get_notification_message(
                 'NEW_COMMENT',
-                lang='fr',
+                lang=recipient_lang,
                 user=user_name,
                 questionnaire=response.questionnaire.title
             )
             Notification.objects.create(
-                recipient=response.questionnaire.created_by,
+                recipient=recipient,
                 sender=instance.author,
                 notification_type='NEW_COMMENT',
                 title=title,
                 message=message,
                 response=response,
                 comment=instance
+            )
+
+            # Envoyer l'email de notification
+            send_notification_email(
+                recipient_email=recipient.email,
+                recipient_name=recipient.get_full_name() or recipient.username,
+                recipient_language=recipient_lang,
+                notification_type='NEW_COMMENT',
+                user=user_name,
+                questionnaire=response.questionnaire.title,
+                response_id=response.id
             )
 
 

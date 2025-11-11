@@ -25,6 +25,10 @@ class User(AbstractUser):
         AVATAR_5 = 'avatar5', 'Avatar 5'
         AVATAR_6 = 'avatar6', 'Avatar 6'
 
+    class Language(models.TextChoices):
+        FRENCH = 'fr', 'Français'
+        ENGLISH = 'en', 'English'
+
     role = models.CharField(
         max_length=20,
         choices=Role.choices,
@@ -33,6 +37,13 @@ class User(AbstractUser):
     )
 
     email = models.EmailField(unique=True, verbose_name="Email")
+
+    preferred_language = models.CharField(
+        max_length=2,
+        choices=Language.choices,
+        default=Language.FRENCH,
+        verbose_name="Langue préférée"
+    )
 
     # Champs pour la photo de profil
     avatar = models.CharField(

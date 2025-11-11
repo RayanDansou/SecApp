@@ -196,6 +196,18 @@ class GoogleLoginView(APIView):
                 user.first_name = first_name or user.first_name
                 user.last_name = last_name or user.last_name
                 user.save()
+            else:
+                # Si c'est un nouveau compte créé via la connexion Google, envoyer l'email de bienvenue
+                try:
+                    from .email_service import email_service
+                    email_service.send_welcome_email(
+                        email=user.email,
+                        username=user.username,
+                        role=user.role
+                    )
+                except Exception as e:
+                    print(f"Erreur lors de l'envoi de l'email de bienvenue: {str(e)}")
+                    # On continue même si l'email échoue
 
             # Vérifier que le compte est actif
             if not user.is_active:
