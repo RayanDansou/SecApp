@@ -271,11 +271,21 @@
 .google-login-wrapper {
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-top: 24px;
   margin-bottom: 20px;
 }
 
 .google-login-wrapper > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   max-width: 400px;
+}
+
+/* Force center the Google One Tap button */
+.google-login-wrapper iframe,
+.google-login-wrapper > div > div {
+  margin: 0 auto !important;
 }
