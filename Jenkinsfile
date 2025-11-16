@@ -79,13 +79,13 @@ REACT_APP_API_URL=https://api.guardianiq.cloud
                     // Build Backend
                     sh """
                         mkdir -p backend/staticfiles || true
-                        docker build -t ${DOCKER_REPO}:backend-${VERSION} \
+                        docker build --no-cache -t ${DOCKER_REPO}:backend-${VERSION} \
                             -f backend/Dockerfile ./backend
                     """
 
                     // Build Frontend
                     sh """
-                        docker build -t ${DOCKER_REPO}:frontend-${VERSION} \
+                        docker build --no-cache -t ${DOCKER_REPO}:frontend-${VERSION} \
                             -f frontend/Dockerfile ./frontend
                     """
 
@@ -140,7 +140,7 @@ REACT_APP_API_URL=https://api.guardianiq.cloud
                         docker compose -f docker-compose.prod.yml up db backend frontend -d
 
                         # Attendre que les services soient prêts
-                        sleep 20
+                        sleep 5
 
                         echo "✅ Services started successfully"
                     """
@@ -195,7 +195,7 @@ REACT_APP_API_URL=https://api.guardianiq.cloud
         }
         always {
             // Nettoyage des images intermédiaires
-            sh 'docker system prune -f || true'
+            sh 'docker system prune -a -f || true'
         }
     }
 }
