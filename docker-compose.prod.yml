@@ -24,7 +24,7 @@ services:
     container_name: guardianiq-backend-prod
     restart: always
     command: >
-      sh -c "pyht*on manage.py makemigrations &&
+      sh -c "python manage.py makemigrations &&
              python manage.py migrate --noinput &&
              python manage.py collectstatic --noinput &&
              python manage.py cleanup_old_notifications &&
