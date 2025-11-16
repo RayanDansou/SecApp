@@ -27,6 +27,7 @@ pipeline {
 
                     // Build Backend
                     sh """
+                        mkdir -p backend/staticfiles || true
                         docker build -t ${DOCKER_REPO}:backend-${VERSION} \
                             -f backend/Dockerfile ./backend
                     """
