@@ -95,13 +95,13 @@ pipeline {
 
                     sh """
                         # Arrêt des conteneurs existants
-                        docker-compose -f docker-compose.prod.yml down || true
+                        docker-compose -f docker-compose.prod.yml down db backend frontend|| true
 
                         # Mise à jour des images
-                        docker-compose -f docker-compose.prod.yml pull
+                        docker-compose -f docker-compose.prod.yml pull db backend frontend
 
                         # Démarrage des services
-                        docker-compose -f docker-compose.prod.yml up -d
+                        docker-compose -f docker-compose.prod.yml up db backend frontend -d
 
                         # Attendre que les services soient prêts
                         sleep 20
