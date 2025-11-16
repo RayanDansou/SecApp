@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Credentials Docker Hub (à configurer dans Jenkins)
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        DOCKERHUB_CREDENTIALS = credentials('guardianiqdockertoken')
         DOCKER_REPO = 'rayandans/guardianiq'
 
         // Version basée sur le build number
