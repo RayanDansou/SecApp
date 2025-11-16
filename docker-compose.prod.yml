@@ -47,12 +47,8 @@ services:
     restart: always
     ports:
       - "3333:3000"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
     environment:
       - NODE_ENV=production
-      - CHOKIDAR_USEPOLLING=true
     depends_on:
       - backend
     networks:
