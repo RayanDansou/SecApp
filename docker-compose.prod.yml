@@ -50,6 +50,8 @@ services:
       - "3333:3000"
     environment:
       - NODE_ENV=production
+      - REACT_APP_API_URL=${REACT_APP_API_URL:-https://api.guardianiq.cloud}
+      - REACT_APP_GOOGLE_CLIENT_ID=124527769655-0uh4fbe69iit5puro7hlev0bchpcs85r.apps.googleusercontent.com
     depends_on:
       - backend
     networks:
