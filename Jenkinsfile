@@ -20,6 +20,57 @@ pipeline {
             }
         }
 
+        stage('Create env files') {
+            steps {
+                script {
+                    echo "🛠️ Creating environment files..."
+
+                    // Backend .env
+                    sh """
+                        cat > .env <<EOF
+                        DDJANGO_SECRET_KEY=django-insecure-dev-key-change-in-production
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1,*,82.29.170.94
+
+DB_NAME=guardianiq_db
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_HOST=db
+DB_PORT=5432
+
+
+AZURE_OPENAI_KEY=FXTT3DcnrTH8wB2udITYwXD4QviKdL9hsB4LOyP5yxQTFI8RWAgIJQQJ99BKACfhMk5XJ3w3AAABACOGOcx3
+AZURE_OPENAI_ENDPOINT=https://guardianiq.openai.azure.com/
+AZURE_OPENAI_API_VERSION=2024-12-01-preview
+AZURE_OPENAI_MODEL=gpt-5-mini
+
+RESEND_API_KEY=re_RHqRCsMG_GC8himVnndkeZHzLiX52voGC
+RESEND_FROM_EMAIL=noreply@guardianiq.cloud
+
+
+# Google OAuth Configuration
+GOOGLE_CLIENT_ID=124527769655-0uh4fbe69iit5puro7hlev0bchpcs85r.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
+
+FRONTEND_URL=https://guardianiq.cloud
+REACT_APP_API_URL=https://api.guardianiq.cloud
+                        EOF
+                    """
+
+                    // Frontend .env
+                    sh """          
+                        cat > frontend/.env <<EOF
+                        REACT_APP_API_URL=https://api.guardianiq.cloud
+                        REACT_APP_GOOGLE_CLIENT_ID=124527769655-0uh4fbe69iit5puro7hlev0bchpcs85r.apps.googleusercontent.com
+                        EOF
+                    """
+
+                    echo "✅ Environment files created"
+                }
+            }
+        }
+
+
         stage('Build Images') {
             steps {
                 script {
@@ -39,25 +90,6 @@ pipeline {
                     """
 
                     echo "✅ Images built successfully"
-                }
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                script {
-                    echo "🧪 Running tests..."
-
-                    // Tests Backend Django
-                    sh """
-                        docker run --rm ${DOCKER_REPO}:backend-${VERSION} \
-                            python manage.py test --noinput || true
-                    """
-
-                    // Tests Frontend (si configurés)
-                    // sh "docker run --rm ${DOCKER_REPO}:frontend-${VERSION} npm test || true"
-
-                    echo "✅ Tests completed"
                 }
             }
         }
@@ -99,7 +131,7 @@ pipeline {
                         docker-compose -f docker-compose.prod.yml down db backend frontend|| true
 
                         # Mise à jour des images
-                        docker-compose -f docker-compose.prod.yml pull db backend frontend
+                        docker-compose -f docker-compose.prod.yml pull
 
                         # Démarrage des services
                         docker-compose -f docker-compose.prod.yml up db backend frontend -d
