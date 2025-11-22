@@ -5,12 +5,20 @@
   overflow-x: hidden;
 }
 
+/* Container pour centrer le contenu */
+.landing-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  width: 100%;
+}
+
 /* Hero Section */
 .hero-section {
   min-height: 90vh;
   display: flex;
   align-items: center;
-  padding: 60px 20px;
+  padding: 120px 20px 60px 20px;
   background: linear-gradient(135deg,
     var(--bg-primary) 0%,
     var(--bg-secondary) 100%);
@@ -33,8 +41,6 @@
 }
 
 .hero-content {
-  max-width: 1400px;
-  margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 80px;
@@ -270,8 +276,6 @@
 }
 
 .features-grid {
-  max-width: 1400px;
-  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 32px;
@@ -326,8 +330,6 @@
 }
 
 .roles-grid {
-  max-width: 1400px;
-  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 32px;
@@ -428,8 +430,6 @@
 }
 
 .steps-container {
-  max-width: 1400px;
-  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -513,8 +513,6 @@
 }
 
 .cta-content {
-  max-width: 800px;
-  margin: 0 auto;
   text-align: center;
   position: relative;
   z-index: 1;
@@ -561,6 +559,10 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
+  .landing-container {
+    padding: 0 30px;
+  }
+
   .hero-content {
     grid-template-columns: 1fr;
     gap: 60px;
@@ -580,8 +582,12 @@
 }
 
 @media (max-width: 768px) {
+  .landing-container {
+    padding: 0 20px;
+  }
+
   .hero-section {
-    padding: 40px 20px;
+    padding: 100px 0 40px 0;
     min-height: auto;
   }
 
@@ -634,6 +640,10 @@
 }
 
 @media (max-width: 480px) {
+  .landing-container {
+    padding: 0 16px;
+  }
+
   .hero-title {
     font-size: 28px;
   }

@@ -28,7 +28,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/login');
+    navigate('/');
   };
 
   // Fermer le menu si on clique en dehors
@@ -96,7 +96,7 @@ const Navbar = () => {
   return (
     <nav className={`navbar ${isScrolled ? 'navbar-scrolled' : ''}`}>
       <div className="navbar-container">
-        <div className="nav-brand" onClick={() => navigate('/dashboard')}>
+        <div className="nav-brand" onClick={() => navigate('/')}>
           <Logo size={32} showText={true} />
         </div>
 

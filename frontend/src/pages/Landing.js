@@ -13,6 +13,8 @@ import {
   Lock,
   Workflow
 } from 'lucide-react';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import '../styles/Landing.css';
 
 const Landing = () => {
@@ -29,9 +31,12 @@ const Landing = () => {
 
   return (
     <div className="landing-page">
+      <Navbar />
+
       {/* Hero Section */}
       <section className="hero-section">
-        <div className="hero-content">
+        <div className="landing-container">
+          <div className="hero-content">
           <div className="hero-text">
             <span className="hero-tagline">
               <Sparkles size={20} />
@@ -85,11 +90,13 @@ const Landing = () => {
             </div>
           </div>
         </div>
+        </div>
       </section>
 
       {/* Features Section */}
       <section id="features" className="features-section">
-        <div className="section-header">
+        <div className="landing-container">
+          <div className="section-header">
           <h2>{t('landing.features.title')}</h2>
           <p>{t('landing.features.subtitle')}</p>
         </div>
@@ -127,11 +134,13 @@ const Landing = () => {
             <p>{t('landing.features.documents.description')}</p>
           </div>
         </div>
+        </div>
       </section>
 
       {/* Roles Section */}
       <section className="roles-section">
-        <div className="section-header">
+        <div className="landing-container">
+          <div className="section-header">
           <h2>{t('landing.roles.title')}</h2>
           <p>{t('landing.roles.subtitle')}</p>
         </div>
@@ -197,11 +206,13 @@ const Landing = () => {
             </ul>
           </div>
         </div>
+        </div>
       </section>
 
       {/* How It Works Section */}
       <section className="how-it-works-section">
-        <div className="section-header">
+        <div className="landing-container">
+          <div className="section-header">
           <h2>{t('landing.howItWorks.title')}</h2>
           <p>{t('landing.howItWorks.subtitle')}</p>
         </div>
@@ -251,11 +262,13 @@ const Landing = () => {
             </div>
           </div>
         </div>
+        </div>
       </section>
 
       {/* CTA Section */}
       <section className="cta-section">
-        <div className="cta-content">
+        <div className="landing-container">
+          <div className="cta-content">
           <Lock size={48} className="cta-icon" />
           <h2>{t('landing.cta.title')}</h2>
           <p>{t('landing.cta.description')}</p>
@@ -264,7 +277,10 @@ const Landing = () => {
             <ArrowRight size={20} />
           </button>
         </div>
+        </div>
       </section>
+
+      <Footer />
     </div>
   );
 };
