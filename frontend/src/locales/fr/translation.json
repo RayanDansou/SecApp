@@ -422,5 +422,100 @@
     "error": "Erreur lors de l'export",
     "notAvailable": "L'export est disponible uniquement pour les questionnaires validés ou rejetés",
     "success": "Rapport exporté avec succès"
+  },
+  "landing": {
+    "hero": {
+      "title": "GuardianIQ",
+      "subtitle": "Votre plateforme de gestion de la sécurité",
+      "description": "Simplifiez la validation des questionnaires de sécurité avec l'IA. Analysez, validez et optimisez la sécurité de vos projets en toute confiance.",
+      "getStarted": "Commencer maintenant",
+      "learnMore": "En savoir plus",
+      "tagline": "Sécurité intelligente"
+    },
+    "features": {
+      "title": "Fonctionnalités Innovantes",
+      "subtitle": "Tout ce dont vous avez besoin pour une gestion de sécurité optimale",
+      "aiAnalysis": {
+        "title": "Analyse IA Avancée",
+        "description": "Analyse automatique des questionnaires avec recommandations de sécurité basées sur l'IA et scoring CIA détaillé."
+      },
+      "workflow": {
+        "title": "Workflow de Validation",
+        "description": "Processus structuré de soumission, analyse et validation avec traçabilité complète de toutes les actions."
+      },
+      "collaboration": {
+        "title": "Collaboration Intégrée",
+        "description": "Communication fluide entre chefs de projet, analystes et business owners via un système de commentaires intégré."
+      },
+      "documents": {
+        "title": "Gestion Documentaire",
+        "description": "Upload et consultation sécurisés de documents d'architecture technique avec validation des formats."
+      }
+    },
+    "roles": {
+      "title": "Pour Qui ?",
+      "subtitle": "Une solution adaptée à chaque rôle",
+      "chefProjet": {
+        "title": "Chef de Projet",
+        "description": "Créez et soumettez vos questionnaires de sécurité, uploadez vos documents d'architecture et suivez l'avancement en temps réel.",
+        "features": [
+          "Remplir les questionnaires",
+          "Uploader des documents",
+          "Suivre l'état d'avancement",
+          "Échanger avec les analystes"
+        ]
+      },
+      "analyste": {
+        "title": "Analyste Sécurité",
+        "description": "Créez des templates, analysez les réponses avec l'IA et validez ou rejetez les questionnaires avec des recommandations détaillées.",
+        "features": [
+          "Créer des questionnaires",
+          "Analyser avec l'IA",
+          "Valider ou rejeter",
+          "Fournir des recommandations"
+        ]
+      },
+      "businessOwner": {
+        "title": "Business Owner",
+        "description": "Consultez les questionnaires validés, examinez les scores de sécurité et suivez les recommandations pour vos projets.",
+        "features": [
+          "Consulter les validations",
+          "Voir les scores CIA",
+          "Suivre les recommandations",
+          "Échanger des retours"
+        ]
+      }
+    },
+    "howItWorks": {
+      "title": "Comment Ça Marche ?",
+      "subtitle": "Un processus simple et efficace",
+      "step1": {
+        "title": "Création & Soumission",
+        "description": "Le chef de projet remplit le questionnaire et upload les documents d'architecture technique."
+      },
+      "step2": {
+        "title": "Analyse IA",
+        "description": "L'IA analyse automatiquement les réponses et génère un score de sécurité avec recommandations."
+      },
+      "step3": {
+        "title": "Validation Analyste",
+        "description": "L'analyste examine les résultats, ajoute ses commentaires et valide ou rejette le questionnaire."
+      },
+      "step4": {
+        "title": "Consultation & Suivi",
+        "description": "Les résultats sont accessibles à tous les acteurs pour suivi et amélioration continue."
+      }
+    },
+    "cta": {
+      "title": "Prêt à Sécuriser Vos Projets ?",
+      "description": "Rejoignez GuardianIQ et transformez votre approche de la sécurité",
+      "button": "Créer un compte gratuit"
+    },
+    "stats": {
+      "questionnaires": "Questionnaires Analysés",
+      "users": "Utilisateurs Actifs",
+      "accuracy": "Précision IA",
+      "satisfaction": "Satisfaction"
+    }
   }
 }

@@ -422,5 +422,100 @@
     "error": "Error exporting report",
     "notAvailable": "Export is only available for validated or rejected questionnaires",
     "success": "Report exported successfully"
+  },
+  "landing": {
+    "hero": {
+      "title": "GuardianIQ",
+      "subtitle": "Your Security Management Platform",
+      "description": "Simplify security questionnaire validation with AI. Analyze, validate, and optimize your project security with confidence.",
+      "getStarted": "Get Started",
+      "learnMore": "Learn More",
+      "tagline": "Intelligent Security"
+    },
+    "features": {
+      "title": "Innovative Features",
+      "subtitle": "Everything you need for optimal security management",
+      "aiAnalysis": {
+        "title": "Advanced AI Analysis",
+        "description": "Automatic questionnaire analysis with AI-based security recommendations and detailed CIA scoring."
+      },
+      "workflow": {
+        "title": "Validation Workflow",
+        "description": "Structured process for submission, analysis, and validation with complete traceability of all actions."
+      },
+      "collaboration": {
+        "title": "Integrated Collaboration",
+        "description": "Seamless communication between project managers, analysts, and business owners via an integrated comment system."
+      },
+      "documents": {
+        "title": "Document Management",
+        "description": "Secure upload and consultation of technical architecture documents with format validation."
+      }
+    },
+    "roles": {
+      "title": "Who Is It For?",
+      "subtitle": "A solution adapted to each role",
+      "chefProjet": {
+        "title": "Project Manager",
+        "description": "Create and submit your security questionnaires, upload your architecture documents, and track progress in real-time.",
+        "features": [
+          "Fill out questionnaires",
+          "Upload documents",
+          "Track progress",
+          "Communicate with analysts"
+        ]
+      },
+      "analyste": {
+        "title": "Security Analyst",
+        "description": "Create templates, analyze responses with AI, and validate or reject questionnaires with detailed recommendations.",
+        "features": [
+          "Create questionnaires",
+          "Analyze with AI",
+          "Validate or reject",
+          "Provide recommendations"
+        ]
+      },
+      "businessOwner": {
+        "title": "Business Owner",
+        "description": "Review validated questionnaires, examine security scores, and track recommendations for your projects.",
+        "features": [
+          "Review validations",
+          "View CIA scores",
+          "Track recommendations",
+          "Share feedback"
+        ]
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "A simple and effective process",
+      "step1": {
+        "title": "Creation & Submission",
+        "description": "The project manager fills out the questionnaire and uploads technical architecture documents."
+      },
+      "step2": {
+        "title": "AI Analysis",
+        "description": "AI automatically analyzes responses and generates a security score with recommendations."
+      },
+      "step3": {
+        "title": "Analyst Validation",
+        "description": "The analyst reviews results, adds comments, and validates or rejects the questionnaire."
+      },
+      "step4": {
+        "title": "Review & Follow-up",
+        "description": "Results are accessible to all stakeholders for monitoring and continuous improvement."
+      }
+    },
+    "cta": {
+      "title": "Ready to Secure Your Projects?",
+      "description": "Join GuardianIQ and transform your security approach",
+      "button": "Create Free Account"
+    },
+    "stats": {
+      "questionnaires": "Questionnaires Analyzed",
+      "users": "Active Users",
+      "accuracy": "AI Accuracy",
+      "satisfaction": "Satisfaction"
+    }
   }
 }

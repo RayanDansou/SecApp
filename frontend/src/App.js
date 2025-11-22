@@ -4,6 +4,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
@@ -42,6 +43,7 @@ function App() {
             <div className="app">
             <Routes>
             {/* Routes publiques */}
+            <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -168,9 +170,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
-            {/* Redirection par défaut */}
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
             {/* 404 - Page non trouvée */}
             <Route
