@@ -128,16 +128,16 @@ REACT_APP_API_URL=https://api.guardianiq.cloud
 
                     sh """
                         # Arrêt des conteneurs existants
-                        docker compose -f docker-compose.prod.yml down db backend frontend|| true
+                        docker-compose -f docker-compose.prod.yml down db backend frontend|| true
                         sleep 5
 
                         echo \$DOCKERHUB_CREDENTIALS_PSW | docker login -u \$DOCKERHUB_CREDENTIALS_USR --password-stdin
                         
                         # Mise à jour des images
-                        docker compose -f docker-compose.prod.yml pull
+                        docker-compose -f docker-compose.prod.yml pull
 
                         # Démarrage des services
-                        docker compose -f docker-compose.prod.yml up db backend frontend -d
+                        docker-compose -f docker-compose.prod.yml up db backend frontend -d
 
                         # Attendre que les services soient prêts
                         sleep 5
