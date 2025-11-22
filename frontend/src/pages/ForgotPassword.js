@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import authService from '../services/authService';
 import Logo from '../components/Logo';
@@ -7,6 +7,7 @@ import './Login.css';
 
 const ForgotPassword = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -32,7 +33,10 @@ const ForgotPassword = () => {
       <div className="login-container">
         <div className="login-card">
           <div className="login-header">
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+            <div
+              style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px', cursor: 'pointer' }}
+              onClick={() => navigate('/')}
+            >
               <Logo size={60} showText={true} />
             </div>
             <h2>{t('auth.resetLinkSent')}</h2>
@@ -57,7 +61,10 @@ const ForgotPassword = () => {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+          <div
+            style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px', cursor: 'pointer' }}
+            onClick={() => navigate('/')}
+          >
             <Logo size={60} showText={true} />
           </div>
           <h2>{t('auth.forgotPasswordTitle')}</h2>

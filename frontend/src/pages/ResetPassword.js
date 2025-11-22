@@ -61,7 +61,10 @@ const ResetPassword = () => {
       <div className="login-container">
         <div className="login-card">
           <div className="login-header">
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+            <div
+              style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px', cursor: 'pointer' }}
+              onClick={() => navigate('/')}
+            >
               <Logo size={60} showText={true} />
             </div>
             <h2>{t('common.error')}</h2>
@@ -86,7 +89,10 @@ const ResetPassword = () => {
       <div className="login-container">
         <div className="login-card">
           <div className="login-header">
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+            <div
+              style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px', cursor: 'pointer' }}
+              onClick={() => navigate('/')}
+            >
               <Logo size={60} showText={true} />
             </div>
             <h2>{t('common.success')}</h2>
@@ -110,7 +116,10 @@ const ResetPassword = () => {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+          <div
+            style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px', cursor: 'pointer' }}
+            onClick={() => navigate('/')}
+          >
             <Logo size={60} showText={true} />
           </div>
           <h2>{t('auth.resetPasswordTitle')}</h2>

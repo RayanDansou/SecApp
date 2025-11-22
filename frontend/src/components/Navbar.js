@@ -154,41 +154,45 @@ const Navbar = () => {
 
         <div className="nav-user" ref={userMenuRef}>
           <div className="user-avatar" onClick={() => setShowUserMenu(!showUserMenu)}>
-          {getProfilePictureUrl() ? (
-            <img
-              src={getProfilePictureUrl()}
-              alt="Profile"
-              className="avatar-image"
-            />
-          ) : (
-            <div className="avatar-circle">
-              {getInitials(user?.username)}
-            </div>
-          )}
-        </div>
-
-        {showUserMenu && (
-          <div className="user-dropdown-menu">
-            <div className="user-info">
-              <div className="user-info-name">{user?.username}</div>
-              <div className="user-info-email">{user?.email}</div>
-            </div>
-
-            <div className="dropdown-divider"></div>
-
-            <button className="dropdown-item" onClick={() => { navigate('/profile'); setShowUserMenu(false); }}>
-              <Settings size={18} />
-              <span>{t('navbar.settings')}</span>
-            </button>
-
-            {user?.role === 'ADMIN' && (
-              <button className="dropdown-item" onClick={() => { navigate('/admin/users'); setShowUserMenu(false); }}>
-                <Shield size={18} />
-                <span>{t('admin.manageUsers')}</span>
-              </button>
+            {getProfilePictureUrl() ? (
+              <img
+                src={getProfilePictureUrl()}
+                alt="Profile"
+                className="avatar-image"
+              />
+            ) : (
+              <div className="avatar-circle">
+                {getInitials(user?.username)}
+              </div>
             )}
+          </div>
 
-            <div className="dropdown-divider"></div>
+          {showUserMenu && (
+            <div className="user-dropdown-menu">
+            {user && (
+              <>
+                <div className="user-info">
+                  <div className="user-info-name">{user?.username}</div>
+                  <div className="user-info-email">{user?.email}</div>
+                </div>
+
+                <div className="dropdown-divider"></div>
+
+                <button className="dropdown-item" onClick={() => { navigate('/profile'); setShowUserMenu(false); }}>
+                  <Settings size={18} />
+                  <span>{t('navbar.settings')}</span>
+                </button>
+
+                {user?.role === 'ADMIN' && (
+                  <button className="dropdown-item" onClick={() => { navigate('/admin/users'); setShowUserMenu(false); }}>
+                    <Shield size={18} />
+                    <span>{t('admin.manageUsers')}</span>
+                  </button>
+                )}
+
+                <div className="dropdown-divider"></div>
+              </>
+            )}
 
             <button className="dropdown-item" onClick={toggleTheme}>
               {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
@@ -248,10 +252,17 @@ const Navbar = () => {
 
             <div className="dropdown-divider"></div>
 
-            <button className="dropdown-item dropdown-item-danger" onClick={handleLogout}>
-              <LogOut size={18} />
-              <span>{t('navbar.logout')}</span>
-            </button>
+            {user ? (
+              <button className="dropdown-item dropdown-item-danger" onClick={handleLogout}>
+                <LogOut size={18} />
+                <span>{t('navbar.logout')}</span>
+              </button>
+            ) : (
+              <button className="dropdown-item" onClick={() => { navigate('/login'); setShowUserMenu(false); }}>
+                <LogOut size={18} />
+                <span>{t('auth.login')}</span>
+              </button>
+            )}
           </div>
         )}
         </div>

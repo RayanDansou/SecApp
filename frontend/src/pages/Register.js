@@ -167,7 +167,10 @@ const Register = () => {
     <div className="register-container">
       <div className="register-card">
         <div className="register-header">
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+          <div
+            style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px', cursor: 'pointer' }}
+            onClick={() => navigate('/')}
+          >
             <Logo size={60} showText={true} />
           </div>
           <p>{t('auth.registerSubtitle')}</p>

@@ -122,7 +122,10 @@ const Login = () => {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+          <div
+            style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px', cursor: 'pointer' }}
+            onClick={() => navigate('/')}
+          >
             <Logo size={60} showText={true} />
           </div>
           <p>{t('auth.loginSubtitle')}</p>
