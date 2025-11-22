@@ -211,9 +211,11 @@
 
 .score-display {
   display: flex;
-  gap: 32px;
+  gap: 40px;
   width: 100%;
   justify-content: center;
+  align-items: center;
+  padding: 20px 0;
 }
 
 .score-item {
@@ -613,6 +615,11 @@
     justify-content: center;
   }
 
+  .score-display {
+    gap: 24px;
+    padding: 15px 0;
+  }
+
   .features-grid,
   .roles-grid {
     grid-template-columns: 1fr;
@@ -658,5 +665,10 @@
 
   .cta-content h2 {
     font-size: 28px;
+  }
+
+  .score-display {
+    gap: 16px;
+    padding: 10px 0;
   }
 }

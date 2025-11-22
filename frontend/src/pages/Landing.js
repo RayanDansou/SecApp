@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import CircularGauge from '../components/CircularGauge';
 import '../styles/Landing.css';
 
 const Landing = () => {
@@ -66,18 +67,9 @@ const Landing = () => {
               <Shield size={48} className="hero-icon" />
               <h3>Security Score</h3>
               <div className="score-display">
-                <div className="score-item">
-                  <span className="score-label">C</span>
-                  <span className="score-value">95</span>
-                </div>
-                <div className="score-item">
-                  <span className="score-label">I</span>
-                  <span className="score-value">88</span>
-                </div>
-                <div className="score-item">
-                  <span className="score-label">A</span>
-                  <span className="score-value">92</span>
-                </div>
+                <CircularGauge value={95} label="C" />
+                <CircularGauge value={88} label="I" />
+                <CircularGauge value={92} label="A" />
               </div>
             </div>
             <div className="hero-card hero-card-small">
