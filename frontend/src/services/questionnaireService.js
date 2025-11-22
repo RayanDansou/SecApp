@@ -472,6 +472,42 @@ class QuestionnaireService {
       throw error.response?.data || { error: 'Erreur lors de la récupération des analyses IA' };
     }
   }
+
+  // ========================================
+  // Export Reports (PDF/DOCX)
+  // ========================================
+
+  /**
+   * Exporter une réponse en PDF
+   * @param {number} responseId - ID de la réponse
+   * @returns {Promise} Blob du fichier PDF
+   */
+  async exportResponsePdf(responseId) {
+    try {
+      const response = await api.get(`/api/responses/${responseId}/export/pdf/`, {
+        responseType: 'blob', // Important pour recevoir le fichier binaire
+      });
+      return response;
+    } catch (error) {
+      throw error.response?.data || { error: 'Erreur lors de l\'export PDF' };
+    }
+  }
+
+  /**
+   * Exporter une réponse en Word (DOCX)
+   * @param {number} responseId - ID de la réponse
+   * @returns {Promise} Blob du fichier DOCX
+   */
+  async exportResponseDocx(responseId) {
+    try {
+      const response = await api.get(`/api/responses/${responseId}/export/docx/`, {
+        responseType: 'blob', // Important pour recevoir le fichier binaire
+      });
+      return response;
+    } catch (error) {
+      throw error.response?.data || { error: 'Erreur lors de l\'export Word' };
+    }
+  }
 }
 
 export default new QuestionnaireService();

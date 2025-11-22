@@ -411,5 +411,16 @@
     "rights": "All rights reserved.",
     "madeWith": "Made with",
     "byTeam": "by the GuardianIQ team"
+  },
+  "export": {
+    "title": "Download Report",
+    "exportPdf": "Export to PDF",
+    "exportWord": "Export to Word",
+    "exportingPdf": "Generating PDF...",
+    "exportingWord": "Generating Word...",
+    "note": "Reports include responses, CIA scores, AI analysis and recommendations.",
+    "error": "Error exporting report",
+    "notAvailable": "Export is only available for validated or rejected questionnaires",
+    "success": "Report exported successfully"
   }
 }

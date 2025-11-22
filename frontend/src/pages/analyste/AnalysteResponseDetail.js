@@ -8,6 +8,7 @@ import StatusHistory from '../../components/questionnaires/StatusHistory';
 import CommentsList from '../../components/questionnaires/CommentsList';
 import DocumentsManager from '../../components/questionnaires/DocumentsManager';
 import AIAnalysisResults from '../../components/questionnaires/AIAnalysisResults';
+import ExportButtons from '../../components/ExportButtons';
 import './AnalysteResponseDetail.css';
 
 const AnalysteResponseDetail = () => {
@@ -349,6 +350,9 @@ const AnalysteResponseDetail = () => {
           </div>
         )}
       </div>
+
+      {/* Export Buttons - visible only for VALIDE or REJETE status */}
+      <ExportButtons responseId={response.id} status={response.status} />
 
       {/* Actions de validation - Zone dynamique unique */}
       {response?.status !== 'VALIDE' && response?.status !== 'REJETE' && (

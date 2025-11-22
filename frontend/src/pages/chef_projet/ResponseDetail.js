@@ -8,6 +8,7 @@ import StatusHistory from '../../components/questionnaires/StatusHistory';
 import CommentsList from '../../components/questionnaires/CommentsList';
 import DocumentsManager from '../../components/questionnaires/DocumentsManager';
 import AIAnalysisResults from '../../components/questionnaires/AIAnalysisResults';
+import ExportButtons from '../../components/ExportButtons';
 import './ResponseDetail.css';
 
 const ResponseDetail = () => {
@@ -165,6 +166,9 @@ const ResponseDetail = () => {
           <AIAnalysisResults analysis={latestAnalysis} />
         </div>
       )}
+
+      {/* Export Buttons - visible only for VALIDE or REJETE status */}
+      <ExportButtons responseId={response.id} status={response.status} />
 
       <DocumentsManager
         documents={documents}

@@ -40,6 +40,8 @@ from .serializers import (
     NotificationSerializer,
 )
 from .ai_service import AIAnalysisService, extract_document_content
+from .export_service import ReportExportService
+from django.http import FileResponse
 
 
 # ===========================
@@ -218,10 +220,134 @@ class QuestionnaireDocumentViewSet(viewsets.ModelViewSet):
 
 
 # ===========================
+# Export Mixin (à définir AVANT son utilisation)
+# ===========================
+
+class QuestionnaireResponseExportMixin:
+    """
+    Mixin pour ajouter les fonctionnalités d'export PDF/Word
+    aux réponses de questionnaires validés/rejetés.
+    """
+
+    @action(detail=True, methods=['get'], url_path='export/pdf')
+    def export_pdf(self, request, pk=None):
+        """
+        Exporte le rapport d'analyse en PDF.
+        GET /api/responses/{id}/export/pdf/
+
+        Accessible aux:
+        - Chef de projet (propriétaire)
+        - Analyste
+        - Business Owner
+        """
+        response_obj = self.get_object()
+
+        # Vérifier que le questionnaire est validé ou rejeté
+        if response_obj.status not in ['VALIDE', 'REJETE']:
+            return Response(
+                {'error': 'Le rapport ne peut être exporté que pour les questionnaires validés ou rejetés.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Vérifier les permissions
+        if not self._can_export(request.user, response_obj):
+            raise PermissionDenied("Vous n'avez pas la permission d'exporter ce rapport.")
+
+        try:
+            # Générer le PDF
+            export_service = ReportExportService(response_obj.id)
+            pdf_file = export_service.generate_pdf()
+            filename = export_service.get_filename('pdf')
+
+            # Retourner le fichier
+            response = FileResponse(
+                pdf_file,
+                content_type='application/pdf',
+                as_attachment=True,
+                filename=filename
+            )
+
+            return response
+
+        except Exception as e:
+            return Response(
+                {'error': f'Erreur lors de la génération du PDF: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    @action(detail=True, methods=['get'], url_path='export/docx')
+    def export_docx(self, request, pk=None):
+        """
+        Exporte le rapport d'analyse en Word (DOCX).
+        GET /api/responses/{id}/export/docx/
+
+        Accessible aux:
+        - Chef de projet (propriétaire)
+        - Analyste
+        - Business Owner
+        """
+        response_obj = self.get_object()
+
+        # Vérifier que le questionnaire est validé ou rejeté
+        if response_obj.status not in ['VALIDE', 'REJETE']:
+            return Response(
+                {'error': 'Le rapport ne peut être exporté que pour les questionnaires validés ou rejetés.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Vérifier les permissions
+        if not self._can_export(request.user, response_obj):
+            raise PermissionDenied("Vous n'avez pas la permission d'exporter ce rapport.")
+
+        try:
+            # Générer le DOCX
+            export_service = ReportExportService(response_obj.id)
+            docx_file = export_service.generate_docx()
+            filename = export_service.get_filename('docx')
+
+            # Retourner le fichier
+            response = FileResponse(
+                docx_file,
+                content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                as_attachment=True,
+                filename=filename
+            )
+
+            return response
+
+        except Exception as e:
+            return Response(
+                {'error': f'Erreur lors de la génération du Word: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def _can_export(self, user, response_obj):
+        """
+        Vérifie si l'utilisateur peut exporter ce rapport.
+
+        Returns:
+            bool: True si l'utilisateur peut exporter
+        """
+        # Chef de projet (propriétaire)
+        if user == response_obj.responder:
+            return True
+
+        # Analyste ou Business Owner
+        if user.role in ['ANALYSTE', 'BUSINESS_OWNER']:
+            return True
+
+        # Admin
+        if user.is_staff or user.is_superuser:
+            return True
+
+        return False
+
+
+# ===========================
 # Questionnaire Response ViewSets (CHEF_PROJET)
 # ===========================
 
-class QuestionnaireResponseViewSet(viewsets.ModelViewSet):
+class QuestionnaireResponseViewSet(QuestionnaireResponseExportMixin, viewsets.ModelViewSet):
     """
     ViewSet pour les réponses aux questionnaires
 
@@ -231,6 +357,10 @@ class QuestionnaireResponseViewSet(viewsets.ModelViewSet):
     - create: CHEF_PROJET uniquement
     - update: propriétaire uniquement, et seulement en BROUILLON
     - destroy: propriétaire uniquement, et seulement en BROUILLON
+
+    Actions supplémentaires:
+    - export_pdf: Exporte le rapport en PDF (VALIDE/REJETE uniquement)
+    - export_docx: Exporte le rapport en Word (VALIDE/REJETE uniquement)
     """
 
     def get_permissions(self):
