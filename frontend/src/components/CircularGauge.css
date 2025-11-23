@@ -57,6 +57,10 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .circular-gauge {
+    transform: scale(0.9);
+  }
+
   .gauge-value {
     font-size: 24px;
   }
@@ -67,6 +71,10 @@
 }
 
 @media (max-width: 480px) {
+  .circular-gauge {
+    transform: scale(0.75);
+  }
+
   .gauge-value {
     font-size: 20px;
   }

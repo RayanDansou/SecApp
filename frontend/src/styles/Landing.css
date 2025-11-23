@@ -615,9 +615,39 @@
     justify-content: center;
   }
 
+  /* Hero visual - single column on mobile */
+  .hero-visual {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Reduce card padding on mobile */
+  .hero-card {
+    padding: 20px;
+  }
+
+  .hero-card-main {
+    grid-column: 1;
+  }
+
+  .hero-card-main h3 {
+    font-size: 20px;
+    margin: 12px 0 16px;
+  }
+
+  /* Score display - reduce gap */
   .score-display {
-    gap: 24px;
-    padding: 15px 0;
+    gap: 20px;
+    padding: 12px 0;
+  }
+
+  /* Small cards - better mobile layout */
+  .hero-card-small {
+    gap: 8px;
+  }
+
+  .hero-card-small p {
+    font-size: 14px;
   }
 
   .features-grid,
@@ -657,6 +687,46 @@
 
   .hero-visual {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* Further reduce card padding on small mobile */
+  .hero-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .hero-card-main h3 {
+    font-size: 18px;
+    margin: 8px 0 12px;
+  }
+
+  /* Score display - tighter layout */
+  .score-display {
+    gap: 12px;
+    padding: 8px 0;
+    flex-wrap: wrap;
+  }
+
+  /* Smaller icon sizes */
+  .hero-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .hero-card-small {
+    padding: 12px;
+  }
+
+  .hero-card-small p {
+    font-size: 13px;
+  }
+
+  /* Buttons - reduce padding */
+  .btn-primary-hero,
+  .btn-secondary-hero {
+    padding: 14px 24px;
+    font-size: 15px;
   }
 
   .section-header h2 {
@@ -665,10 +735,5 @@
 
   .cta-content h2 {
     font-size: 28px;
-  }
-
-  .score-display {
-    gap: 16px;
-    padding: 10px 0;
   }
 }
