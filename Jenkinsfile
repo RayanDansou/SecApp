@@ -8,6 +8,7 @@ pipeline {
 
         // Version basée sur le build number
         VERSION = "${env.BUILD_NUMBER}"
+        DISCORD_WEBHOOK = credentials('discord_webhook_url')
     }
 
     stages {
@@ -90,6 +91,54 @@ REACT_APP_API_URL=https://api.guardianiq.cloud
                     """
 
                     echo "✅ Images built successfully"
+                }
+            }
+        }
+
+        stage('Security scans') {
+            steps {
+                script {
+                    try {
+                        sh """
+                            set -e
+                            echo "🔹 Vérification de Trivy"
+                            if ! trivy --version > /dev/null 2>&1; then
+                                echo "❌ Trivy non installé. Installation..."
+                                curl -sfL https://github.com/aquasecurity/trivy/releases/download/v0.38.3/trivy_0.38.3_Linux-64bit.tar.gz -o trivy.tar.gz
+                                tar zxvf trivy.tar.gz
+                                mv trivy /usr/local/bin/
+                                rm trivy.tar.gz
+                                echo "✅ Trivy installé"
+                            fi
+                            rm discord_msg*.txt || true
+
+                            echo "🔹 Scan backend"
+                            trivy image --format template --template "@/var/jenkins_home/scripts/summary.tpl" --severity MEDIUM,HIGH,CRITICAL --no-progress "${DOCKER_REPO}:backend-${VERSION}" > backend_vulnerabilities.txt
+                            echo "🔐 Vulnérabilités Backend :" > discord_msg1.txt
+                            echo '```' >> discord_msg1.txt
+                            cat backend_vulnerabilities.txt >> discord_msg1.txt
+                            echo '```' >> discord_msg1.txt
+
+                            echo "🔹 Scan frontend"
+                            trivy image --format template --template "@/var/jenkins_home/scripts/summary.tpl" --severity MEDIUM,HIGH,CRITICAL --no-progress "${DOCKER_REPO}:frontend-${VERSION}" > frontend_vulnerabilities.txt
+                            echo "🔐 Vulnérabilités Frontend :" > discord_msg2.txt
+                            echo '```' >> discord_msg2.txt
+                            cat frontend_vulnerabilities.txt >> discord_msg2.txt
+                            echo '```' >> discord_msg2.txt
+                        """
+
+                        ['discord_msg1.txt', 'discord_msg2.txt'].each { file ->
+                            if (fileExists(file)) {
+                                def content = readFile(file)
+                                notifyDiscord(content)
+                            }
+                        }
+
+                        notifyDiscord("✅ *Security Scan* terminé avec succès !")
+                    } catch (e) {
+                        notifyDiscord("❌ Échec du *Security Scan* : ${e.message}")
+                        error("Aborting pipeline.")
+                    }
                 }
             }
         }
@@ -180,8 +229,8 @@ REACT_APP_API_URL=https://api.guardianiq.cloud
             ✅ ========================================
             📦 Backend:  ${DOCKER_REPO}:backend-${VERSION}
             📦 Frontend: ${DOCKER_REPO}:frontend-${VERSION}
-            🌐 Backend:  http://localhost:8888
-            🌐 Frontend: http://localhost:3333
+            🌐 Backend:  https://guardianiq.cloud
+            🌐 Frontend: http://api.guardianiq.cloud
             ✅ ========================================
             """
         }
@@ -197,5 +246,35 @@ REACT_APP_API_URL=https://api.guardianiq.cloud
             // Nettoyage des images intermédiaires
             sh 'docker system prune -a -f || true'
         }
+    }
+}
+
+def notifyDiscord(String message) {
+    int chunkSize = 1900
+    int totalLength = message.length()
+    int numChunks = (int)Math.ceil(totalLength / (double)chunkSize)
+
+    for (int i = 0; i < numChunks; i++) {
+        int startIdx = i * chunkSize
+        int endIdx = Math.min(startIdx + chunkSize, totalLength)
+        String chunk = message.substring(startIdx, endIdx)
+
+        // Échappement spécial pour shell + JSON
+        def safeChunk = chunk
+            .replace('\\', '\\\\')
+            .replace('"', '\\"')
+            .replace('`', '\\`')
+            .replace('$', '\\$')
+            .replace('\n', '\\n')
+            .replace('\r', '')
+
+        sh """
+            curl -X POST \
+                -H 'Content-Type: application/json' \
+                -d "{\\"content\\": \\"${safeChunk}\\"}" \
+                \${DISCORD_WEBHOOK}
+        """
+
+        sleep(time: 1, unit: 'SECONDS')
     }
 }
