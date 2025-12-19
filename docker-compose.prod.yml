@@ -40,7 +40,7 @@ services:
              python manage.py migrate --noinput &&
              python manage.py collectstatic --noinput &&
              python manage.py cleanup_old_notifications &&
-             gunicorn secapp.wsgi:application --bind 0.0.0.0:8000 --bind 0.0.0.0:8000 --workers 2 --threads 2 --timeout 120 --max-requests 1000--worker-class gthread"
+             gunicorn secapp.wsgi:application --bind 0.0.0.0:8000 --bind 0.0.0.0:8000 --workers 2 --threads 2 --timeout 120 --max-requests 1000 --worker-class gthread"
     volumes:
       - backend_static:/app/staticfiles
       - backend_media:/app/media
