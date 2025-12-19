@@ -7,6 +7,13 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-guardianiq_db}
+      POSTGRES_SHARED_BUFFERS: "256MB"
+      POSTGRES_EFFECTIVE_CACHE_SIZE: "768MB"
+      POSTGRES_MAINTENANCE_WORK_MEM: "64MB"
+      POSTGRES_MAX_CONNECTIONS: "30"           # ⚠️ Réduit de 100
+      POSTGRES_WORK_MEM: "8MB"
+      POSTGRES_MAX_WORKER_PROCESSES: "2"       # Important !
+      POSTGRES_MAX_PARALLEL_WORKERS_PER_GATHER: "1"
     volumes:
       - postgres_guardianiq_data:/var/lib/postgresql/data
     ports:
@@ -16,6 +23,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'        # 40% du total
+          memory: 1G
     networks:
       - guardianiq-network
 
@@ -28,7 +40,12 @@ services:
              python manage.py migrate --noinput &&
              python manage.py collectstatic --noinput &&
              python manage.py cleanup_old_notifications &&
-             gunicorn secapp.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+             gunicorn secapp.wsgi:application --bind 0.0.0.0:8000 --bind 0.0.0.0:8000 
+             --workers 2                    # ⚠️ Réduit de 3 à 2
+             --threads 2                    # Ajouter threads
+             --timeout 120 
+             --max-requests 1000
+             --worker-class gthread"
     volumes:
       - backend_static:/app/staticfiles
       - backend_media:/app/media
@@ -36,6 +53,11 @@ services:
       - "8888:8000"
     env_file:
       - .env
+    deploy:
+      resources:
+        limits:
+            cpus: '1.0'        # 50% du total
+            memory: 1.5G
     depends_on:
       db:
         condition: service_healthy
@@ -50,10 +72,16 @@ services:
       - "3333:3000"
     environment:
       - NODE_ENV=production
+      - NODE_OPTIONS=--max-old-space-size=384
       - REACT_APP_API_URL=${REACT_APP_API_URL:-https://api.guardianiq.cloud}
       - REACT_APP_GOOGLE_CLIENT_ID=124527769655-0uh4fbe69iit5puro7hlev0bchpcs85r.apps.googleusercontent.com
     depends_on:
       - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'        # 25% du total
+          memory: 512M
     networks:
       - guardianiq-network
 
