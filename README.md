@@ -11,7 +11,7 @@
 [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED.svg)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-[🚀 Démarrage Rapide](#-installation-et-démarrage) • [📖 Documentation](#-documentation) • [🏗️ Architecture](#%EF%B8%8F-architecture-technique) • [🔐 Sécurité](#-sécurité)
+[🚀 Démarrage Rapide](#-installation-et-démarrage) • [🏗️ Architecture](#%EF%B8%8F-architecture-technique) • [🔐 Sécurité](#-sécurité)
 
 </div>
 
@@ -145,76 +145,7 @@ GuardianIQ transforme ce processus en :
 
 ### Vue d'Ensemble du Processus
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         CYCLE DE VIE D'UN QUESTIONNAIRE                  │
-└─────────────────────────────────────────────────────────────────────────┘
-
-    👨‍💼 ANALYSTE SÉCURITÉ                 👨‍💻 CHEF DE PROJET
-         │                                    │
-         │ 1️⃣ Crée un template               │
-         │    de questionnaire               │
-         ├───────────────────────────────────>│
-         │                                    │ 2️⃣ Remplit le questionnaire
-         │                                    │    + Upload documents
-         │                                    │
-         │ 3️⃣ Reçoit notification            │ 3️⃣ Soumet le questionnaire
-         │<───────────────────────────────────┤
-         │                                    │
-         │ 4️⃣ Analyse assistée par IA        │
-         │    📊 Scores CIA                   │
-         │    💡 Recommandations              │
-         │                                    │
-         │ 5️⃣ Valide ou Rejette              │
-         ├───────────────────────────────────>│ 5️⃣ Reçoit notification
-         │                                    │
-         ↓                                    ↓
-
-    👔 BUSINESS OWNER
-         │
-         │ 6️⃣ Consulte les résultats
-         │    Scores + Recommandations
-         │
-         └─> 📈 Décisions stratégiques
-```
-
-### Étapes Détaillées
-
-#### 1️⃣ Création du Template (Analyste)
-L'analyste sécurité crée un questionnaire réutilisable avec des questions standardisées (ex: "Le système est-il accessible depuis Internet ?", "Les données sont-elles chiffrées ?").
-
-#### 2️⃣ Remplissage (Chef de Projet)
-Le chef de projet :
-- Sélectionne un questionnaire disponible
-- Répond aux questions (sauvegarde possible en brouillon)
-- Upload les documents d'architecture technique (PDF, Word, etc.)
-
-#### 3️⃣ Soumission & Analyse IA
-- Le questionnaire est soumis
-- **Azure OpenAI** analyse automatiquement :
-  - Les réponses au questionnaire
-  - Le contenu des documents uploadés
-- Génération de recommandations préliminaires
-
-#### 4️⃣ Validation par l'Analyste
-L'analyste examine :
-- Les réponses fournies
-- Les documents d'architecture
-- L'analyse IA et les recommandations
-- Décide de **valider** ✅ ou **rejeter** ❌
-
-#### 5️⃣ Scoring Final & Notification
-Si validé :
-- Génération des scores **CIA** (0-100) :
-  - 🔒 **Confidentialité** : Protection des données sensibles
-  - ✔️ **Intégrité** : Fiabilité et exactitude des données
-  - ⚡ **Disponibilité** : Accessibilité du système
-- Notification automatique au chef de projet et business owner
-
-#### 6️⃣ Consultation & Suivi
-- Le business owner consulte les résultats
-- Possibilité d'échanger via le système de messagerie intégré
-- Traçabilité complète pour audit
+![alt text](lifecycle.png)
 
 ---
 
@@ -346,197 +277,29 @@ Si validé :
 
 ### Architecture 3-Tiers
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                          CLIENT LAYER                                │
-│  👤 Web Browser (Chrome, Firefox, Edge, Safari)                     │
-└──────────────────────────────┬──────────────────────────────────────┘
-                               │ HTTPS
-                               ↓
-┌─────────────────────────────────────────────────────────────────────┐
-│                      PRESENTATION LAYER                              │
-│  ┌──────────────────────────────────────────────────────────────┐   │
-│  │  Frontend Container (React 19.2)                             │   │
-│  │  - React Router (navigation)                                 │   │
-│  │  - Axios (API calls)                                         │   │
-│  │  - i18next (FR/EN)                                           │   │
-│  │  - JWT Auth + Google OAuth                                   │   │
-│  │  Port: 3333 (dev) / 3000 (prod)                              │   │
-│  └──────────────────────────────────────────────────────────────┘   │
-└──────────────────────────────┬──────────────────────────────────────┘
-                               │ REST API (JSON)
-                               ↓
-┌─────────────────────────────────────────────────────────────────────┐
-│                       APPLICATION LAYER                              │
-│  ┌──────────────────────────────────────────────────────────────┐   │
-│  │  Backend Container (Django 5.2 + DRF)                        │   │
-│  │  - Gunicorn WSGI (2 workers, 2 threads)                      │   │
-│  │  - JWT Authentication                                        │   │
-│  │  - Role-Based Access Control                                 │   │
-│  │  - REST API Endpoints                                        │   │
-│  │  - Business Logic                                            │   │
-│  │  Port: 8888 (dev) / 8000 (prod)                              │   │
-│  └──────────────┬───────────────────────────┬───────────────────┘   │
-│                 │                           │                        │
-│                 ↓                           ↓                        │
-│    ┌────────────────────┐      ┌────────────────────┐              │
-│    │  Azure OpenAI API  │      │    Resend Email    │              │
-│    │  GPT-5 Mini        │      │    Notifications   │              │
-│    │  (IA Analysis)     │      │    (SMTP)          │              │
-│    └────────────────────┘      └────────────────────┘              │
-└──────────────────────────────┬──────────────────────────────────────┘
-                               │ SQL (psycopg2)
-                               ↓
-┌─────────────────────────────────────────────────────────────────────┐
-│                         DATA LAYER                                   │
-│  ┌──────────────────────────────────────────────────────────────┐   │
-│  │  PostgreSQL 16 Container                                     │   │
-│  │  - Users (roles, auth)                                       │   │
-│  │  - Questionnaires (templates)                                │   │
-│  │  - QuestionnaireResponses (submissions)                      │   │
-│  │  - Questions / Answers                                       │   │
-│  │  - QuestionnaireDocuments (GED)                              │   │
-│  │  - AIAnalysis (CIA scores)                                   │   │
-│  │  - ResponseComments (messaging)                              │   │
-│  │  - Notifications                                             │   │
-│  │  Port: 5438 (host) → 5432 (container)                        │   │
-│  └──────────────────────────────────────────────────────────────┘   │
-│  ┌──────────────────────────────────────────────────────────────┐   │
-│  │  Volumes (Persistance)                                       │   │
-│  │  - postgres_data (BDD)                                       │   │
-│  │  - backend_media (uploads)                                   │   │
-│  │  - backend_static (assets)                                   │   │
-│  └──────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────┘
-```
+![alt text](Architecture.png)
 
 ---
 
 ### Modèle de Données (Simplifié)
 
-```sql
-┌─────────────────┐         ┌──────────────────────┐
-│     Users       │         │   Questionnaires     │
-├─────────────────┤         │    (Templates)       │
-│ • id (PK)       │         ├──────────────────────┤
-│ • username      │    ┌────│ • id (PK)            │
-│ • email         │    │    │ • title              │
-│ • password      │    │    │ • created_by_id (FK) │
-│ • role          │◄───┘    │ • created_at         │
-│   - CHEF_PROJET │         └──────────┬───────────┘
-│   - ANALYSTE    │                    │
-│   - BUSINESS    │                    │ 1:N
-│   - ADMIN       │                    ↓
-└────────┬────────┘         ┌──────────────────────┐
-         │                  │ QuestionnaireResponse│
-         │ 1:N              ├──────────────────────┤
-         │                  │ • id (PK)            │
-         └─────────────────>│ • questionnaire_id   │
-                            │ • submitted_by_id(FK)│
-                   ┌────────│ • status             │
-                   │        │   - brouillon        │
-                   │        │   - soumis           │
-                   │        │   - en_analyse       │
-                   │        │   - validé           │
-                   │        │   - rejeté           │
-                   │        └──────────┬───────────┘
-                   │                   │
-                   │ 1:1               │ 1:N
-                   ↓                   ↓
-        ┌──────────────────┐ ┌─────────────────────┐
-        │   AIAnalysis     │ │ QuestionnaireDoc    │
-        ├──────────────────┤ ├─────────────────────┤
-        │ • id (PK)        │ │ • id (PK)           │
-        │ • response_id(FK)│ │ • response_id (FK)  │
-        │ • confidentiality│ │ • file_path         │
-        │ • integrity      │ │ • uploaded_at       │
-        │ • availability   │ └─────────────────────┘
-        │ • recommendations│
-        └──────────────────┘
-```
+![alt text](Data.png)
 
 ---
 
 ## 🔀 Workflow Détaillé
 
+### Pipeline CI/CD Complet
+
+Le processus de déploiement en production suit un workflow automatisé garantissant la qualité et la fiabilité du code déployé.
+
+![alt text](mep.png)
+
+---
+
 ### Diagramme de Séquence - Processus Complet
 
-```
-Chef Projet    Frontend       Backend        PostgreSQL    Azure OpenAI    Resend Email    Analyste
-    │              │              │               │              │               │            │
-    │ 1. Login     │              │               │              │               │            │
-    ├─────────────>│              │               │              │               │            │
-    │              │ POST /login  │               │              │               │            │
-    │              ├─────────────>│ Verify creds  │              │               │            │
-    │              │              ├──────────────>│              │               │            │
-    │              │              │ User data     │              │               │            │
-    │              │              │<──────────────┤              │               │            │
-    │              │ JWT Token    │               │              │               │            │
-    │              │<─────────────┤               │              │               │            │
-    │              │              │               │              │               │            │
-    │ 2. Remplir questionnaire    │               │              │               │            │
-    ├─────────────>│              │               │              │               │            │
-    │              │ GET /questionnaires          │              │               │            │
-    │              ├─────────────>│ Fetch templates              │               │            │
-    │              │              ├──────────────>│              │               │            │
-    │              │ Templates    │               │              │               │            │
-    │              │<─────────────┤               │              │               │            │
-    │              │              │               │              │               │            │
-    │ 3. Upload docs              │               │              │               │            │
-    ├─────────────>│ POST /documents              │              │               │            │
-    │              ├─────────────>│ Save file     │              │               │            │
-    │              │              ├──────────────>│              │               │            │
-    │              │ Success      │               │              │               │            │
-    │              │<─────────────┤               │              │               │            │
-    │              │              │               │              │               │            │
-    │ 4. Soumettre │              │               │              │               │            │
-    ├─────────────>│ POST /submit │               │              │               │            │
-    │              ├─────────────>│ Update status │              │               │            │
-    │              │              ├──────────────>│              │               │            │
-    │              │              │               │              │               │            │
-    │              │              │ Analyze questionnaire         │               │            │
-    │              │              ├──────────────────────────────>│               │            │
-    │              │              │ CIA scores + recommendations  │               │            │
-    │              │              │<──────────────────────────────┤               │            │
-    │              │              │               │              │               │            │
-    │              │              │ Store AI results             │               │            │
-    │              │              ├──────────────>│              │               │            │
-    │              │              │               │              │               │            │
-    │              │              │ Send notification to analyst │               │            │
-    │              │              ├──────────────────────────────────────────────>│            │
-    │              │              │                                               │            │
-    │              │              │                                Email notification          │
-    │              │              │                                               ├───────────>│
-    │              │ Success      │               │              │               │            │
-    │              │<─────────────┤               │              │               │            │
-    │              │              │               │              │               │            │
-    │              │              │               │              │               │ 5. Review  │
-    │              │              │               │              │               │<───────────┤
-    │              │              │ GET /questionnaires/{id}      │               │            │
-    │              │              │<──────────────────────────────────────────────────────────┤
-    │              │              │ Response + Docs + AI Analysis │               │            │
-    │              │              ├───────────────────────────────────────────────────────────>│
-    │              │              │               │              │               │            │
-    │              │              │               │              │               │ 6. Validate│
-    │              │              │ POST /validate (status=validé)                │            │
-    │              │              │<──────────────────────────────────────────────────────────┤
-    │              │              │               │              │               │            │
-    │              │              │ Update status │              │               │            │
-    │              │              ├──────────────>│              │               │            │
-    │              │              │               │              │               │            │
-    │              │              │ Send notification to chef projet               │            │
-    │              │              ├──────────────────────────────────────────────>│            │
-    │              │              │                                Email           │            │
-    │<────────────────────────────────────────────────────────────────────────────┤            │
-    │              │              │               │              │               │            │
-    │ 7. Consulter résultats      │               │              │               │            │
-    ├─────────────>│ GET /score   │               │              │               │            │
-    │              ├─────────────>│ Fetch CIA scores             │               │            │
-    │              │              ├──────────────>│              │               │            │
-    │              │ CIA + Reco   │               │              │               │            │
-    │              │<─────────────┤               │              │               │            │
-    │              │              │               │              │               │            │
-```
+![alt text](workflow.png)
 
 ---
 
@@ -554,32 +317,6 @@ Chef Projet    Frontend       Backend        PostgreSQL    Azure OpenAI    Resen
 | `PUT` | `/api/auth/profile/` | Mettre à jour le profil | ✅ |
 | `POST` | `/api/auth/change-password/` | Changer le mot de passe | ✅ |
 
-#### Exemple - Login
-
-```bash
-POST /api/auth/login/
-Content-Type: application/json
-
-{
-  "username": "analyste1",
-  "password": "SecureP@ssw0rd"
-}
-```
-
-**Réponse** :
-```json
-{
-  "access": "eyJ0eXAiOiJKV1QiLCJhbGc...",
-  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc...",
-  "user": {
-    "id": 1,
-    "username": "analyste1",
-    "email": "analyste@guardianiq.com",
-    "role": "ANALYSTE"
-  }
-}
-```
-
 ---
 
 ### Questionnaires Endpoints
@@ -595,65 +332,6 @@ Content-Type: application/json
 | `POST` | `/api/questionnaires/{id}/validate/` | Valider/Rejeter | Analyste |
 | `GET` | `/api/questionnaires/{id}/score/` | Récupérer scores CIA | Tous |
 
-#### Exemple - Créer un Template (Analyste)
-
-```bash
-POST /api/questionnaires/
-Authorization: Bearer {JWT_TOKEN}
-Content-Type: application/json
-
-{
-  "title": "Questionnaire Sécurité Web Application",
-  "description": "Évaluation standard pour les applications web",
-  "questions": [
-    {
-      "text": "L'application est-elle accessible depuis Internet ?",
-      "question_type": "yes_no",
-      "order": 1
-    },
-    {
-      "text": "Les données sensibles sont-elles chiffrées au repos ?",
-      "question_type": "yes_no",
-      "order": 2
-    },
-    {
-      "text": "Décrivez l'architecture réseau",
-      "question_type": "text",
-      "order": 3
-    }
-  ]
-}
-```
-
-#### Exemple - Valider un Questionnaire (Analyste)
-
-```bash
-POST /api/questionnaires/42/validate/
-Authorization: Bearer {JWT_TOKEN}
-Content-Type: application/json
-
-{
-  "status": "validé",
-  "comment": "Les contrôles d'accès sont conformes. Recommandation: renforcer le chiffrement des backups."
-}
-```
-
-**Réponse** :
-```json
-{
-  "id": 42,
-  "status": "validé",
-  "validated_at": "2025-12-25T14:30:00Z",
-  "validator": "analyste1",
-  "comment": "Les contrôles d'accès sont conformes...",
-  "ai_analysis": {
-    "confidentiality": 85,
-    "integrity": 90,
-    "availability": 88,
-    "recommendations": "Renforcer le chiffrement des backups. Implémenter un plan de reprise d'activité..."
-  }
-}
-```
 
 ---
 
@@ -666,17 +344,6 @@ Content-Type: application/json
 | `GET` | `/api/questionnaires/{id}/documents/{doc_id}/` | Télécharger document | Analyste, Business Owner |
 | `DELETE` | `/api/questionnaires/{id}/documents/{doc_id}/` | Supprimer document | Chef Projet |
 
-#### Exemple - Upload Document
-
-```bash
-POST /api/questionnaires/42/documents/
-Authorization: Bearer {JWT_TOKEN}
-Content-Type: multipart/form-data
-
-file: [Binary file data]
-description: "Architecture technique du projet CRM"
-```
-
 ---
 
 ### Messages Endpoints
@@ -685,18 +352,6 @@ description: "Architecture technique du projet CRM"
 |--------|----------|-------------|-------------|
 | `GET` | `/api/questionnaires/{id}/messages/` | Liste des messages | Tous (concernés) |
 | `POST` | `/api/questionnaires/{id}/messages/` | Envoyer un message | Tous (concernés) |
-
-#### Exemple - Envoyer un Message
-
-```bash
-POST /api/questionnaires/42/messages/
-Authorization: Bearer {JWT_TOKEN}
-Content-Type: application/json
-
-{
-  "content": "Pouvez-vous préciser les mécanismes d'authentification utilisés ?"
-}
-```
 
 ---
 
@@ -951,26 +606,6 @@ RESEND_FROM_EMAIL=noreply@guardianiq.cloud
 
 ---
 
-### Recommandations Production
-
-✅ **Sécurité** :
-- Utiliser HTTPS (reverse proxy Nginx/Traefik)
-- Définir `DEBUG=False`
-- Secrets stockés en variables d'environnement chiffrées
-- Activer les rate limits
-
-✅ **Performance** :
-- Base de données PostgreSQL externe (RDS, Cloud SQL)
-- CDN pour les assets statiques
-- Redis pour le cache (optionnel)
-
-✅ **Monitoring** :
-- Logs centralisés (ELK, CloudWatch)
-- Alertes (Sentry, Datadog)
-- Backups automatiques BDD
-
----
-
 ## 🔐 Sécurité
 
 ### Mesures Implémentées
@@ -1000,28 +635,9 @@ RESEND_FROM_EMAIL=noreply@guardianiq.cloud
 
 ---
 
-### Bonnes Pratiques
-
-🔒 **Ne jamais commiter** :
-- Fichiers `.env` avec vraies clés
-- Secrets en dur dans le code
-- Credentials database
-
-🔑 **Gestion des secrets** :
-- Variables d'environnement
-- Vault (HashiCorp, AWS Secrets Manager)
-- Rotation régulière des clés API
-
-📊 **Audit régulier** :
-- Consulter les logs (`backend/logs/`)
-- Analyser les tentatives de connexion
-- Monitorer les accès anormaux
-
----
-
 ## 🙏 Remerciements
 
-- Tous les contributeurs
+- Tous les contributeurs du projet
 
 ---
 
@@ -1043,3 +659,5 @@ RESEND_FROM_EMAIL=noreply@guardianiq.cloud
 *Fait avec ❤️ pour améliorer la sécurité des projets IT*
 
 </div>
+
+
