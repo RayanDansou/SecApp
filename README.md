@@ -19,6 +19,7 @@
 
 ## 📋 Table des Matières
 
+- [Contribution](#-Auteurs)
 - [Introduction](#-introduction)
 - [Pourquoi GuardianIQ ?](#-pourquoi-guardianiq-)
 - [Fonctionnalités Principales](#-fonctionnalités-principales)
@@ -31,11 +32,19 @@
 - [Configuration](#%EF%B8%8F-configuration)
 - [Déploiement](#-déploiement)
 - [Sécurité](#-sécurité)
-- [Internationalisation](#-internationalisation)
-- [Contribution](#-contribution)
-- [Licence](#-licence)
 
 ---
+
+## 👨‍💻 Auteurs
+
+- **Yeba Khwaou** - [@vyctoria21](https://github.com/vyctoria21)
+- **Elodie Alexandre** - [@elodie-alexandre](https://github.com/elodie-alexandre)
+- **Shainez Denfer** - [@takohtsubo](https://github.com/takohtsubo)
+- **Bahdon Barkhad** - [@Filoutubes](https://github.com/Filoutubes)
+- **Rayan Dansou** - [@RayanDansou](https://github.com/RayanDansou)
+
+---
+
 
 ## 🎯 Introduction
 
@@ -1010,121 +1019,16 @@ RESEND_FROM_EMAIL=noreply@guardianiq.cloud
 
 ---
 
-## 🌍 Internationalisation
-
-GuardianIQ supporte **2 langues** via **i18next** :
-
-- 🇫🇷 **Français** (par défaut)
-- 🇬🇧 **English**
-
-### Fichiers de Traduction
-
-```
-frontend/src/locales/
-├── fr/
-│   └── translation.json    # Traductions françaises
-└── en/
-    └── translation.json    # Traductions anglaises
-```
-
-### Utilisation dans le Code
-
-```jsx
-import { useTranslation } from 'react-i18next';
-
-function MyComponent() {
-  const { t, i18n } = useTranslation();
-
-  return (
-    <div>
-      <h1>{t('dashboard.title')}</h1>
-      <button onClick={() => i18n.changeLanguage('en')}>
-        English
-      </button>
-    </div>
-  );
-}
-```
-
-### Ajouter une Nouvelle Langue
-
-1. Créer `frontend/src/locales/es/translation.json`
-2. Ajouter dans `i18n.js` :
-   ```js
-   import es from './locales/es/translation.json';
-   i18n.addResourceBundle('es', 'translation', es);
-   ```
-
----
-
-## 📚 Documentation
-
-### Fichiers de Documentation
-
-Le projet inclut une documentation complète :
-
-- 📘 **CLAUDE.md** - Architecture technique détaillée
-- 🚀 **QUICK_START.md** - Guide de démarrage rapide
-- 🐳 **DOCKER_COMPOSE_GUIDE.md** - Utilisation Docker
-- 🔧 **JENKINS_SETUP.md** - Configuration Jenkins
-- 🔑 **GOOGLE_OAUTH_SETUP.md** - Setup Google OAuth
-- 🤖 **GUIDE_AI_ANALYSIS.md** - Intégration Azure OpenAI
-- 📄 **EXPORT_FEATURE_GUIDE.md** - Export PDF/Word
-- 🏗️ **Architecture_Slide.md** - Diagrammes architecture
-- 🛠️ **PRODUCTION_FIXES.md** - Corrections production
-
----
-
-## 🤝 Contribution
-
-### Comment Contribuer
-
-1. **Fork** le projet
-2. **Créer** une branche feature (`git checkout -b feature/AmazingFeature`)
-3. **Commit** vos changements (`git commit -m 'Add AmazingFeature'`)
-4. **Push** vers la branche (`git push origin feature/AmazingFeature`)
-5. **Ouvrir** une Pull Request
-
-### Standards de Code
-
-#### Backend (Python)
-- PEP 8 compliance
-- Docstrings pour fonctions publiques
-- Tests unitaires pour nouvelle logique
-
-#### Frontend (React)
-- ESLint + Prettier
-- Composants fonctionnels avec hooks
-- PropTypes ou TypeScript (futur)
-
----
-
-## 📝 Licence
-
-Ce projet est sous licence **MIT**. Voir [LICENSE](LICENSE) pour plus de détails.
-
----
-
-## 👨‍💻 Auteurs
-
-- **Rayan Dansou** - *Développeur Principal* - [@RayanDansou](https://github.com/RayanDansou)
-
----
-
 ## 🙏 Remerciements
 
-- Azure OpenAI pour l'analyse intelligente
-- Resend pour les notifications email
-- Communauté Django & React
 - Tous les contributeurs
 
 ---
 
 ## 📞 Support
 
-- 📧 **Email** : support@guardianiq.cloud
+- 📧 **Email** : dansourayan@gmail.com
 - 🐛 **Issues** : [GitHub Issues](https://github.com/RayanDansou/SecApp/issues)
-- 💬 **Discord** : [Rejoindre le serveur](https://discord.gg/guardianiq)
 
 ---
 
