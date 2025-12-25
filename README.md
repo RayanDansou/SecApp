@@ -27,11 +27,11 @@
 - [Rôles et Permissions](#-rôles-et-permissions)
 - [Architecture Technique](#%EF%B8%8F-architecture-technique)
 - [Workflow Détaillé](#-workflow-détaillé)
+- [Sécurité](#-sécurité)
 - [API Documentation](#-api-documentation)
 - [Installation et Démarrage](#-installation-et-démarrage)
 - [Configuration](#%EF%B8%8F-configuration)
 - [Déploiement](#-déploiement)
-- [Sécurité](#-sécurité)
 
 ---
 
@@ -300,6 +300,35 @@ Le processus de déploiement en production suit un workflow automatisé garantis
 ### Diagramme de Séquence - Processus Complet
 
 ![alt text](workflow.png)
+
+---
+
+## 🔐 Sécurité
+
+### Mesures Implémentées
+
+| Couche | Mesure | Description |
+|--------|--------|-------------|
+| 🔐 **Authentification** | JWT + OAuth 2.0 | Tokens sécurisés + Google OAuth |
+| 🛡️ **Autorisation** | RBAC | 4 rôles avec permissions granulaires |
+| 🔒 **Transport** | HTTPS | Chiffrement TLS en production |
+| 💾 **Stockage** | Chiffrement | Secrets chiffrés, hashage bcrypt |
+| 📎 **Uploads** | Validation | MIME types, taille max, antivirus |
+| 🔍 **Audit** | Logs complets | Traçabilité de toutes les actions |
+| 🐳 **Isolation** | Containers | Services isolés, réseau bridgé |
+| ⚡ **Rate Limiting** | DRF Throttling | Protection contre brute force |
+| 🧪 **Validation** | Input sanitization | Protection XSS, SQL injection |
+
+---
+
+### OWASP Top 10 Coverage
+
+✅ **A01:2021 - Broken Access Control** → RBAC strict
+✅ **A02:2021 - Cryptographic Failures** → JWT, HTTPS, hashage
+✅ **A03:2021 - Injection** → ORM Django, validation inputs
+✅ **A05:2021 - Security Misconfiguration** → Settings production
+✅ **A07:2021 - Identification/Authentication Failures** → JWT + OAuth
+✅ **A09:2021 - Security Logging Failures** → Audit logs complets
 
 ---
 
@@ -603,35 +632,6 @@ AZURE_OPENAI_KEY=your-production-key
 # Resend Email
 RESEND_FROM_EMAIL=noreply@guardianiq.cloud
 ```
-
----
-
-## 🔐 Sécurité
-
-### Mesures Implémentées
-
-| Couche | Mesure | Description |
-|--------|--------|-------------|
-| 🔐 **Authentification** | JWT + OAuth 2.0 | Tokens sécurisés + Google OAuth |
-| 🛡️ **Autorisation** | RBAC | 4 rôles avec permissions granulaires |
-| 🔒 **Transport** | HTTPS | Chiffrement TLS en production |
-| 💾 **Stockage** | Chiffrement | Secrets chiffrés, hashage bcrypt |
-| 📎 **Uploads** | Validation | MIME types, taille max, antivirus |
-| 🔍 **Audit** | Logs complets | Traçabilité de toutes les actions |
-| 🐳 **Isolation** | Containers | Services isolés, réseau bridgé |
-| ⚡ **Rate Limiting** | DRF Throttling | Protection contre brute force |
-| 🧪 **Validation** | Input sanitization | Protection XSS, SQL injection |
-
----
-
-### OWASP Top 10 Coverage
-
-✅ **A01:2021 - Broken Access Control** → RBAC strict
-✅ **A02:2021 - Cryptographic Failures** → JWT, HTTPS, hashage
-✅ **A03:2021 - Injection** → ORM Django, validation inputs
-✅ **A05:2021 - Security Misconfiguration** → Settings production
-✅ **A07:2021 - Identification/Authentication Failures** → JWT + OAuth
-✅ **A09:2021 - Security Logging Failures** → Audit logs complets
 
 ---
 
