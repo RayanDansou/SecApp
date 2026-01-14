@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Mail, Github, Linkedin } from 'lucide-react';
+import { Mail, Github, Linkedin, Youtube } from 'lucide-react';
 import Logo from './Logo';
 import './Footer.css';
 
@@ -30,6 +30,9 @@ const Footer = () => {
               </a>
               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                 <Linkedin size={20} />
+              </a>
+              <a href="https://www.youtube.com/@GuardianIQ" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                <Youtube size={20} />
               </a>
               <a href="mailto:guardianiq.cloud@gmail.com" aria-label="Email">
                 <Mail size={20} />
