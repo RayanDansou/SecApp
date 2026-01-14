@@ -31,7 +31,7 @@ const Footer = () => {
               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                 <Linkedin size={20} />
               </a>
-              <a href="mailto:contact@guardianiq.com" aria-label="Email">
+              <a href="mailto:dansourayan@gmail.com" aria-label="Email">
                 <Mail size={20} />
               </a>
             </div>
