@@ -27,7 +27,7 @@ const Landing = () => {
   };
 
   const handleLearnMore = () => {
-    document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('video').scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -82,34 +82,6 @@ const Landing = () => {
             </div>
           </div>
         </div>
-        </div>
-      </section>
-
-      {/* Video Section */}
-      <section className="video-section" style={{ padding: '4rem 0', backgroundColor: 'var(--bg-secondary, #f8fafc)' }}>
-        <div className="landing-container">
-          <div className="section-header">
-            <h2>{t('landing.video.title')}</h2>
-            <p>{t('landing.video.subtitle')}</p>
-          </div>
-          <div style={{
-            maxWidth: '900px',
-            margin: '0 auto',
-            borderRadius: '16px',
-            overflow: 'hidden',
-            boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-            aspectRatio: '16/9'
-          }}>
-            <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube.com/embed/c1uowEf24fg"
-              title={t('landing.video.title')}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
         </div>
       </section>
 
@@ -282,6 +254,34 @@ const Landing = () => {
             </div>
           </div>
         </div>
+        </div>
+      </section>
+
+      {/* Video Section */}
+      <section id="video" className="video-section" style={{ padding: '4rem 0', backgroundColor: 'var(--bg-secondary, #f8fafc)' }}>
+        <div className="landing-container">
+          <div className="section-header">
+            <h2>{t('landing.video.title')}</h2>
+            <p>{t('landing.video.subtitle')}</p>
+          </div>
+          <div style={{
+            maxWidth: '900px',
+            margin: '0 auto',
+            borderRadius: '16px',
+            overflow: 'hidden',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+            aspectRatio: '16/9'
+          }}>
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/c1uowEf24fg"
+              title={t('landing.video.title')}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
         </div>
       </section>
 
