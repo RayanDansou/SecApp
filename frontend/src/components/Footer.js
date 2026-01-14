@@ -74,7 +74,7 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="/support" target="_blank" rel="noopener noreferrer">
+                <a href="mailto:dansourayan@gmail.com">
                   {t('footer.support', { defaultValue: 'Support' })}
                 </a>
               </li>
