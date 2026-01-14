@@ -31,7 +31,7 @@ const Footer = () => {
               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                 <Linkedin size={20} />
               </a>
-              <a href="mailto:dansourayan@gmail.com" aria-label="Email">
+              <a href="mailto:guardianiq.cloud@gmail.com" aria-label="Email">
                 <Mail size={20} />
               </a>
             </div>
@@ -74,7 +74,7 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="mailto:dansourayan@gmail.com">
+                <a href="mailto:guardianiq.cloud@gmail.com">
                   {t('footer.support', { defaultValue: 'Support' })}
                 </a>
               </li>
