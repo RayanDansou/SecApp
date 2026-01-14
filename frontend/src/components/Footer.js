@@ -64,7 +64,7 @@ const Footer = () => {
             <h4>{t('footer.resources', { defaultValue: 'Ressources' })}</h4>
             <ul className="footer-links">
               <li>
-                <a href="/documentation" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/RayanDansou/SecApp/blob/main/README.md" target="_blank" rel="noopener noreferrer">
                   {t('footer.documentation', { defaultValue: 'Documentation' })}
                 </a>
               </li>
