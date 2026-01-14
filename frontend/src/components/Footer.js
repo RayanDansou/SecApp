@@ -69,7 +69,7 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="/api" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/RayanDansou/SecApp/tree/main?tab=readme-ov-file#-api-documentation" target="_blank" rel="noopener noreferrer">
                   {t('footer.api', { defaultValue: 'API' })}
                 </a>
               </li>
