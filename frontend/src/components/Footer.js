@@ -89,17 +89,26 @@ const Footer = () => {
             <h4>{t('footer.legal', { defaultValue: 'Légal' })}</h4>
             <ul className="footer-links">
               <li>
-                <a href="/terms" target="_blank" rel="noopener noreferrer">
+                <a onClick={() => {
+                  navigate('/terms')
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}>
                   {t('footer.terms', { defaultValue: 'Conditions d\'utilisation' })}
                 </a>
               </li>
               <li>
-                <a href="/privacy" target="_blank" rel="noopener noreferrer">
+                <a onClick={() => {
+                  navigate('/privacy')
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}>
                   {t('footer.privacy', { defaultValue: 'Politique de confidentialité' })}
                 </a>
               </li>
               <li>
-                <a href="/cookies" target="_blank" rel="noopener noreferrer">
+                <a onClick={() => {
+                  navigate('/cookies')
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}>
                   {t('footer.cookies', { defaultValue: 'Politique des cookies' })}
                 </a>
               </li>

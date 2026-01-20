@@ -33,7 +33,7 @@ sleep 5
 echo "   Checking database health..."
 
 for i in {1..30}; do
-    if nc -z localhost 5432; then
+    if nc -z localhost 5438; then
         echo "   ✅ Database is healthy!"
         break
     fi
@@ -50,7 +50,7 @@ done
 # Wait for frontend to be ready
 echo "   Checking backend health..."
 for i in {1..30}; do
-    if curl -s -o /dev/null http://localhost:8000; then
+    if curl -s -o /dev/null http://localhost:8888; then
         echo "   ✅ Backend is healthy!"
         break
     fi
@@ -65,7 +65,7 @@ done
 # Wait for frontend to be ready
 echo "   Checking frontend health..."
 for i in {1..30}; do
-    if curl -f http://localhost:3000 > /dev/null 2>&1; then
+    if curl -f http://localhost:3333 > /dev/null 2>&1; then
         echo "   ✅ Frontend is healthy!"
         break
     fi
@@ -81,10 +81,10 @@ echo ""
 echo "✅ SecApp is running!"
 echo ""
 echo "📍 Services:"
-echo "   Frontend:  http://localhost:3000"
-echo "   Backend:   http://localhost:8000"
-echo "   API Docs:  http://localhost:8000/admin/"
-echo "   Database:  localhost:5432"
+echo "   Frontend:  http://localhost:3333"
+echo "   Backend:   http://localhost:8888"
+echo "   API Docs:  http://localhost:8888/admin/"
+echo "   Database:  localhost:5438"
 echo ""
 echo "📊 Useful commands:"
 echo "   View logs:     docker compose logs -f"
