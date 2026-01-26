@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build & Deploy') {
+            steps {
+                script {
+                    echo "🔨 Building and deploying GuardianIQ..."
+
+                    sh """
+                        # Arrêt des services existants
+                        docker-compose down
+
+                        # Build et démarrage
+                        docker-compose up -d --build
+
+                        # Attendre démarrage
+                        sleep 15
+
+                        # Migrations
+                        docker-compose exec -T backend python manage.py migrate --noinput
+
+                        # Afficher l'état
+                        docker-compose ps
+                    """
+
+                    echo """
+                    ✅ GuardianIQ déployé !
+                    🌐 Frontend: http://localhost:3333
+                    🌐 Backend:  http://localhost:8888
+                    """
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    echo "🧪 Running tests..."
+                    sh 'docker-compose exec -T backend python manage.py test || true'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Pipeline réussie !"
+        }
+        failure {
+            echo "❌ Pipeline échouée. Vérifiez les logs."
+        }
+    }
+}

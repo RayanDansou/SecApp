@@ -1,0 +1,384 @@
+.my-templates {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.page-header {
+  margin-bottom: 30px;
+}
+
+.btn-back {
+  background-color: transparent;
+  border: none;
+  color: #0D8FDB;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 16px;
+  padding: 8px 0;
+  transition: color 0.2s;
+}
+
+.btn-back:hover {
+  color: #0B7AC2;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.header-content h1 {
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+  transition: color 0.3s ease;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.btn-create {
+  background-color: #0D8FDB;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.btn-create:hover {
+  background-color: #0B7AC2;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 10px 20px;
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-card);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.2s, background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.filter-btn:hover {
+  border-color: #0D8FDB;
+  color: #0D8FDB;
+}
+
+.filter-btn.active {
+  background-color: #0D8FDB;
+  color: white;
+  border-color: #0D8FDB;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.error-message {
+  background-color: var(--error-bg);
+  color: var(--error);
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  background-color: var(--bg-card);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+}
+
+.empty-state h2 {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 24px;
+  transition: color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #0D8FDB;
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #0B7AC2;
+}
+
+.templates-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.template-card {
+  background-color: var(--bg-card);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s ease;
+}
+
+.template-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px var(--shadow);
+}
+
+.card-header {
+  padding: 20px 20px 12px 20px;
+  border-bottom: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
+}
+
+.card-title-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.card-title-section h3 {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin: 0;
+  flex: 1;
+  line-height: 1.4;
+  transition: color 0.3s ease;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.status-indicator {
+  flex-shrink: 0;
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-active {
+  background-color: var(--success-bg);
+  color: var(--success);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.badge-inactive {
+  background-color: var(--bg-secondary);
+  color: var(--text-muted);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card-body {
+  padding: 16px 20px;
+}
+
+.template-description {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.3s ease;
+}
+
+.card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.meta-label {
+  color: var(--text-muted);
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.meta-value {
+  color: var(--text-primary);
+  font-weight: 600;
+  transition: color 0.3s ease;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  padding: 16px 20px;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-toggle,
+.btn-delete {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-activate {
+  background-color: var(--success);
+  color: white;
+}
+
+.btn-activate:hover {
+  background-color: #2e7d32;
+}
+
+.btn-deactivate {
+  background-color: var(--warning);
+  color: white;
+}
+
+.btn-deactivate:hover {
+  background-color: #ef6c00;
+}
+
+.btn-delete {
+  background-color: var(--danger);
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: var(--error);
+}
+
+@media (max-width: 1024px) {
+  .templates-list {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .my-templates {
+    padding: 24px 16px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+  .templates-list {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-create {
+    width: 100%;
+  }
+
+  .filters {
+    flex-direction: column;
+  }
+
+  .filter-btn {
+    width: 100%;
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+
+  .btn-toggle,
+  .btn-delete {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .my-templates {
+    padding: 16px 12px;
+  }
+
+  .page-header h1 {
+    font-size: 20px;
+  }
+
+  .card-title-section h3 {
+    font-size: 16px;
+  }
+
+  .template-description {
+    font-size: 13px;
+  }
+
+  .badge {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+}

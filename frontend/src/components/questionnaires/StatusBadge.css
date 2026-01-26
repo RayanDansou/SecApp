@@ -1,0 +1,56 @@
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-draft {
+  background-color: var(--draft-bg, #e0e0e0);
+  color: var(--draft, #616161);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.status-submitted {
+  background-color: var(--info-bg, #e3f2fd);
+  color: var(--info, #0D8FDB);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.status-pending {
+  background-color: var(--warning-bg, #fff3e0);
+  color: var(--warning, #f57c00);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.status-validation {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode .status-validation {
+  background-color: rgba(123, 31, 162, 0.2);
+  color: #ce93d8;
+}
+
+.status-approved {
+  background-color: var(--success-bg, #e8f5e9);
+  color: var(--success, #388e3c);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.status-rejected {
+  background-color: var(--error-bg, #fde8e7);
+  color: var(--error, #870a05);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.status-default {
+  background-color: var(--bg-secondary, #f5f5f5);
+  color: var(--text-muted, #757575);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

@@ -1,0 +1,17 @@
+django
+django-cors-headers
+djangorestframework
+djangorestframework-simplejwt
+psycopg2-binary
+python-dotenv
+openai>=1.0.0
+resend
+django-allauth
+dj-rest-auth[with_social]
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+Pillow
+gunicorn
+weasyprint
+python-docx

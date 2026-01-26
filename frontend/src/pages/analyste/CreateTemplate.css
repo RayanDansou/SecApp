@@ -1,0 +1,335 @@
+.create-template {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.page-header {
+  margin-bottom: 40px;
+}
+
+.btn-back {
+  background-color: transparent;
+  border: none;
+  color: #0D8FDB;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 16px;
+  padding: 8px 0;
+  transition: color 0.2s;
+}
+
+.btn-back:hover {
+  color: #0B7AC2;
+}
+
+.page-header h1 {
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.error-message {
+  background-color: var(--error-bg);
+  color: var(--error);
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.success-message {
+  background-color: var(--success-bg);
+  color: var(--success);
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.template-form {
+  background-color: var(--bg-card);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-section {
+  padding: 30px;
+  border-bottom: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
+}
+
+.form-section:last-child {
+  border-bottom: none;
+}
+
+.form-section h2 {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+  transition: color 0.3s ease;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  margin: 0;
+}
+
+.btn-add {
+  background-color: #0D8FDB;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-add:hover {
+  background-color: #0B7AC2;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
+}
+
+.required {
+  color: var(--danger);
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #0D8FDB;
+}
+
+.form-group.checkbox {
+  margin-bottom: 16px;
+}
+
+.form-group.checkbox label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.form-group.checkbox input[type="checkbox"] {
+  margin-right: 8px;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+.questions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.question-item {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  transition: border-color 0.2s, background-color 0.3s ease;
+}
+
+.question-item:hover {
+  border-color: #0D8FDB;
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.question-number {
+  background-color: #0D8FDB;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.question-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  min-width: 36px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-icon:hover:not(:disabled) {
+  background-color: var(--bg-secondary);
+  border-color: #0D8FDB;
+  color: #0D8FDB;
+}
+
+.btn-icon:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-icon.btn-delete:hover:not(:disabled) {
+  background-color: var(--error-bg);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.form-actions {
+  padding: 30px;
+  background-color: var(--bg-secondary);
+  border-radius: 0 0 8px 8px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 12px 32px;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary {
+  background-color: #0D8FDB;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #0B7AC2;
+}
+
+.btn-primary:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: var(--border-color);
+  color: var(--text-primary);
+  transition: background-color 0.2s, color 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--text-muted);
+}
+
+.template-created {
+  background-color: var(--bg-card);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow);
+  overflow: hidden;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.success-card {
+  text-align: center;
+  padding: 60px 30px;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background-color: var(--success);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  margin: 0 auto 20px;
+}
+
+.success-card h2 {
+  color: #2e7d32;
+  font-size: 1.8rem;
+  margin-bottom: 12px;
+}
+
+.success-card p {
+  color: #558b2f;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .btn-add {
+    width: 100%;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}

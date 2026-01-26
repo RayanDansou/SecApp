@@ -1,0 +1,243 @@
+.available-questionnaires {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.page-header {
+  margin-bottom: 40px;
+}
+
+.page-header h1 {
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.error-message {
+  background-color: var(--error-bg);
+  color: var(--error);
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.empty-state p {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  font-style: italic;
+  transition: color 0.3s ease;
+}
+
+.questionnaires-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.questionnaire-card {
+  background-color: var(--bg-card);
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: box-shadow 0.3s, transform 0.3s, background-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.questionnaire-card:hover {
+  box-shadow: 0 4px 16px var(--shadow);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.card-header h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  flex: 1;
+  transition: color 0.3s ease;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.question-count {
+  background-color: var(--info-bg);
+  color: var(--info);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card-description {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+  flex: 1;
+  transition: color 0.3s ease;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 12px;
+  background-color: var(--bg-secondary);
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.meta-item {
+  display: flex;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.meta-label {
+  color: var(--text-muted);
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.meta-value {
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.start-button {
+  background-color: #0D8FDB;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.start-button:hover {
+  background-color: #0B7AC2;
+}
+
+@media (max-width: 1024px) {
+  .questionnaires-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .available-questionnaires {
+    padding: 24px 16px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+  .questionnaires-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .questionnaire-card {
+    padding: 16px;
+  }
+
+  .card-header h3 {
+    font-size: 18px;
+  }
+
+  .card-description {
+    font-size: 14px;
+  }
+
+  .start-button {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .available-questionnaires {
+    padding: 16px 12px;
+  }
+
+  .page-header h1 {
+    font-size: 20px;
+  }
+
+  .questionnaires-grid {
+    gap: 12px;
+  }
+
+  .questionnaire-card {
+    padding: 12px;
+  }
+
+  .card-header h3 {
+    font-size: 16px;
+  }
+
+  .card-description {
+    font-size: 13px;
+  }
+
+  .card-meta {
+    font-size: 12px;
+    flex-wrap: wrap;
+  }
+
+  .meta-label {
+    font-size: 11px;
+  }
+
+  .meta-value {
+    font-size: 12px;
+  }
+
+  .start-button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Rapport d'Analyse - {{ questionnaire.title }}</title>
+</head>
+<body>
+    <!-- En-tête -->
+    <div class="header">
+        <h1>Rapport d'Analyse de Sécurité</h1>
+        <div class="subtitle">GuardianIQ - Analyse de Sécurité des Applications</div>
+        <div class="status-badge" style="background-color: {{ status_badge_color }};">
+            {{ response.get_status_display }}
+        </div>
+    </div>
+
+    <!-- Informations Générales -->
+    <div class="section">
+        <h2 class="section-title">Informations Générales</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Questionnaire</div>
+                <div class="info-value">{{ questionnaire.title }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Chef de Projet</div>
+                <div class="info-value">{{ responder.get_full_name|default:responder.username }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Date de Soumission</div>
+                <div class="info-value">
+                    {% if response.submitted_at %}
+                        {{ response.submitted_at|date:"d/m/Y H:i" }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Statut</div>
+                <div class="info-value">{{ response.get_status_display }}</div>
+            </div>
+        </div>
+        {% if questionnaire.description %}
+        <div class="info-item" style="grid-column: 1 / -1;">
+            <div class="info-label">Description</div>
+            <div class="info-value">{{ questionnaire.description }}</div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Scores CIA -->
+    {% if ai_analysis %}
+    <div class="section">
+        <h2 class="section-title">Scores de Sécurité (CIA)</h2>
+        <div class="score-container">
+            <div class="score-card">
+                <div class="score-value">{{ ai_analysis.coherence_score }}%</div>
+                <div class="score-label">Cohérence Globale</div>
+            </div>
+            <div class="score-card">
+                <div class="score-value">{{ ai_analysis.confidentiality_score }}</div>
+                <div class="score-label">Confidentialité</div>
+            </div>
+            <div class="score-card">
+                <div class="score-value">{{ ai_analysis.integrity_score }}</div>
+                <div class="score-label">Intégrité</div>
+            </div>
+            <div class="score-card">
+                <div class="score-value">{{ ai_analysis.availability_score }}</div>
+                <div class="score-label">Disponibilité</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Questions et Réponses -->
+    <div class="section">
+        <h2 class="section-title">Questions et Réponses</h2>
+        {% for answer in answers %}
+        <div class="question-item">
+            <div class="question-text">
+                Q{{ answer.question.order }}: {{ answer.question.text }}
+            </div>
+            <div class="answer-text">
+                {{ answer.answer_text }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Analyse IA Détaillée -->
+    {% if ai_analysis %}
+    <div class="section">
+        <h2 class="section-title">Analyse IA Détaillée</h2>
+
+        <!-- Résumé -->
+        <div style="margin-bottom: 20px; padding: 15px; background: #f0f9ff; border-left: 4px solid #3b82f6; border-radius: 4px;">
+            <strong>Résumé de l'analyse:</strong>
+            <p>{{ ai_analysis.analysis_summary }}</p>
+        </div>
+
+        <!-- Points Forts -->
+        {% if ai_analysis.strengths %}
+        <h3 style="color: #10b981; margin-top: 20px;">✓ Points Forts</h3>
+        {% for strength in ai_analysis.strengths %}
+        <div class="strength-item">
+            {{ strength }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- Points Faibles -->
+        {% if ai_analysis.weaknesses %}
+        <h3 style="color: #ef4444; margin-top: 20px;">⚠ Points Faibles</h3>
+        {% for weakness in ai_analysis.weaknesses %}
+        <div class="weakness-item">
+            {{ weakness }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- Recommandations -->
+        {% if ai_analysis.recommendations %}
+        <h3 style="color: #f59e0b; margin-top: 20px;">💡 Recommandations</h3>
+        {% for recommendation in ai_analysis.recommendations %}
+        <div class="recommendation-item">
+            {{ recommendation }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- Incohérences -->
+        {% if ai_analysis.inconsistencies %}
+        <h3 style="color: #ef4444; margin-top: 20px;">❌ Incohérences Détectées</h3>
+        {% for inconsistency in ai_analysis.inconsistencies %}
+        <div class="weakness-item">
+            {{ inconsistency }}
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Commentaires -->
+    {% if comments %}
+    <div class="section">
+        <h2 class="section-title">Commentaires</h2>
+        {% for comment in comments %}
+        <div class="comment-item">
+            <div>
+                <span class="comment-author">{{ comment.author.get_full_name|default:comment.author.username }}</span>
+                <span class="comment-date"> - {{ comment.created_at|date:"d/m/Y H:i" }}</span>
+            </div>
+            <div style="margin-top: 8px;">{{ comment.content }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Documents Associés -->
+    {% if documents %}
+    <div class="section">
+        <h2 class="section-title">Documents Associés</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom du Fichier</th>
+                    <th>Date d'Upload</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for document in documents %}
+                <tr>
+                    <td>{{ document.filename }}</td>
+                    <td>{{ document.uploaded_at|date:"d/m/Y H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Historique des Statuts -->
+    <div class="section">
+        <h2 class="section-title">Historique des Statuts</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Ancien Statut</th>
+                    <th>Nouveau Statut</th>
+                    <th>Modifié par</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for history in status_history %}
+                <tr>
+                    <td>{{ history.changed_at|date:"d/m/Y H:i" }}</td>
+                    <td>{{ history.get_old_status_display|default:"Création" }}</td>
+                    <td>{{ history.get_new_status_display }}</td>
+                    <td>{{ history.changed_by.username|default:"Système" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>
+            Rapport généré par <strong>GuardianIQ</strong> le {{ generated_at|date:"d/m/Y à H:i" }}<br>
+            Ce document est confidentiel et destiné uniquement aux personnes autorisées.
+        </p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,244 @@
+.response-detail {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.page-header {
+  margin-bottom: 30px;
+}
+
+.btn-back {
+  background-color: transparent;
+  border: none;
+  color: #0D8FDB;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 16px;
+  padding: 8px 0;
+  transition: color 0.2s;
+}
+
+.btn-back:hover {
+  color: #0B7AC2;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-content h1 {
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.error-message {
+  background-color: var(--error-bg);
+  color: var(--error);
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.response-info,
+.questionnaire-info,
+.answers-section {
+  background-color: var(--bg-card);
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow);
+  margin-bottom: 24px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.response-info h2,
+.questionnaire-info h2,
+.answers-section h2 {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  transition: color 0.3s ease;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.info-value {
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.questionnaire-description {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+  transition: color 0.3s ease;
+}
+
+.questionnaire-meta {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.questionnaire-meta strong {
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+.separator {
+  margin: 0 8px;
+  color: var(--border-color);
+  transition: color 0.3s ease;
+}
+
+.answer-item {
+  padding: 20px;
+  background-color: var(--bg-secondary);
+  border-radius: 6px;
+  margin-bottom: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.answer-item:last-child {
+  margin-bottom: 0;
+}
+
+.answer-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.answer-number {
+  background-color: #0D8FDB;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.required-mark {
+  color: var(--danger);
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.question-text {
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  transition: color 0.3s ease;
+}
+
+.answer-text {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding: 12px;
+  background-color: var(--bg-card);
+  border-radius: 4px;
+  white-space: pre-wrap;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.no-answers {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 40px 20px;
+  font-style: italic;
+  transition: color 0.3s ease;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 0;
+}
+
+.btn-edit {
+  background-color: #0D8FDB;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-edit:hover {
+  background-color: #0B7AC2;
+}
+
+/* AI Analysis Section */
+.ai-analysis-section {
+  margin: 32px 0;
+  padding: 24px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  transition: background-color 0.3s ease;
+}
+
+.ai-analysis-header {
+  margin-bottom: 20px;
+}
+
+.ai-analysis-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
