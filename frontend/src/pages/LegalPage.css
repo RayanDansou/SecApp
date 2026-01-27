@@ -1,0 +1,97 @@
+.legal-container {
+  padding: 2rem 1rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+  min-height: calc(100vh - 64px - 300px); /* Ajustement pour le footer/header */
+}
+
+.legal-card {
+  background-color: var(--bg-primary, #ffffff);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 2.5rem;
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+.legal-card h1 {
+  color: var(--text-primary, #1a202c);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+}
+
+.legal-content {
+  color: var(--text-secondary, #4a5568);
+  line-height: 1.7;
+}
+
+.last-updated {
+  color: var(--text-tertiary, #718096);
+  font-size: 0.875rem;
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+.legal-content section {
+  margin-bottom: 2rem;
+}
+
+.legal-content h2 {
+  color: var(--text-primary, #2d3748);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+
+.legal-content p {
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+.legal-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.legal-content li {
+  margin-bottom: 0.5rem;
+}
+
+/* Styles spécifiques pour le tableau des cookies */
+.legal-table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+.legal-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--bg-primary, #fff);
+  font-size: 0.95rem;
+}
+
+.legal-table th {
+  background-color: var(--bg-secondary, #f7fafc);
+  color: var(--text-primary, #2d3748);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+}
+
+.legal-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  color: var(--text-secondary, #4a5568);
+}
+
+.legal-table tr:last-child td {
+  border-bottom: none;
+}
